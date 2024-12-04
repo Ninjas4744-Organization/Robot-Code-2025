@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
+import com.ninjas4744.NinjasLib.Swerve.SwerveController;
+import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,12 +13,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.ShooterAngle;
+import frc.robot.Subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -28,34 +32,33 @@ public class CommandBuilder {
             Supplier<Translation2d> rotation,
             BooleanSupplier isLookAt,
             BooleanSupplier isBayblade) {
-            return Commands.none();
-//            return Commands.runOnce(
-//                () -> {
-//                    double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
-//                    double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
-//                    double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
-//                    double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
-//
-//                    double finalRotation =
-//                        rx * SwerveConstants.maxAngularVelocity * SwerveConstants.kRotationSpeedFactor;
-//
+            return Commands.runOnce(
+                () -> {
+                    double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
+                    double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
+                    double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
+                    double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
+
+                    double finalRotation =
+                        rx * SwerveConstants.kSwerveConstants.maxAngularVelocity * SwerveConstants.kRotationSpeedFactor;
+
 //                    if (isLookAt.getAsBoolean())
 //                        finalRotation = SwerveIO.getInstance().lookAt(new Translation2d(ry, rx), 45);
-//
+
 //                    if (isBayblade.getAsBoolean()) finalRotation = SwerveConstants.maxAngularVelocity;
-//
+
 //                    SwerveIO.getInstance().updateDemand(new ChassisSpeeds(ly, lx, finalRotation));
-//                },
-//                SwerveIO.getInstance());
+                    SwerveIO.getInstance().drive(SwerveIO.getInstance().fromPercent(new ChassisSpeeds(ly, lx, rx)), SwerveConstants.kFieldRelative);
+                }, SwerveSubsystem.getInstance());
         }
 
         public static Command resetGyro(boolean forceZero) {
             return Commands.runOnce(() -> {
                 if (forceZero) RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
                 else {
-                    if (VisionIO.getInstance().hasTargets())
+                    /*if (VisionIO.getInstance().hasTargets())
                         RobotState.getInstance().resetGyro(RobotState.getInstance().getRobotPose().getRotation());
-                    else RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
+                    else*/ RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
                 }
             });
         }

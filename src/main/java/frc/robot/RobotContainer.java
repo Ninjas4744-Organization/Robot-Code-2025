@@ -3,7 +3,10 @@ package frc.robot;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
 import com.ninjas4744.NinjasLib.RobotStateIO;
+import com.ninjas4744.NinjasLib.RobotStateWithSwerve;
 import com.ninjas4744.NinjasLib.StateMachineIO;
+import com.ninjas4744.NinjasLib.Swerve.Swerve;
+import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -20,6 +24,7 @@ import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.Indexer;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.ShooterAngle;
+import frc.robot.Subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 	private final CommandPS5Controller _driverJoystick;
@@ -28,22 +33,20 @@ public class RobotContainer {
 	private boolean isSwerveLookAt = false;
 
 	public RobotContainer() {
-		RobotStateIO.setInstance(new RobotState(), Robot.instance);
+		SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
+		RobotStateWithSwerve.setInstance(new RobotState(), ((Swerve)SwerveIO.getInstance()).getKinematics(), SwerveConstants.kInvertGyro, estimation -> 0);
+		SwerveSubsystem.getInstance();
 		Shooter.getInstance();
 		ShooterAngle.getInstance();
 		StateMachineIO.setInstance(new StateMachine());
 		Indexer.getInstance();
 		FieldConstants.getFieldLayout();
 
-		VisionIO.setConstants(VisionConstants.kVisionConstants);
-		RobotState.getInstance().initPoseEstimator();
 		CommandBuilder.Auto.configureAutoBuilder();
 
 		_driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
-//		_operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);
 
-		Shuffleboard.getTab("Competition")
-				.addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
+		Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
 
 		configureBindings();
 	}
@@ -57,12 +60,12 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBindings() {
-//		SwerveIO.getInstance()
-//				.setDefaultCommand(CommandBuilder.Teleop.swerveDrive(
-//						() -> new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
-//						() -> new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
-//						() -> isSwerveLookAt,
-//						() -> false));
+		SwerveSubsystem.getInstance()
+				.setDefaultCommand(CommandBuilder.Teleop.swerveDrive(
+						() -> new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
+						() -> new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
+						() -> isSwerveLookAt,
+						() -> false));
 
 		_driverJoystick.R1().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
 		_driverJoystick.R2().onTrue(CommandBuilder.Teleop.changeRobotState(RobotStates.SHOOT));
@@ -75,9 +78,9 @@ public class RobotContainer {
 		_driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
 
 		_driverJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
-			if (RobotState.getInstance().getRobotPose().getX() <= 5)
+			/*if (RobotState.getInstance().getRobotPose().getX() <= 5)
 				StateMachine.getInstance().changeRobotState(RobotStates.SHOOT_SPEAKER_PREPARE);
-			else StateMachine.getInstance().changeRobotState(RobotStates.DELIVERY);
+			else*/ StateMachine.getInstance().changeRobotState(RobotStates.DELIVERY);
 		})));
 
 		_driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.DRIVE_TO_AMP)));
@@ -110,9 +113,9 @@ public class RobotContainer {
 	}
 
 	public void periodic() {
-		for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
-			if (estimation.robotPose != null)
-				RobotState.getInstance().updateRobotPose(estimation);
+//		for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
+//			if (estimation.robotPose != null)
+//				RobotState.getInstance().updateRobotPose(estimation);
 	}
 
 	public void resetSubsystems() {
