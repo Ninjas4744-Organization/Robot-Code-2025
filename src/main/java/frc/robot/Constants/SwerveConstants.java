@@ -31,9 +31,11 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.createShuffleboard = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 28.125;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.createShuffleboard = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
             kSwerveConstants.moduleConstants[i].maxModuleSpeed = kSwerveConstants.maxSpeed;
         }
