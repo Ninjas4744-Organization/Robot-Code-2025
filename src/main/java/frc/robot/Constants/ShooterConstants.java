@@ -16,7 +16,8 @@ public class ShooterConstants {
         kControllerConstants.currentLimit = 40;
         kControllerConstants.subsystemName = "Shooter";
 
-        kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(7.5, 0.185);
+//        kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(7.5, 0.185);
+        kControllerConstants.controlConstants = ControlConstants.createPID(10, 0, 0, 0);
         kControllerConstants.velocityGoalTolerance = 600;
         kControllerConstants.encoderConversionFactor = 60;
 
