@@ -34,12 +34,13 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
-		RobotStateWithSwerve.setInstance(new RobotState(), ((Swerve)SwerveIO.getInstance()).getKinematics(), SwerveConstants.kInvertGyro, estimation -> 0);
+		RobotStateWithSwerve.setInstance(new RobotState(), ((Swerve)SwerveIO.getInstance()).getKinematics(), SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
 		SwerveSubsystem.getInstance();
 		Shooter.getInstance();
 		ShooterAngle.getInstance();
 		StateMachineIO.setInstance(new StateMachine());
 		Indexer.getInstance();
+		VisionIO.setConstants(VisionConstants.kVisionConstants);
 		FieldConstants.getFieldLayout();
 
 		CommandBuilder.Auto.configureAutoBuilder();
@@ -113,9 +114,9 @@ public class RobotContainer {
 	}
 
 	public void periodic() {
-//		for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
-//			if (estimation.robotPose != null)
-//				RobotState.getInstance().updateRobotPose(estimation);
+		for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
+			if (estimation.robotPose != null)
+				RobotState.getInstance().updateRobotPose(estimation);
 	}
 
 	public void resetSubsystems() {
