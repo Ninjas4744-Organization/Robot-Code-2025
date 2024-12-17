@@ -2,14 +2,24 @@ package frc.robot.Constants;
 
 import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
+import com.ninjas4744.NinjasLib.DataClasses.SwerveControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveModuleConstants;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.controllers.PathFollowingController;
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.system.plant.DCMotor;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 
 public class SwerveConstants {
     public static final double kSpeedFactor = 0.5;
     public static final double kRotationSpeedFactor = 0.25;
     public static final double kJoystickDeadband = 0.2;
     public static final boolean kInvertGyro = false;
-    public static final boolean kFieldRelative = true;
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
@@ -55,4 +65,29 @@ public class SwerveConstants {
         kSwerveConstants.moduleConstants[3].angleMotorConstants.main.id = 17;
         kSwerveConstants.moduleConstants[3].canCoderID = 43;
     }
+
+    public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
+    static {
+        kSwerveControllerConstants.swerveConstants = kSwerveConstants;
+        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(0.75, 0, 0, 0);
+        kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.057, 0.09, 0.003, 10);
+        kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
+        kSwerveControllerConstants.driveAssistThreshold = 2;
+        kSwerveControllerConstants.driverFieldRelative = true;
+        kSwerveControllerConstants.pathConstraints = new PathConstraints(5, 10, 8, 16);
+
+        try {
+            kSwerveControllerConstants.robotConfig = RobotConfig.fromGUISettings();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final PathFollowingController kPathFollowingController =
+      new PPHolonomicDriveController(
+        new PIDConstants(kSwerveControllerConstants.drivePIDConstants.P, kSwerveControllerConstants.drivePIDConstants.I, kSwerveControllerConstants.drivePIDConstants.D),
+        new PIDConstants(kSwerveControllerConstants.rotationPIDConstants.P, kSwerveControllerConstants.rotationPIDConstants.I, kSwerveControllerConstants.rotationPIDConstants.D)
+      );
 }

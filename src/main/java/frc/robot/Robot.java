@@ -18,7 +18,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		_autoChooser = new SendableChooser<>();
 		_autoChooser.setDefaultOption("None", "None");
-		_autoChooser.addOption("", "");
+		_autoChooser.addOption("Example Auto", "Example Auto");
+		_autoChooser.addOption("New Auto", "New Auto");
 		SmartDashboard.putData("Autonomy", _autoChooser);
 
 		instance = this;

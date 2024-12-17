@@ -13,11 +13,11 @@ public class ShooterConstants {
     static {
         kControllerConstants.main.id = 30;
         kControllerConstants.main.inverted = true;
-        kControllerConstants.currentLimit = 40;
+        kControllerConstants.currentLimit = 90;
         kControllerConstants.subsystemName = "Shooter";
 
-//        kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(7.5, 0.185);
-        kControllerConstants.controlConstants = ControlConstants.createPID(10, 0, 0, 0);
+        kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(7.5, 0.185);
+//        kControllerConstants.controlConstants = ControlConstants.createPID(10, 0, 0, 0);
         kControllerConstants.velocityGoalTolerance = 600;
         kControllerConstants.encoderConversionFactor = 60;
 
