@@ -20,6 +20,10 @@ public class Robot extends TimedRobot {
 		_autoChooser.setDefaultOption("None", "None");
 		_autoChooser.addOption("Example Auto", "Example Auto");
 		_autoChooser.addOption("New Auto", "New Auto");
+		_autoChooser.addOption("stage shoot note 1 stage shoot", "stage shoot note 1 stage shoot");
+		_autoChooser.addOption("stage shoot note 2 stage shoot", "stage shoot note 2 stage shoot");
+		_autoChooser.addOption("stage shoot note 3 stage shoot", "stage shoot note 3 stage shoot");
+
 		SmartDashboard.putData("Autonomy", _autoChooser);
 
 		instance = this;

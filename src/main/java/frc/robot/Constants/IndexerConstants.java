@@ -20,7 +20,7 @@ public class IndexerConstants {
 
     public enum States {
         kIntake(1),
-        kIndex(0.5),
+        kIndex(1),
         kIndexBack(-1),
         kShoot(1),
         kOuttake(1);

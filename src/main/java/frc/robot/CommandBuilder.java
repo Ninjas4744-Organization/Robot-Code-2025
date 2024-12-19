@@ -156,6 +156,7 @@ public class CommandBuilder {
 
             NamedCommands.registerCommand("Jiggle Back Right", jiggleBack(new Translation2d(-1, 0), new Translation2d(0, -1)));
             NamedCommands.registerCommand("Jiggle Back Left", jiggleBack(new Translation2d(-1, 0), new Translation2d(0, 1)));
+            NamedCommands.registerCommand("Jiggle Right Front", jiggleBack(new Translation2d(0, 1), new Translation2d(-1, 0)));
 
             NamedCommands.registerCommand("Print 1", Commands.print("11111111111111111111"));
 
