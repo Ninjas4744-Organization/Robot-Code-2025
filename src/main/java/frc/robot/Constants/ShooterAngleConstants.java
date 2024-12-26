@@ -29,7 +29,7 @@ public class ShooterAngleConstants {
         kControllerConstants.maxSoftLimit = 72;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
-        kSimulatedControllerConstants.motorTorque = 1;
+        kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.NEO;
     }
 
     public static final int kLimitSwitchId = 2;

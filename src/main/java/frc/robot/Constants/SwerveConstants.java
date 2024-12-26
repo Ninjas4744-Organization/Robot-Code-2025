@@ -1,5 +1,6 @@
 package frc.robot.Constants;
 
+import com.ninjas4744.NinjasLib.Controllers.NinjasSparkMaxController;
 import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveControllerConstants;
@@ -10,6 +11,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import org.json.simple.parser.ParseException;
 
@@ -26,6 +29,12 @@ public class SwerveConstants {
         kSwerveConstants.openLoop = true;
         kSwerveConstants.trackWidth = 0.62;
         kSwerveConstants.wheelBase = 0.62;
+        kSwerveConstants.kinematics = new SwerveDriveKinematics(
+          new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, SwerveConstants.kSwerveConstants.trackWidth / 2.0),
+          new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0),
+          new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, SwerveConstants.kSwerveConstants.trackWidth / 2.0),
+          new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0)
+        );
 
         kSwerveConstants.maxSpeed = 5;
         kSwerveConstants.maxAngularVelocity = 10.7;
@@ -36,7 +45,7 @@ public class SwerveConstants {
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 0);
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 0, NinjasSparkMaxController.class);
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;

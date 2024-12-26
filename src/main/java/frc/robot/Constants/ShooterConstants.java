@@ -26,7 +26,7 @@ public class ShooterConstants {
         kControllerConstants.followers[0].inverted = true;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
-        kSimulatedControllerConstants.motorTorque = 1;
+        kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.FALCON;
     }
 
     public static final double kMinimumShootTolerance = 1000;

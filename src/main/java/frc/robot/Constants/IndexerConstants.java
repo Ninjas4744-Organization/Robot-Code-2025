@@ -15,7 +15,7 @@ public class IndexerConstants {
         kControllerConstants.subsystemName = "Indexer";
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
-        kSimulatedControllerConstants.motorTorque = 1;
+        kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.FALCON;
     }
 
     public enum States {
