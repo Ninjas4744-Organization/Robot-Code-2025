@@ -29,7 +29,6 @@ public class RobotContainer {
     private boolean isSwerveLookAt = false;
 
     public RobotContainer() {
-        SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
         SwerveSubsystem.getInstance();
         Shooter.getInstance();
