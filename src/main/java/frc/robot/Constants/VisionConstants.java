@@ -1,6 +1,5 @@
 package frc.robot.Constants;
 
-import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.NoteDetectionConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -37,13 +36,6 @@ public class VisionConstants {
         kVisionConstants.simulationConstants.FPS = 30;
         kVisionConstants.simulationConstants.averageLatency = 35;
         kVisionConstants.simulationConstants.latencyStdDev = 5;
-
-        kVisionConstants.noteDetectionConstants = new NoteDetectionConstants();
-        kVisionConstants.noteDetectionConstants.limelightMountAngleX = 18.22;
-        kVisionConstants.noteDetectionConstants.limelightName = "";
-        kVisionConstants.noteDetectionConstants.limelightMountAngleY = 0;
-        kVisionConstants.noteDetectionConstants.limelightHeight = 0.395;
-        kVisionConstants.noteDetectionConstants.noteHeight = 0.0254;
     }
 
     public static double calculateFOM(VisionOutput estimation) {
