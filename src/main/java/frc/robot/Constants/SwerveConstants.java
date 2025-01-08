@@ -19,16 +19,16 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class SwerveConstants {
-    public static final double kSpeedFactor = 0.5;
-    public static final double kRotationSpeedFactor = 0.25;
+    public static final double kSpeedFactor = 0.25;
+    public static final double kRotationSpeedFactor = 0.125;
     public static final double kJoystickDeadband = 0.2;
     public static final boolean kInvertGyro = false;
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
-        kSwerveConstants.openLoop = true;
-        kSwerveConstants.trackWidth = 0.62;
-        kSwerveConstants.wheelBase = 0.62;
+        kSwerveConstants.openLoop = false;
+        kSwerveConstants.trackWidth = 0.7;
+        kSwerveConstants.wheelBase = 0.7;
         kSwerveConstants.kinematics = new SwerveDriveKinematics(
           new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, SwerveConstants.kSwerveConstants.trackWidth / 2.0),
           new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0),
@@ -36,7 +36,7 @@ public class SwerveConstants {
           new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0)
         );
 
-        kSwerveConstants.maxSpeed = 5;
+        kSwerveConstants.maxSpeed = 5.7;
         kSwerveConstants.maxAngularVelocity = 10.7;
         kSwerveConstants.simulationAcceleration = 12;
         kSwerveConstants.simulationAngleAcceleration = 18;
@@ -45,17 +45,21 @@ public class SwerveConstants {
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 0, NinjasSparkMaxController.class);
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 50;
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class);
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
             kSwerveConstants.moduleConstants[i].driveMotorConstants.createShuffleboard = false;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.1);
+
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.main.id = 11 + i * 2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 28.125;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
             kSwerveConstants.moduleConstants[i].angleMotorConstants.createShuffleboard = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
+
             kSwerveConstants.moduleConstants[i].maxModuleSpeed = kSwerveConstants.maxSpeed;
         }
         kSwerveConstants.moduleConstants[0].driveMotorConstants.main.id = 10;

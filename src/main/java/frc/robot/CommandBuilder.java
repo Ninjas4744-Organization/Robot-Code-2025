@@ -19,9 +19,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
-import frc.robot.Subsystems.Indexer;
-import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.ShooterAngle;
 import frc.robot.Subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -41,16 +38,15 @@ public class CommandBuilder {
                     double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
                     double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
 
-                    double finalRotation =
-                        rx * SwerveConstants.kSwerveConstants.maxAngularVelocity * SwerveConstants.kRotationSpeedFactor;
+                    double finalRotation = rx * SwerveConstants.kSwerveConstants.maxAngularVelocity * SwerveConstants.kRotationSpeedFactor;
 
-//                    if (isLookAt.getAsBoolean())
-//                        finalRotation = SwerveIO.getInstance().lookAt(new Translation2d(ry, rx), 45);
+                    if (isLookAt.getAsBoolean())
+                        finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
 
-//                    if (isBayblade.getAsBoolean()) finalRotation = SwerveConstants.maxAngularVelocity;
+                    if (isBayblade.getAsBoolean())
+                        finalRotation = SwerveConstants.kSwerveConstants.maxAngularVelocity;
 
-                    SwerveController.getInstance()._demand.driverInput = new ChassisSpeeds(ly, lx, finalRotation);
-//                    SwerveIO.getInstance().drive(SwerveIO.getInstance().fromPercent(new ChassisSpeeds(ly, lx, rx)), SwerveConstants.kFieldRelative);
+                    SwerveController.getInstance()._demand.driverInput = new ChassisSpeeds(ly * SwerveConstants.kSpeedFactor, lx * SwerveConstants.kSpeedFactor, finalRotation);
                 }, SwerveSubsystem.getInstance());
         }
 
@@ -73,7 +69,7 @@ public class CommandBuilder {
             return Commands.either(
                 command,
                 Commands.none(),
-                () -> RobotState.getInstance().getRobotState() == RobotStates.TESTING
+                () -> RobotState.getInstance().getRobotState() == RobotStates.TEST
             );
         }
 
@@ -81,7 +77,7 @@ public class CommandBuilder {
             return Commands.either(
                 command,
                 Commands.none(),
-                () -> RobotState.getInstance().getRobotState() != RobotStates.TESTING
+                () -> RobotState.getInstance().getRobotState() != RobotStates.TEST
             );
         }
     }
@@ -122,79 +118,7 @@ public class CommandBuilder {
 
         /** Registers all auto commands to pathplanner */
         private static void registerCommands() {
-            NamedCommands.registerCommand(
-                "Prepare Shoot", prepareShoot());
 
-            NamedCommands.registerCommand(
-                "Wait Shoot Ready",
-                Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.SHOOT_SPEAKER_READY));
-
-            NamedCommands.registerCommand("Shoot", shoot());
-
-            NamedCommands.registerCommand(
-                "Full Shoot",
-                Commands.sequence(
-                    prepareShoot(),
-                    Commands.waitUntil(
-                        () -> RobotState.getInstance().getRobotState() == RobotStates.SHOOT_SPEAKER_READY),
-                    shoot(),
-                    Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.NOTE_SEARCH)));
-
-            NamedCommands.registerCommand("Intake", Teleop.changeRobotState(RobotStates.INTAKE));
-
-            NamedCommands.registerCommand("Wait Note", Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.NOTE_IN_INDEXER));
-
-            NamedCommands.registerCommand(
-                "Reset",
-                Commands.sequence(
-                    Teleop.changeRobotState(RobotStates.RESET),
-                    Commands.waitUntil(() -> ShooterAngle.getInstance().isResetted()
-                        && Indexer.getInstance().isResetted()
-                        && Shooter.getInstance().isResetted())));
-
-            NamedCommands.registerCommand("Stop", Commands.runOnce(() -> SwerveIO.getInstance().drive(new ChassisSpeeds(), false)));
-
-            NamedCommands.registerCommand("Jiggle Back Right", jiggleBack(new Translation2d(-1, 0), new Translation2d(0, -1)));
-            NamedCommands.registerCommand("Jiggle Back Left", jiggleBack(new Translation2d(-1, 0), new Translation2d(0, 1)));
-            NamedCommands.registerCommand("Jiggle Right Front", jiggleBack(new Translation2d(0, 1), new Translation2d(-1, 0)));
-
-            NamedCommands.registerCommand("Print 1", Commands.print("11111111111111111111"));
-
-            NamedCommands.registerCommand("Print 2", Commands.print("22222222222222222222"));
-        }
-
-        private static Command prepareShoot() {
-            return Commands.runOnce(() -> {
-                StateMachine.getInstance().changeRobotState(RobotStates.SHOOT_SPEAKER_PREPARE);
-                SwerveController.getInstance()._demand.targetPose = FieldConstants.getTagPose(FieldConstants.getSpeakerTag().ID).toPose2d();
-                SwerveController.getInstance().setState(SwerveDemand.SwerveState.LOOK_AT_TARGET);
-            });
-        }
-
-        private static Command shoot() {
-            return Commands.runOnce(() -> {
-                StateMachine.getInstance().changeRobotState(RobotStates.SHOOT);
-                SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
-            });
-        }
-
-        static double t = 0;
-
-        private static Command jiggleBack(Translation2d dir, Translation2d jiggleDir) {
-            return Commands.run(() -> {
-                double speed = 0.15 * SwerveConstants.kSwerveConstants.maxSpeed;
-                double jiggleSpeed = Math.cos(t - 0.5) * 0.45 * SwerveConstants.kSwerveConstants.maxSpeed;
-                SwerveIO.getInstance().drive(new ChassisSpeeds(
-                    dir.getX() * speed + jiggleDir.getX() * jiggleSpeed,
-                    dir.getY() * speed + jiggleDir.getY() * jiggleSpeed,
-                    0
-                ), false);
-
-                t += 0.02 * Math.PI * 2;
-            }).until(() -> RobotState.getInstance().getNoteInIndexer()).andThen(Commands.runOnce(() -> {
-                SwerveIO.getInstance().drive(new ChassisSpeeds(), false);
-                t = 0;
-            }));
         }
 
         /**
@@ -203,7 +127,7 @@ public class CommandBuilder {
         public static Command autoCommand(String auto) {
             SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
             SwerveController.getInstance()._demand.fieldRelative = false;
-            RobotState.getInstance().setRobotState(RobotStates.NOTE_IN_INDEXER);
+            RobotState.getInstance().setRobotState(RobotStates.CORAL_READY);
 
             return AutoBuilder.buildAuto(auto);
         }

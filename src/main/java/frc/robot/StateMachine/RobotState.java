@@ -18,20 +18,11 @@ import frc.robot.Constants.Constants;
 import frc.robot.Constants.VisionConstants;
 
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
-	private final DigitalInput _indexerNote = new DigitalInput(Constants.kIndexerBeamBreakerId);
-
 	public RobotState(){
 		_robotState = RobotStates.IDLE;
 	}
 
 	public static RobotState getInstance() {
 		return (RobotState)RobotStateWithSwerve.getInstance();
-	}
-
-	/**
-	 * @return Whether there's a note in the indexer according to its beam breaker
-	 */
-	public boolean getNoteInIndexer() {
-		return !_indexerNote.get();
 	}
 }

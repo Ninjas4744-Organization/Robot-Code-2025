@@ -9,7 +9,6 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class Robot extends TimedRobot {
-	public static Robot instance;
 	private RobotContainer _robotContainer;
 	private SendableChooser<String> _autoChooser;
 	private Command _autoCommand;
@@ -18,15 +17,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		_autoChooser = new SendableChooser<>();
 		_autoChooser.setDefaultOption("None", "None");
-		_autoChooser.addOption("Example Auto", "Example Auto");
-		_autoChooser.addOption("New Auto", "New Auto");
-		_autoChooser.addOption("stage shoot note 1 stage shoot", "stage shoot note 1 stage shoot");
-		_autoChooser.addOption("stage shoot note 2 stage shoot", "stage shoot note 2 stage shoot");
-		_autoChooser.addOption("stage shoot note 3 stage shoot", "stage shoot note 3 stage shoot");
-
 		SmartDashboard.putData("Autonomy", _autoChooser);
 
-		instance = this;
 		_robotContainer = new RobotContainer();
 	}
 
@@ -75,8 +67,11 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
+		if (_autoCommand != null)
+			_autoCommand.cancel();
+
 		CommandScheduler.getInstance().cancelAll();
-		RobotState.getInstance().setRobotState(RobotStates.TESTING);
+		RobotState.getInstance().setRobotState(RobotStates.TEST);
 	}
 
 	@Override
