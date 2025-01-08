@@ -6,6 +6,7 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class ShooterAngle extends StateMachineMotoredSubsystem<RobotStates> {
@@ -67,6 +68,9 @@ public class ShooterAngle extends StateMachineMotoredSubsystem<RobotStates> {
 	@Override
 	public void periodic() {
 		super.periodic();
+
+		if(RobotState.isSimulated())
+			return;
 
 		SmartDashboard.putBoolean("Shooter Angle Limit", _limit.get());
 		if (_limit.get()) {

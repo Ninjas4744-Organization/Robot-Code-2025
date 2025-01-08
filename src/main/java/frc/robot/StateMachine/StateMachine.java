@@ -212,13 +212,6 @@ public class StateMachine extends StateMachineIO<RobotStates> {
               && Shooter.getInstance().isReady(),
             RobotStates.SHOOT_SPEAKER_READY));
 
-        //test
-        addEndCondition(
-          RobotStates.SHOOT_SPEAKER_READY,
-          new StateEndCondition<>(
-            () -> true,
-            RobotStates.SHOOT));
-
         addEndCondition(
           RobotStates.OOGA_BOOGA,
           new StateEndCondition<>(
