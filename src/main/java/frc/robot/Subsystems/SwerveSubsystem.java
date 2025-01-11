@@ -19,7 +19,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     private SwerveSubsystem(){
         SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
-        SwerveController.getInstance().setState(SwerveState.DEFAULT);
     }
 
     @Override

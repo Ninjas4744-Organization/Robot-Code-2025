@@ -46,7 +46,7 @@ public class CommandBuilder {
                     if (isBayblade.getAsBoolean())
                         finalRotation = SwerveConstants.kSwerveConstants.maxAngularVelocity;
 
-                    SwerveController.getInstance()._demand.driverInput = new ChassisSpeeds(ly * SwerveConstants.kSpeedFactor, lx * SwerveConstants.kSpeedFactor, finalRotation);
+                    SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(ly * SwerveConstants.kSpeedFactor, lx * SwerveConstants.kSpeedFactor, finalRotation);
                 }, SwerveSubsystem.getInstance());
         }
 
@@ -102,7 +102,7 @@ public class CommandBuilder {
 
                 () -> SwerveIO.getInstance().getChassisSpeeds(false), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 
-                (drive) -> SwerveController.getInstance()._demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                (drive) -> SwerveController.getInstance().Demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 
                 SwerveConstants.kPathFollowingController, //Autonomy config
 
@@ -126,7 +126,7 @@ public class CommandBuilder {
          */
         public static Command autoCommand(String auto) {
             SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
-            SwerveController.getInstance()._demand.fieldRelative = false;
+            SwerveController.getInstance().Demand.fieldRelative = false;
             RobotState.getInstance().setRobotState(RobotStates.CORAL_READY);
 
             return AutoBuilder.buildAuto(auto);
