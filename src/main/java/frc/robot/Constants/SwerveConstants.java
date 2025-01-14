@@ -19,8 +19,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class SwerveConstants {
-    public static final double kSpeedFactor = 0.25;
-    public static final double kRotationSpeedFactor = 0.125;
+    public static final double kSpeedFactor = 1;
+    public static final double kRotationSpeedFactor = 0.5;
     public static final double kJoystickDeadband = 0.2;
     public static final boolean kInvertGyro = false;
 
@@ -36,10 +36,10 @@ public class SwerveConstants {
           new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0)
         );
 
-        kSwerveConstants.maxSpeed = 5.7;
+        kSwerveConstants.maxSpeed = 5;
         kSwerveConstants.maxAngularVelocity = 10.7;
-        kSwerveConstants.simulationAcceleration = 12;
-        kSwerveConstants.simulationAngleAcceleration = 18;
+        kSwerveConstants.simulationAcceleration = 16;
+        kSwerveConstants.simulationAngleAcceleration = 20;
 
         kSwerveConstants.canCoderInvert = false;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
@@ -62,21 +62,6 @@ public class SwerveConstants {
 
             kSwerveConstants.moduleConstants[i].maxModuleSpeed = kSwerveConstants.maxSpeed;
         }
-        kSwerveConstants.moduleConstants[0].driveMotorConstants.main.id = 10;
-        kSwerveConstants.moduleConstants[0].angleMotorConstants.main.id = 11;
-        kSwerveConstants.moduleConstants[0].canCoderID = 40;
-
-        kSwerveConstants.moduleConstants[1].driveMotorConstants.main.id = 12;
-        kSwerveConstants.moduleConstants[1].angleMotorConstants.main.id = 13;
-        kSwerveConstants.moduleConstants[1].canCoderID = 41;
-
-        kSwerveConstants.moduleConstants[2].driveMotorConstants.main.id = 14;
-        kSwerveConstants.moduleConstants[2].angleMotorConstants.main.id = 15;
-        kSwerveConstants.moduleConstants[2].canCoderID = 42;
-
-        kSwerveConstants.moduleConstants[3].driveMotorConstants.main.id = 16;
-        kSwerveConstants.moduleConstants[3].angleMotorConstants.main.id = 17;
-        kSwerveConstants.moduleConstants[3].canCoderID = 43;
     }
 
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();

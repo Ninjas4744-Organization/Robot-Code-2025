@@ -33,16 +33,22 @@ public class FieldConstants {
             ? kBlueFieldLayout
             : kRedFieldLayout;
 
-        if (!ignoredTags.isEmpty())
-            layout.getTags().removeIf(tag -> ignoredTags.contains(tag.ID));
+        if (!ignoredTags.isEmpty()){
+            List<AprilTag> tags = layout.getTags();
+            tags.removeIf(tag -> ignoredTags.contains(tag.ID));
+            layout = new AprilTagFieldLayout(tags, layout.getFieldLength(), layout.getFieldWidth());
+        }
 
         return layout;
     }
 
     public static AprilTagFieldLayout getFieldLayoutWithAllowed(List<Integer> allowedTags) {
         AprilTagFieldLayout layout = getFieldLayout();
-        if (!allowedTags.isEmpty())
-            layout.getTags().removeIf(tag -> !allowedTags.contains(tag.ID));
+        if (!allowedTags.isEmpty()){
+            List<AprilTag> tags = layout.getTags();
+            tags.removeIf(tag -> !allowedTags.contains(tag.ID));
+            layout = new AprilTagFieldLayout(tags, layout.getFieldLength(), layout.getFieldWidth());
+        }
 
         return layout;
     }
@@ -79,6 +85,6 @@ public class FieldConstants {
     }
 
     public static Pose2d getOffsetReefTagPose(AprilTag tag, boolean isRight){
-        return tag.pose.toPose2d().transformBy(new Transform2d(0, isRight ? -0.5 : 0.5, new Rotation2d()));
+        return tag.pose.toPose2d().transformBy(new Transform2d(0, isRight ? 0.17 : -0.17, new Rotation2d()));
     }
 }
