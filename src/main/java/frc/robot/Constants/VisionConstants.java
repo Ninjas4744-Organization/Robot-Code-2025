@@ -13,7 +13,7 @@ public class VisionConstants {
 
         kVisionConstants.maxAmbiguity = 0.2;
         kVisionConstants.maxDistance = 6;
-        kVisionConstants.fieldLayoutGetter = FieldConstants::getFieldLayout;
+        kVisionConstants.fieldLayoutGetter = FieldConstants::getFieldLayoutWithIgnored;
 
         kVisionConstants.simulationConstants = new SimulationConstants();
         kVisionConstants.simulationConstants.resolutionWidth = 1600;
