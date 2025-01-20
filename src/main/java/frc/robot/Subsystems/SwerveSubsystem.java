@@ -62,6 +62,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     @Override
     public void periodic() {
         super.periodic();
+        System.out.println(SwerveController.getInstance().isDriveAssistFinished());
         SwerveController.getInstance().periodic();
     }
 }

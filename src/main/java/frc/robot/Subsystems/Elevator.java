@@ -44,10 +44,16 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         return _limit.get();
     }
 
+    public double getPosition() {
+        return controller().getPosition();
+    }
+
+    public double getGoal() {
+        return controller().getGoal();
+    }
 
     @Override
     protected void setFunctionMaps() {
-
 
     }
     @Override
