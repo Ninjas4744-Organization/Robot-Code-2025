@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.861,
+        "y": 2.8842499999999998
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.3625,
+        "y": 2.06525
+      },
+      "isLocked": false,
+      "linkedName": "front right"
+    },
+    {
+      "anchor": {
+        "x": 6.93,
+        "y": 4.03
+      },
+      "prevControl": {
+        "x": 5.37225,
+        "y": 1.9775000000000005
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "park center"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 500.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "park center",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 60.89014444310894
+  },
+  "useDefaultConstraints": true
+}
