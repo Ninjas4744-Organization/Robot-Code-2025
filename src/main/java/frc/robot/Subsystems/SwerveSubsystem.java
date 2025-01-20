@@ -25,7 +25,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     private AprilTag _currentReefTag;
     private final StructPublisher<Pose2d> _targetPosePublisher = NetworkTableInstance.getDefault()
             .getStructTopic("Reef Target", Pose2d.struct)
-            .publish();
+            .publish();;
 
     private SwerveSubsystem(){
         SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
