@@ -24,6 +24,10 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         return _instance;
     }
 
+    public static void dontCreateSubsystem(){
+        _dontCreate = true;
+    }
+
     AddressableLED _leds;
     AddressableLEDBuffer _ledsBuffer;
     Timer _timer;
@@ -83,20 +87,15 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         }
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-    }
-
     @Override
     protected void setFunctionMaps() {
         if(_dontCreate)
             return;
+
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kBlack)), RobotStates.RESET, RobotStates.CORAL_SEARCH);
         addFunctionToOnChangeMap(this::intakeLights, RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(1.5))), RobotStates.TEST);
         addFunctionToOnChangeMap(this::rainbow, RobotStates.REMOVE_ALGAE);
-        addFunctionToOnChangeMap(() -> elevatorUp(Elevator.getInstance().getPosition(), Elevator.getInstance().getGoal()), RobotStates.REMOVE_ALGAE);
-        addFunctionToOnChangeMap(() -> elevatorDown(Elevator.getInstance().getPosition(), Elevator.getInstance().getGoal()), RobotStates.REMOVE_ALGAE);
     }
 }
