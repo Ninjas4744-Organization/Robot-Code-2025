@@ -48,7 +48,7 @@
   "folder": "park center",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 60.89014444310894
+    "rotation": 59.393592968490545
   },
   "useDefaultConstraints": true
 }

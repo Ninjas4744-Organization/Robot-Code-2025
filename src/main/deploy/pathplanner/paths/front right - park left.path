@@ -48,7 +48,7 @@
   "folder": "park left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.32767421766487
+    "rotation": 59.393592968490545
   },
   "useDefaultConstraints": true
 }
