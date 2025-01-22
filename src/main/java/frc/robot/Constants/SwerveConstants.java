@@ -5,7 +5,6 @@ import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveModuleConstants;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -13,7 +12,6 @@ import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -83,7 +81,7 @@ public class SwerveConstants {
         }
     }
 
-    public static final PathFollowingController kPathFollowingController =
+    public static final PathFollowingController kAutonomyConfig =
       new PPHolonomicDriveController(
         new PIDConstants(kSwerveControllerConstants.drivePIDConstants.P, kSwerveControllerConstants.drivePIDConstants.I, kSwerveControllerConstants.drivePIDConstants.D),
         new PIDConstants(kSwerveControllerConstants.rotationPIDConstants.P, kSwerveControllerConstants.rotationPIDConstants.I, kSwerveControllerConstants.rotationPIDConstants.D)

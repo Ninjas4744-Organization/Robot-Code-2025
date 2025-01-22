@@ -2,6 +2,10 @@ package frc.robot.Constants;
 
 import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
+import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 
 import java.util.Map;
@@ -9,7 +13,10 @@ import java.util.Map;
 public class VisionConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.VisionConstants kVisionConstants = new com.ninjas4744.NinjasLib.DataClasses.VisionConstants();
     static{
-        kVisionConstants.cameras = Map.of();
+        kVisionConstants.cameras = Map.of(
+                "Front", new Transform3d(0.07, 0.105, -0.055, new Rotation3d(0, Units.degreesToRadians(30), 0)),
+                "Right", new Transform3d(-0.13, 0.145, -0.06, new Rotation3d(0, Units.degreesToRadians(30), Units.degreesToRadians(-90 + 3)))
+        );
 
         kVisionConstants.maxAmbiguity = 0.2;
         kVisionConstants.maxDistance = 6;

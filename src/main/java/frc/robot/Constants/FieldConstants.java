@@ -65,7 +65,7 @@ public class FieldConstants {
         return tagPose.transformBy(new Transform2d(offset, 0, new Rotation2d()));
     }
 
-    public static AprilTag getClosestReefTag(){
+    public static Pose2d getClosestReefTag(){
         List<AprilTag> tags = getFieldLayoutWithAllowed(List.of(6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22)).getTags();
 
         AprilTag closestTag = null;
@@ -81,10 +81,10 @@ public class FieldConstants {
             }
         }
 
-        return closestTag;
+        return getOffsetTagPose(closestTag.pose.toPose2d(), 0.5);
     }
 
-    public static Pose2d getOffsetReefTagPose(AprilTag tag, boolean isRight){
-        return tag.pose.toPose2d().transformBy(new Transform2d(0, isRight ? 0.17 : -0.17, new Rotation2d()));
+    public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight){
+        return tagPose.transformBy(new Transform2d(0, isRight ? 0.17 : -0.17, new Rotation2d()));
     }
 }

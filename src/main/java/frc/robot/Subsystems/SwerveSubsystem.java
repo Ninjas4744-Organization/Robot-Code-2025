@@ -6,6 +6,8 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import frc.robot.Constants.FieldConstants;
@@ -22,7 +24,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         return _instance;
     }
 
-    private AprilTag _currentReefTag;
+    private Pose2d _currentReefTag;
     private final StructPublisher<Pose2d> _targetPosePublisher = NetworkTableInstance.getDefault()
             .getStructTopic("Reef Target", Pose2d.struct)
             .publish();;
@@ -44,25 +46,41 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         addFunctionToOnChangeMap(() -> {
             _currentReefTag = FieldConstants.getClosestReefTag();
-            _targetPosePublisher.set(_currentReefTag.pose.toPose2d());
+            _targetPosePublisher.set(_currentReefTag);
 
-            SwerveController.getInstance().Demand.targetPose = _currentReefTag.pose.toPose2d();
+            SwerveController.getInstance().Demand.targetPose = _currentReefTag;
             SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
         }, RobotStates.L1, RobotStates.L2, RobotStates.L3, RobotStates.L4);
 
-        addFunctionToOnChangeMap(() -> {
+        addFunctionToPeriodicMap(() -> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
             _targetPosePublisher.set(target);
 
+//            SwerveController.getInstance().Demand.targetPose = target;
+//            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+
+//            SwerveController.getInstance().Demand.point = target;
+//            SwerveController.getInstance().Demand.angle = target.getRotation();
+//            SwerveController.getInstance().setState(SwerveState.LOCKED_AXIS);
+
             SwerveController.getInstance().Demand.targetPose = target;
-            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+            SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
+                    SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
+                    SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
+                    0
+            );
+            SwerveController.getInstance().setState(SwerveState.VELOCITY);
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+    }
+
+    public boolean atReefSide(){
+        return RobotState.getInstance().getRobotPose().getTranslation()
+                .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.1;
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        System.out.println(SwerveController.getInstance().isDriveAssistFinished());
         SwerveController.getInstance().periodic();
     }
 }

@@ -16,6 +16,10 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
         return _instance;
     }
 
+    public static void dontCreateSubsystem(){
+        _dontCreate = true;
+    }
+
     @Override
     protected void setController() {
         if(!_dontCreate)
@@ -26,16 +30,6 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setSimulationController() {
         if(!_dontCreate)
             _simulatedController = new NinjasSimulatedController(HornConstants.kSimulatedControllerConstants);
-    }
-
-    @Override
-    public void periodic() {
-        if(!_dontCreate)
-            super.periodic();
-    }
-
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
     }
 
     @Override
@@ -55,9 +49,14 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setFunctionMaps() {
         if(_dontCreate)
             return;
+
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET, RobotStates.IDLE);
         addFunctionToOnChangeMap(() -> controller().setPercent(HornConstants.kSpeedPercent), RobotStates.REMOVE_ALGAE);
+    }
 
-
+    @Override
+    public void periodic() {
+        if(!_dontCreate)
+            super.periodic();
     }
 }

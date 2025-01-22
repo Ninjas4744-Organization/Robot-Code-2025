@@ -17,7 +17,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
-import frc.robot.Subsystems.SwerveSubsystem;
+import frc.robot.Subsystems.*;
 
 public class RobotContainer {
     private final CommandPS5Controller _driverJoystick;
@@ -29,6 +29,11 @@ public class RobotContainer {
         SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM, 2);
         SwerveSubsystem.getInstance();
+        Elevator.dontCreateSubsystem();
+        Horn.dontCreateSubsystem();
+        HornAngle.dontCreateSubsystem();
+        Leds.dontCreateSubsystem();
+        Outtake.dontCreateSubsystem();
         StateMachineIO.setInstance(new StateMachine());
         VisionIO.setConstants(VisionConstants.kVisionConstants);
         FieldConstants.getFieldLayout();
