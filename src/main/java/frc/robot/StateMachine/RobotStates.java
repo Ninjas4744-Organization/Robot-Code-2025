@@ -5,7 +5,6 @@ public enum RobotStates {
     IDLE,
     CORAL_SEARCH,
     CORAL_READY,
-    INTAKE_PREPARE,
     INTAKE,
     REMOVE_ALGAE,
     L1,

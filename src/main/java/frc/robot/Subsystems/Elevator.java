@@ -54,6 +54,23 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
+        addFunctionToOnChangeMap(
+                ()->_controller.setPosition(ElevatorConstants.goollL1),RobotStates.L1
+        );
+        addFunctionToOnChangeMap(
+                ()->_controller.setPosition(ElevatorConstants.goollL2),RobotStates.L2
+        );
+        addFunctionToOnChangeMap(
+                ()->_controller.setPosition(ElevatorConstants.goollL3),RobotStates.L3
+        );
+        addFunctionToOnChangeMap(
+                ()->_controller.setPosition(ElevatorConstants.goollL4),RobotStates.L4
+        );
+        addFunctionToOnChangeMap(
+                ()->_controller.setPosition(ElevatorConstants.goollclose),RobotStates.CLOSE,RobotStates.RESET
+        );
+
+
 
     }
     @Override

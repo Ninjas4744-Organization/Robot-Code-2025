@@ -17,5 +17,5 @@ public class OuttakeConstants {
 
     public static final double kOuttakeState = 1;
     public static final double kIntakeState = 0.7;
-    public static final double kCLoseState = 0;
+    public static final double kCloseState = 0;
 }
