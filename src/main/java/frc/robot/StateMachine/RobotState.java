@@ -18,12 +18,12 @@ import frc.robot.Constants.Constants;
 import frc.robot.Constants.VisionConstants;
 
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
-	private DigitalInput bimbrakr= new DigitalInput(0);
+	private DigitalInput _beambreaker = new DigitalInput(0);
 	public RobotState(){
 		_robotState = RobotStates.IDLE;
 	}
-	public Boolean isintakFinish(){
-		return bimbrakr.get();
+	public Boolean isIntakeFinished(){
+		return _beambreaker.get();
 	}
 
 	public static RobotState getInstance() {
