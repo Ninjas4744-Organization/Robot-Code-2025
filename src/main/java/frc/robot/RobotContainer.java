@@ -27,7 +27,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
-        RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM, 2);
+        RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
         SwerveSubsystem.getInstance();
         Elevator.dontCreateSubsystem();
         Horn.dontCreateSubsystem();
