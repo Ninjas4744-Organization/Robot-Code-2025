@@ -31,13 +31,13 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     @Override
     public void resetSubsystem() {
         if(!_dontCreate)
-            _controller.stop();
+            controller().stop();
     }
 
     @Override
     public boolean isResetted() {
         if(!_dontCreate)
-            return _controller.getOutput() == 0;
+            return controller().getOutput() == 0;
         return true;
     }
 
@@ -49,8 +49,8 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setFunctionMaps() {
         if(_dontCreate)
             return;
-        addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
-        addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
+        addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
+        addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
+        addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
     }
 }
