@@ -11,37 +11,49 @@ import frc.robot.StateMachine.RobotStates;
 
 public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     private static Elevator _instance;
-    private DigitalInput _limit;
+    private static boolean _dontCreate = false;
+
     public static Elevator getInstance(){
         if(_instance == null)
             _instance = new Elevator();
         return _instance;
     }
-    public Elevator (){
-        _limit=new DigitalInput(ElevatorConstants.limitSwichid);
 
+    private DigitalInput _limit;
+
+    public Elevator (){
+        super();
+        if(!_dontCreate)
+            _limit=new DigitalInput(ElevatorConstants.limitSwichid);
     }
 
     @Override
     protected void setController() {
-        _controller= new NinjasTalonFXController(ElevatorConstants.kControllerConstants);
-
+        if(!_dontCreate)
+            _controller= new NinjasTalonFXController(ElevatorConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        _controller= new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
-
+        if(!_dontCreate)
+            _controller= new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        runMotor(-0.35).until(_limit::get).schedule();
+        if(!_dontCreate)
+            runMotor(-0.35).until(_limit::get).schedule();
     }
 
     @Override
     public boolean isResetted() {
-        return _limit.get();
+        if(!_dontCreate)
+            return _limit.get();
+        return true;
+    }
+
+    public static void dontCreateSubsystem(){
+        _dontCreate = true;
     }
 
     public double getPosition() {
@@ -54,24 +66,24 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(
-                ()->_controller.setPosition(ElevatorConstants.goollL1),RobotStates.L1
-        );
-        addFunctionToOnChangeMap(
-                ()->_controller.setPosition(ElevatorConstants.goollL2),RobotStates.L2
-        );
-        addFunctionToOnChangeMap(
-                ()->_controller.setPosition(ElevatorConstants.goollL3),RobotStates.L3
-        );
-        addFunctionToOnChangeMap(
-                ()->_controller.setPosition(ElevatorConstants.goollL4),RobotStates.L4
-        );
-        addFunctionToOnChangeMap(
-                ()->_controller.setPosition(ElevatorConstants.goollclose),RobotStates.CLOSE,RobotStates.RESET
-        );
+        if(_dontCreate)
+            return;
 
-
-
+        addFunctionToOnChangeMap(
+                ()->controller().setPosition(ElevatorConstants.goollL1),RobotStates.L1
+        );
+        addFunctionToOnChangeMap(
+                ()->controller().setPosition(ElevatorConstants.goollL2),RobotStates.L2
+        );
+        addFunctionToOnChangeMap(
+                ()->controller().setPosition(ElevatorConstants.goollL3),RobotStates.L3
+        );
+        addFunctionToOnChangeMap(
+                ()->controller().setPosition(ElevatorConstants.goollL4),RobotStates.L4
+        );
+        addFunctionToOnChangeMap(
+                ()->controller().setPosition(ElevatorConstants.goollclose),RobotStates.CLOSE,RobotStates.RESET
+        );
     }
     @Override
     public void periodic() {

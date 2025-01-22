@@ -8,6 +8,7 @@ import frc.robot.StateMachine.RobotStates;
 
 public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     private static Outtake _instance;
+    private static boolean _dontCreate = false;
 
     public static Outtake getInstance(){
         if(_instance == null)
@@ -17,26 +18,37 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setController(){
-        _controller = new NinjasTalonFXController(OuttakeConstants.kControllerConstants);
+        if(!_dontCreate)
+            _controller = new NinjasTalonFXController(OuttakeConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        _simulatedController = new NinjasSimulatedController(OuttakeConstants.kSimulatedControllerConstants);
+        if(!_dontCreate)
+            _simulatedController = new NinjasSimulatedController(OuttakeConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        _controller.stop();
+        if(!_dontCreate)
+            _controller.stop();
     }
 
     @Override
     public boolean isResetted() {
-        return _controller.getOutput() == 0;
+        if(!_dontCreate)
+            return _controller.getOutput() == 0;
+        return true;
+    }
+
+    public static void dontCreateSubsystem(){
+        _dontCreate = true;
     }
 
     @Override
     protected void setFunctionMaps() {
+        if(_dontCreate)
+            return;
         addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> _controller.setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
