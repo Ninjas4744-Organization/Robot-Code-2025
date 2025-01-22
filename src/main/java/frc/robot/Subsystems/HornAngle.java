@@ -11,11 +11,14 @@ public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
     private static HornAngle _instance;
     private static boolean _dontCreate = false;
 
-
     public static HornAngle getInstance(){
         if(_instance == null)
             _instance = new HornAngle();
         return _instance;
+    }
+
+    public static void dontCreateSubsystem(){
+        _dontCreate = true;
     }
 
     @Override
@@ -43,14 +46,11 @@ public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
         return true;
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-    }
-
     @Override
     protected void setFunctionMaps() {
         if(_dontCreate)
             return;
+
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
     }
 }

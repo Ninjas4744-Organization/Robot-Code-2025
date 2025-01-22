@@ -26,12 +26,12 @@ public class ElevatorConstants {
 
 
     }
-    public static final int limitSwichid=4;
-    public static final double goollL1=2;
-    public static final double goollL2=4;
-    public static final double goollL3=6;
-    public static final double goollL4=10;
-    public static final double goollclose=0;
+    public static final int kLimitSwitchID=4;
+    public static final double kL1State=2;
+    public static final double kL2state=4;
+    public static final double kL3State=6;
+    public static final double kL4State=10;
+    public static final double kCloseState=0;
 
 
 }
