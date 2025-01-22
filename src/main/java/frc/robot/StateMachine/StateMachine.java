@@ -51,9 +51,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     protected void setEndConditionMap() {
-        addEndCondition(RobotStates.IDLE, new StateEndCondition<>(()-> RobotState.getInstance().isintakFinish(), RobotStates.CORAL_SEARCH));
-        addEndCondition(RobotStates.IDLE, new StateEndCondition<>(()-> RobotState.getInstance().isintakFinish(), RobotStates.CORAL_READY));
-        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(()-> RobotState.getInstance().isintakFinish(), RobotStates.CORAL_READY));
+        addEndCondition(RobotStates.IDLE, new StateEndCondition<>(()-> RobotState.getInstance().isIntakeFinished(), RobotStates.CORAL_SEARCH));
+        addEndCondition(RobotStates.IDLE, new StateEndCondition<>(()-> RobotState.getInstance().isIntakeFinished(), RobotStates.CORAL_READY));
+        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(()-> RobotState.getInstance().isIntakeFinished(), RobotStates.CORAL_READY));
         addEndCondition(RobotStates.L1, new StateEndCondition<>(() -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
         addEndCondition(RobotStates.L2, new StateEndCondition<>(() -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
         addEndCondition(RobotStates.L3, new StateEndCondition<>(() -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
