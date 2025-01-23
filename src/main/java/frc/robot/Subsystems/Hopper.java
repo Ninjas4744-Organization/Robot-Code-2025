@@ -18,6 +18,7 @@ public class Hopper extends StateMachineMotoredSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem() {
         _dontCreate = true;
+        getInstance();
     }
 
     @Override

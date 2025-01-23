@@ -18,6 +18,7 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem(){
         _dontCreate = true;
+        getInstance();
     }
 
     @Override
@@ -53,5 +54,11 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
+    }
+
+    @Override
+    public void periodic() {
+        if(!_dontCreate)
+            super.periodic();
     }
 }

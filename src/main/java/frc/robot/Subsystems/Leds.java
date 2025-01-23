@@ -26,6 +26,7 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem(){
         _dontCreate = true;
+        getInstance();
     }
 
     AddressableLED _leds;
@@ -97,5 +98,11 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(1.5))), RobotStates.TEST);
         addFunctionToOnChangeMap(this::rainbow, RobotStates.REMOVE_ALGAE);
+    }
+
+    @Override
+    public void periodic() {
+        if(!_dontCreate)
+            super.periodic();
     }
 }

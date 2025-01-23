@@ -18,6 +18,7 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem(){
         _dontCreate = true;
+        getInstance();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
         if(_dontCreate)
             return;
 
-        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET, RobotStates.IDLE);
+        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().setPercent(HornConstants.kSpeedPercent), RobotStates.REMOVE_ALGAE);
     }
 

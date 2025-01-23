@@ -19,6 +19,7 @@ public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem(){
         _dontCreate = true;
+        getInstance();
     }
 
     @Override
@@ -52,5 +53,11 @@ public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
             return;
 
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
+    }
+
+    @Override
+    public void periodic() {
+        if(!_dontCreate)
+            super.periodic();
     }
 }

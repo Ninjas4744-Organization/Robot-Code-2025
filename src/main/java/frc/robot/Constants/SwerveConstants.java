@@ -17,9 +17,9 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class SwerveConstants {
-    public static final double kSpeedFactor = 1;
-    public static final double kRotationSpeedFactor = 0.5;
-    public static final double kJoystickDeadband = 0.2;
+    public static final double kSpeedFactor = 0.5;
+    public static final double kRotationSpeedFactor = 0.25;
+    public static final double kJoystickDeadband = 0.1;
     public static final boolean kInvertGyro = false;
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
@@ -46,6 +46,7 @@ public class SwerveConstants {
         for(int i = 0; i < 4; i++){
             kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class,  NinjasSparkMaxController.class, false);
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";

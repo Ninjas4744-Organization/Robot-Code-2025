@@ -28,12 +28,15 @@ public class RobotContainer {
     public RobotContainer() {
         SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
+
         SwerveSubsystem.getInstance();
         Elevator.dontCreateSubsystem();
         Horn.dontCreateSubsystem();
         HornAngle.dontCreateSubsystem();
         Leds.dontCreateSubsystem();
         Outtake.dontCreateSubsystem();
+        Hopper.dontCreateSubsystem();
+
         StateMachineIO.setInstance(new StateMachine());
         VisionIO.setConstants(VisionConstants.kVisionConstants);
         FieldConstants.getFieldLayout();

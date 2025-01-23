@@ -3,7 +3,6 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
-import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
@@ -21,6 +20,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     public static void dontCreateSubsystem(){
         _dontCreate = true;
+        getInstance();
     }
 
     private DigitalInput _limit;
@@ -40,7 +40,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     @Override
     protected void setSimulationController() {
         if(!_dontCreate)
-            _controller = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
+            _simulatedController = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
     }
 
     @Override
@@ -58,25 +58,14 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        if(_dontCreate)
-            return;
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL1State), RobotStates.L1);
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL2state), RobotStates.L2);
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL3State), RobotStates.L3);
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL4State), RobotStates.L4);
 
-        addFunctionToOnChangeMap(
-                ()->controller().setPosition(ElevatorConstants.kL1State),RobotStates.L1
-        );
-        addFunctionToOnChangeMap(
-                ()->controller().setPosition(ElevatorConstants.kL2state),RobotStates.L2
-        );
-        addFunctionToOnChangeMap(
-                ()->controller().setPosition(ElevatorConstants.kL3State),RobotStates.L3
-        );
-        addFunctionToOnChangeMap(
-                ()->controller().setPosition(ElevatorConstants.kL4State),RobotStates.L4
-        );
-        addFunctionToOnChangeMap(
-                ()->controller().setPosition(ElevatorConstants.kCloseState),RobotStates.CLOSE,RobotStates.RESET
-        );
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
     }
+
     @Override
     public void periodic() {
         if(_dontCreate)
