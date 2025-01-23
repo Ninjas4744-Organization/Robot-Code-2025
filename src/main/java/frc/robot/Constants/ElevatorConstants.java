@@ -9,7 +9,6 @@ public class ElevatorConstants {
     public static final MainControllerConstants kControllerConstants = new MainControllerConstants();
     public static final SimulatedControllerConstants kSimulatedControllerConstants =
             new SimulatedControllerConstants();
-
     static {
         kControllerConstants.main.id=21;
         kControllerConstants.main.inverted=false;
@@ -22,10 +21,8 @@ public class ElevatorConstants {
         kControllerConstants.positionGoalTolerance=0;
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType= SimulatedControllerConstants.MotorType.KRAKEN;
-
-
-
     }
+
     public static final int kLimitSwitchID=4;
     public static final double kL1State=2;
     public static final double kL2state=4;
