@@ -15,11 +15,17 @@ import frc.robot.StateMachine.RobotStates;
 
 public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     private static SwerveSubsystem _instance;
+    private static  boolean _dontCreate = false;
 
     public static SwerveSubsystem getInstance(){
         if(_instance == null)
             _instance = new SwerveSubsystem();
         return _instance;
+    }
+
+    public static void dontCreateSubsystem(){
+        getInstance();
+        _dontCreate = true;
     }
 
     private Pose2d _currentReefTag;
@@ -28,7 +34,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             .publish();;
 
     private SwerveSubsystem(){
-        SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
+        if(!_dontCreate)
+            SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
     }
 
     @Override
@@ -78,6 +85,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     @Override
     public void periodic() {
+        if(_dontCreate)
+            return;
+
         super.periodic();
         SwerveController.getInstance().periodic();
     }

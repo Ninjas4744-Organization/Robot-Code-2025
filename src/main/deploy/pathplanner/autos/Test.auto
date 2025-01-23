@@ -9,6 +9,12 @@
           "data": {
             "pathName": "start right - park center"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
         }
       ]
     }

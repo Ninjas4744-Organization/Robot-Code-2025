@@ -42,7 +42,7 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
     @Override
     public boolean isResetted() {
         if(!_dontCreate)
-            return controller().atGoal();
+            return controller().getOutput() == 0;
         return true;
     }
 

@@ -68,14 +68,14 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     public void elevatorUp(double current, double end) {
         if(!_dontCreate) {
-            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> end / current);
+            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> current / end);
             setPattern(_pattern);
         }
     }
 
     public void elevatorDown(double current, double end) {
         if(!_dontCreate) {
-            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> 1 - end / current);
+            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> 1 - current / end);
             setPattern(_pattern);
         }
     }

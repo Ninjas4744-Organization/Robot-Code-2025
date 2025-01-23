@@ -5,6 +5,7 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -116,7 +117,31 @@ public class CommandBuilder {
 
         /** Registers all auto commands to pathplanner */
         private static void registerCommands() {
+            NamedCommands.registerCommand("L1", L1());
+            NamedCommands.registerCommand("L2", L2());
+            NamedCommands.registerCommand("L3", L3());
+            NamedCommands.registerCommand("L4", L4());
+            NamedCommands.registerCommand("Intake", intake());
+        }
 
+        public static Command L1() {
+            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L1));
+        }
+
+        public static Command L2() {
+            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L2));
+        }
+
+        public static Command L3() {
+            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L3));
+        }
+
+        public static Command L4() {
+            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L4));
+        }
+
+        public static Command intake() {
+            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.INTAKE));
         }
 
         /**
