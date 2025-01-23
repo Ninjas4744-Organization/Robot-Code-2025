@@ -24,7 +24,7 @@ public class SwerveConstants {
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
-        kSwerveConstants.openLoop = false;
+        kSwerveConstants.openLoop = true;
         kSwerveConstants.trackWidth = 0.7;
         kSwerveConstants.wheelBase = 0.7;
         kSwerveConstants.kinematics = new SwerveDriveKinematics(
@@ -40,10 +40,11 @@ public class SwerveConstants {
         kSwerveConstants.simulationAngleAcceleration = 20;
 
         kSwerveConstants.canCoderInvert = false;
+        kSwerveConstants.createShuffleBoard = false;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class);
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class,  NinjasSparkMaxController.class, false);
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
