@@ -57,6 +57,13 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     @Override
+    public boolean atGoal() {
+        if(!_dontCreate)
+            return super.atGoal();
+        return true;
+    }
+
+    @Override
     protected void setFunctionMaps() {
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL1State), RobotStates.L1);
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL2state), RobotStates.L2);

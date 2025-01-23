@@ -7,6 +7,7 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,6 +26,9 @@ import java.util.function.Supplier;
 
 public class CommandBuilder {
     public static class Teleop{
+        private static SlewRateLimiter driveXLimiter = new SlewRateLimiter(1);
+        private static SlewRateLimiter driveYLimiter = new SlewRateLimiter(1);
+
         public static Command swerveDrive(
             Supplier<Translation2d> translation,
             Supplier<Translation2d> rotation,
@@ -45,7 +49,10 @@ public class CommandBuilder {
                     if (isBayblade.getAsBoolean())
                         finalRotation = SwerveConstants.kSwerveConstants.maxAngularVelocity;
 
-                    SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(ly * SwerveConstants.kSpeedFactor, lx * SwerveConstants.kSpeedFactor, finalRotation);
+                    SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(
+                            driveXLimiter.calculate(ly * SwerveConstants.kSpeedFactor),
+                            driveYLimiter.calculate(lx * SwerveConstants.kSpeedFactor),
+                            finalRotation);
                 }, SwerveSubsystem.getInstance());
         }
 

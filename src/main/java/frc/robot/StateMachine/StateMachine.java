@@ -24,7 +24,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET;
+                    || wantedState == RobotStates.RESET
+                    || wantedState == RobotStates.L1 ;
 
             case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.RESET
@@ -61,35 +62,35 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     protected void setEndConditionMap() {
-//        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
-//                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
-//
-//        addEndCondition(RobotStates.L1, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
-//
-//        addEndCondition(RobotStates.L2, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
-//
-//        addEndCondition(RobotStates.L3, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
-//
-//        addEndCondition(RobotStates.L4, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
-//
-//        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-//                () -> SwerveSubsystem.getInstance().atReefSide() && Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
-//
-//        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-//                () -> SwerveSubsystem.getInstance().atReefSide() && Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
+                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
 
-//        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-//                () -> true, RobotStates.OUTTAKE));
-//
-//        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-//                () -> _outtakeTimer.get() >= 1, RobotStates.CLOSE));
-//
-//        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
-//                () -> _hornTimer.get() >= 1, RobotStates.CLOSE));
+        addEndCondition(RobotStates.L1, new StateEndCondition<>(
+                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
+
+        addEndCondition(RobotStates.L2, new StateEndCondition<>(
+                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
+
+        addEndCondition(RobotStates.L3, new StateEndCondition<>(
+                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
+
+        addEndCondition(RobotStates.L4, new StateEndCondition<>(
+                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.GO_RIGHT_REEF));
+
+        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atReefSide() && Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+
+        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atReefSide() && Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+
+        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
+                () -> true, RobotStates.OUTTAKE));
+
+        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
+                () -> _outtakeTimer.get() >= 1, RobotStates.CLOSE));
+
+        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
+                () -> _hornTimer.get() >= 1, RobotStates.CLOSE));
 
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()
@@ -116,9 +117,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     public void periodic() {
-//        if(RobotState.getInstance().getRobotState() == RobotStates.IDLE)
-//            changeRobotState(RobotState.getInstance().isCoralInRobot() ? RobotStates.CORAL_READY : RobotStates.CORAL_SEARCH);
-
         super.periodic();
+
+        if(RobotState.getInstance().getRobotState() == RobotStates.IDLE)
+            changeRobotState(RobotState.getInstance().isCoralInRobot() ? RobotStates.CORAL_READY : RobotStates.CORAL_SEARCH);
     }
 }

@@ -5,6 +5,7 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
@@ -51,15 +52,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         addFunctionToOnChangeMap(() -> {
             _currentReefTag = FieldConstants.getClosestReefTag();
-            _targetPosePublisher.set(_currentReefTag);
 
-            SwerveController.getInstance().Demand.targetPose = _currentReefTag;
+            SwerveController.getInstance().Demand.targetPose = new Pose2d(_currentReefTag.getTranslation(), _currentReefTag.getRotation().rotateBy(Rotation2d.k180deg));
             SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+
+            _targetPosePublisher.set(SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.L1, RobotStates.L2, RobotStates.L3, RobotStates.L4);
 
         addFunctionToPeriodicMap(() -> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
-            _targetPosePublisher.set(target);
 
 //            SwerveController.getInstance().Demand.targetPose = target;
 //            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
@@ -68,13 +69,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            SwerveController.getInstance().Demand.angle = target.getRotation();
 //            SwerveController.getInstance().setState(SwerveState.LOCKED_AXIS);
 
-            SwerveController.getInstance().Demand.targetPose = target;
+            SwerveController.getInstance().Demand.targetPose = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
             SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
                     SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
                     SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
                     0
             );
             SwerveController.getInstance().setState(SwerveState.VELOCITY);
+
+            _targetPosePublisher.set(SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
     }
 

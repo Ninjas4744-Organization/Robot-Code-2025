@@ -79,7 +79,7 @@ public class FieldConstants {
             }
         }
 
-        return getOffsetTagPose(closestTag.pose.toPose2d(), 0.5);
+        return getOffsetTagPose(closestTag.pose.toPose2d(), 0.55);
     }
 
     public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight){
