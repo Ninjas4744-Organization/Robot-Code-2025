@@ -13,7 +13,6 @@ import java.util.List;
 public class FieldConstants {
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
-
     static {
         try{
             kBlueFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
@@ -56,7 +55,6 @@ public class FieldConstants {
     public static AprilTagFieldLayout getFieldLayout() {
         return getFieldLayoutWithIgnored(List.of());
     }
-
     public static Pose3d getTagPose(int id) {
         return getFieldLayout().getTagPose(id).get();
     }
