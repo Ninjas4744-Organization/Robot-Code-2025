@@ -24,21 +24,22 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.L1 ;
+                    || wantedState == RobotStates.RESET/*
+                    || wantedState == RobotStates.L1*/;
 
             case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
 
-            case CORAL_READY -> wantedState == RobotStates.L1 ||
-                    wantedState == RobotStates.L2 ||
-                    wantedState == RobotStates.L3 ||
-                    wantedState == RobotStates.L4 ||
-                    wantedState == RobotStates.REMOVE_ALGAE ||
-                    wantedState == RobotStates.OUTTAKE_READY
+            case CORAL_READY -> wantedState == RobotStates.L1
+                    || wantedState == RobotStates.L2
+                    || wantedState == RobotStates.L3
+                    || wantedState == RobotStates.L4
+                    || wantedState == RobotStates.REMOVE_ALGAE
+                    || wantedState == RobotStates.OUTTAKE_READY
                     || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
+                    || wantedState == RobotStates.CLOSE
+                    || wantedState == RobotStates.INTAKE;
 
             case L1, L2, L3, L4 -> wantedState == RobotStates.GO_RIGHT_REEF
                     || wantedState == RobotStates.GO_LEFT_REEF

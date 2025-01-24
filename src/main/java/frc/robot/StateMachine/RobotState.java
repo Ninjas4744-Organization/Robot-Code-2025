@@ -11,7 +11,9 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
     }
 
     public boolean isCoralInRobot(){
-        return !_beamBreaker.get();
+        if(!isSimulated())
+            return !_beamBreaker.get();
+        return true;
     }
 
     public static RobotState getInstance() {

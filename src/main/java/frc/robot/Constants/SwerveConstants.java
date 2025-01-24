@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class SwerveConstants {
     public static final double kSpeedFactor = 0.5;
-    public static final double kRotationSpeedFactor = 0.25;
+    public static final double kRotationSpeedFactor = 0.5;
     public static final double kJoystickDeadband = 0.1;
     public static final boolean kInvertGyro = false;
 
@@ -36,8 +36,8 @@ public class SwerveConstants {
 
         kSwerveConstants.maxSpeed = 5;
         kSwerveConstants.maxAngularVelocity = 10.7;
-        kSwerveConstants.simulationAcceleration = 16;
-        kSwerveConstants.simulationAngleAcceleration = 20;
+        kSwerveConstants.simulationAcceleration = 10;
+        kSwerveConstants.simulationAngleAcceleration = 54;
 
         kSwerveConstants.canCoderInvert = false;
         kSwerveConstants.createShuffleBoard = false;
@@ -72,7 +72,7 @@ public class SwerveConstants {
         kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
         kSwerveControllerConstants.driveAssistThreshold = 1;
         kSwerveControllerConstants.driverFieldRelative = true;
-        kSwerveControllerConstants.pathConstraints = new PathConstraints(2, 3, 4, 8);
+        kSwerveControllerConstants.pathConstraints = new PathConstraints(5, 10, 8, 50);
 
         try {
             kSwerveControllerConstants.robotConfig = RobotConfig.fromGUISettings();

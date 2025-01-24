@@ -61,6 +61,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         addFunctionToPeriodicMap(() -> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
+            target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
 
 //            SwerveController.getInstance().Demand.targetPose = target;
 //            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
@@ -69,11 +70,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            SwerveController.getInstance().Demand.angle = target.getRotation();
 //            SwerveController.getInstance().setState(SwerveState.LOCKED_AXIS);
 
-            SwerveController.getInstance().Demand.targetPose = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
+            SwerveController.getInstance().Demand.targetPose = target;
             SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
-                    SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
-                    SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
-                    0
+                SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
+                SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
+                SwerveController.getInstance().lookAt(target.getRotation().getDegrees(), 1)
             );
             SwerveController.getInstance().setState(SwerveState.VELOCITY);
 
@@ -83,7 +84,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     public boolean atReefSide(){
         return RobotState.getInstance().getRobotPose().getTranslation()
-                .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.1;
+                .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
     }
 
     @Override

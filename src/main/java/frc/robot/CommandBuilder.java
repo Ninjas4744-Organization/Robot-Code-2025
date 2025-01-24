@@ -26,8 +26,8 @@ import java.util.function.Supplier;
 
 public class CommandBuilder {
     public static class Teleop{
-        private static SlewRateLimiter driveXLimiter = new SlewRateLimiter(1);
-        private static SlewRateLimiter driveYLimiter = new SlewRateLimiter(1);
+        private static final SlewRateLimiter driveXLimiter = new SlewRateLimiter(/*1*/10);
+        private static final SlewRateLimiter driveYLimiter = new SlewRateLimiter(/*1*/10);
 
         public static Command swerveDrive(
             Supplier<Translation2d> translation,
@@ -41,13 +41,13 @@ public class CommandBuilder {
                     double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
                     double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
 
-                    double finalRotation = rx * SwerveConstants.kSwerveConstants.maxAngularVelocity * SwerveConstants.kRotationSpeedFactor;
+                    double finalRotation = rx * SwerveConstants.kRotationSpeedFactor;
 
                     if (isLookAt.getAsBoolean())
                         finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
 
                     if (isBayblade.getAsBoolean())
-                        finalRotation = SwerveConstants.kSwerveConstants.maxAngularVelocity;
+                        finalRotation = 1;
 
                     SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(
                             driveXLimiter.calculate(ly * SwerveConstants.kSpeedFactor),
