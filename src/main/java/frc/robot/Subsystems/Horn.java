@@ -8,56 +8,45 @@ import frc.robot.StateMachine.RobotStates;
 
 public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
     private static Horn _instance;
-    private static boolean _dontCreate = false;
 
     public static Horn getInstance(){
-        if(_instance == null)
-            _instance = new Horn();
         return _instance;
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-        getInstance();
+    public static void createInstance(boolean paused){
+        _instance = new Horn(paused);
+    }
+
+    private Horn(boolean paused) {
+        super(paused);
     }
 
     @Override
     protected void setController() {
-        if(!_dontCreate)
-            _controller = new NinjasSparkMaxController(HornConstants.kControllerConstants);
+        _controller = new NinjasSparkMaxController(HornConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        if(!_dontCreate)
-            _simulatedController = new NinjasSimulatedController(HornConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(HornConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        if(!_dontCreate)
+        if(!_paused)
             controller().stop();
     }
 
     @Override
     public boolean isResetted() {
-        if(!_dontCreate)
+        if(!_paused)
             return controller().getOutput() == 0;
         return true;
     }
 
     @Override
     protected void setFunctionMaps() {
-        if(_dontCreate)
-            return;
-
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().setPercent(HornConstants.kSpeedPercent), RobotStates.REMOVE_ALGAE);
-    }
-
-    @Override
-    public void periodic() {
-        if(!_dontCreate)
-            super.periodic();
     }
 }

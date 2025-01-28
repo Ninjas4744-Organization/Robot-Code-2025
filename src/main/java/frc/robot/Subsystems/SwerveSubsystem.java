@@ -16,26 +16,24 @@ import frc.robot.StateMachine.RobotStates;
 
 public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     private static SwerveSubsystem _instance;
-    private static  boolean _dontCreate = false;
 
     public static SwerveSubsystem getInstance(){
-        if(_instance == null)
-            _instance = new SwerveSubsystem();
         return _instance;
     }
 
-    public static void dontCreateSubsystem(){
-        getInstance();
-        _dontCreate = true;
+    public static void createInstance(boolean paused){
+        _instance = new SwerveSubsystem(paused);
     }
 
     private Pose2d _currentReefTag;
     private final StructPublisher<Pose2d> _targetPosePublisher = NetworkTableInstance.getDefault()
             .getStructTopic("Reef Target", Pose2d.struct)
-            .publish();;
+            .publish();
 
-    private SwerveSubsystem(){
-        if(!_dontCreate)
+    private SwerveSubsystem(boolean paused){
+        super(paused);
+
+        if(!paused)
             SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
     }
 
@@ -83,16 +81,17 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     public boolean atReefSide(){
-        return RobotState.getInstance().getRobotPose().getTranslation()
-                .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
+        if(!_paused)
+            return RobotState.getInstance().getRobotPose().getTranslation()
+                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
+        return true;
     }
 
     @Override
     public void periodic() {
-        if(_dontCreate)
-            return;
-
         super.periodic();
-        SwerveController.getInstance().periodic();
+
+        if(!_paused)
+            SwerveController.getInstance().periodic();
     }
 }

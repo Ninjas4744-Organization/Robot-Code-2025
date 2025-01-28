@@ -8,57 +8,46 @@ import frc.robot.StateMachine.RobotStates;
 
 public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     private static Outtake _instance;
-    private static boolean _dontCreate = false;
 
     public static Outtake getInstance(){
-        if(_instance == null)
-            _instance = new Outtake();
         return _instance;
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-        getInstance();
+    public static void createInstance(boolean paused){
+        _instance = new Outtake(paused);
+    }
+
+    public Outtake(boolean paused) {
+        super(paused);
     }
 
     @Override
     protected void setController(){
-        if(!_dontCreate)
-            _controller = new NinjasTalonFXController(OuttakeConstants.kControllerConstants);
+        _controller = new NinjasTalonFXController(OuttakeConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        if(!_dontCreate)
-            _simulatedController = new NinjasSimulatedController(OuttakeConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(OuttakeConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        if(!_dontCreate)
+        if(!_paused)
             controller().stop();
     }
 
     @Override
     public boolean isResetted() {
-        if(!_dontCreate)
+        if(!_paused)
             return controller().getOutput() == 0;
         return true;
     }
 
     @Override
     protected void setFunctionMaps() {
-        if(_dontCreate)
-            return;
-        
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET, RobotStates.OUTTAKE_READY);
-    }
-
-    @Override
-    public void periodic() {
-        if(!_dontCreate)
-            super.periodic();
     }
 }

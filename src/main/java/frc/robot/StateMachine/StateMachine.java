@@ -9,6 +9,10 @@ import frc.robot.CoralDetection.DetectedCoral;
 import edu.wpi.first.wpilibj.Timer;
 
 public class StateMachine extends StateMachineIO<RobotStates> {
+    public StateMachine(boolean paused) {
+        super(paused);
+    }
+
     public static StateMachine getInstance() {
         return (StateMachine) StateMachineIO.getInstance();
     }
@@ -123,15 +127,13 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()
                     && Horn.getInstance().isResetted()
-                    && Outtake.getInstance().isResetted()
-                    && Hopper.getInstance().isResetted(), RobotStates.IDLE));
+                    && Outtake.getInstance().isResetted(), RobotStates.IDLE));
 
         addEndCondition(RobotStates.RESET, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()
                     && Horn.getInstance().isResetted()
                     && HornAngle.getInstance().isResetted()
-                    && Outtake.getInstance().isResetted()
-                    && Hopper.getInstance().isResetted(), RobotStates.IDLE));
+                    && Outtake.getInstance().isResetted(), RobotStates.IDLE));
     }
 
     @Override

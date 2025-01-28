@@ -9,55 +9,44 @@ import frc.robot.StateMachine.RobotStates;
 
 public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
     private static HornAngle _instance;
-    private static boolean _dontCreate = false;
 
     public static HornAngle getInstance(){
-        if(_instance == null)
-            _instance = new HornAngle();
         return _instance;
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-        getInstance();
+    public static void createInstance(boolean paused){
+        _instance = new HornAngle(paused);
+    }
+
+    public HornAngle(boolean paused) {
+        super(paused);
     }
 
     @Override
     protected void setController() {
-        if(!_dontCreate)
-            _controller = new NinjasSparkMaxController(HornAngleConstants.kControllerConstants);
+        _controller = new NinjasSparkMaxController(HornAngleConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        if(!_dontCreate)
-            _simulatedController = new NinjasSimulatedController(HornAngleConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(HornAngleConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        if(!_dontCreate)
+        if(!_paused)
             controller().setPosition(HornAngleConstants.kOpenState);
     }
 
     @Override
     public boolean isResetted() {
-        if(!_dontCreate)
+        if(!_paused)
             return controller().atGoal();
         return true;
     }
 
     @Override
     protected void setFunctionMaps() {
-        if(_dontCreate)
-            return;
-
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
-    }
-
-    @Override
-    public void periodic() {
-        if(!_dontCreate)
-            super.periodic();
     }
 }

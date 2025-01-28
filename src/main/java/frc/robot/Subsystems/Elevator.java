@@ -10,56 +10,44 @@ import frc.robot.StateMachine.RobotStates;
 
 public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     private static Elevator _instance;
-    private static boolean _dontCreate = false;
 
     public static Elevator getInstance(){
-        if(_instance == null)
-            _instance = new Elevator();
         return _instance;
     }
 
-    public static void dontCreateSubsystem(){
-        _dontCreate = true;
-        getInstance();
+    public static void createInstance(boolean paused){
+        _instance = new Elevator(paused);
     }
 
     private DigitalInput _limit;
 
-    public Elevator (){
-        super();
-        if(!_dontCreate)
+    private Elevator (boolean paused){
+        super(paused);
+
+        if(!_paused)
             _limit = new DigitalInput(ElevatorConstants.kLimitSwitchID);
     }
 
     @Override
     protected void setController() {
-        if(!_dontCreate)
-            _controller = new NinjasTalonFXController(ElevatorConstants.kControllerConstants);
+        _controller = new NinjasTalonFXController(ElevatorConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        if(!_dontCreate)
-            _simulatedController = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
     }
 
     @Override
     public void resetSubsystem() {
-        if(!_dontCreate)
+        if(!_paused)
             runMotor(-0.35).until(_limit::get).schedule();
     }
 
     @Override
     public boolean isResetted() {
-        if(!_dontCreate)
+        if(!_paused)
             return _limit.get();
-        return true;
-    }
-
-    @Override
-    public boolean atGoal() {
-        if(!_dontCreate)
-            return super.atGoal();
         return true;
     }
 
@@ -75,10 +63,10 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     public void periodic() {
-        if(_dontCreate)
-            return;
-
         super.periodic();
+
+        if(_paused)
+            return;
 
         SmartDashboard.putBoolean("Elevator Limit", _limit.get());
         if (_limit.get()) {

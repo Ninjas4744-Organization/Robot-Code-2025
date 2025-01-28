@@ -30,15 +30,14 @@ public class RobotContainer {
         SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
 
-        SwerveSubsystem.getInstance();
-        Elevator.dontCreateSubsystem();
-        Horn.dontCreateSubsystem();
-        HornAngle.dontCreateSubsystem();
-        Leds.dontCreateSubsystem();
-        Outtake.dontCreateSubsystem();
-        Hopper.dontCreateSubsystem();
+        SwerveSubsystem.createInstance(false);
+        Elevator.createInstance(true);
+        Horn.createInstance(true);
+        HornAngle.createInstance(true);
+        Leds.createInstance(true);
+        Outtake.createInstance(true);
 
-        StateMachineIO.setInstance(new StateMachine());
+        StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
         FieldConstants.getFieldLayout();
 
