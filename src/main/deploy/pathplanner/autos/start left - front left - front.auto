@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start left - front left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front left - source left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "start left",
+  "choreoAuto": false
+}

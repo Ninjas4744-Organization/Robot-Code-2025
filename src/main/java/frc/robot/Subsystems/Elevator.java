@@ -39,13 +39,13 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     @Override
-    public void resetSubsystem() {
+    protected void resetSubsystemO() {
         if(!_paused)
             runMotor(-0.35).until(_limit::get).schedule();
     }
 
     @Override
-    public boolean isResetted() {
+    protected boolean isResettedO() {
         if(!_paused)
             return _limit.get();
         return true;

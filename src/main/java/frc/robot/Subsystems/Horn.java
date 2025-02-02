@@ -32,13 +32,13 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     @Override
-    public void resetSubsystem() {
+    protected void resetSubsystemO() {
         if(!_paused)
             controller().stop();
     }
 
     @Override
-    public boolean isResetted() {
+    protected boolean isResettedO() {
         if(!_paused)
             return controller().getOutput() == 0;
         return true;

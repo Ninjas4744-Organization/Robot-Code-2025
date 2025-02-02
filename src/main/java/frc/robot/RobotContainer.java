@@ -9,6 +9,7 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.Constants.Constants;
@@ -91,6 +92,8 @@ public class RobotContainer {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
+
+        SmartDashboard.putString("Coral Detection", CoralDetection.getCoralDetection().toString());
     }
 
     public void resetSubsystems() {

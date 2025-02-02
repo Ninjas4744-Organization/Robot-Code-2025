@@ -147,6 +147,7 @@ public class CommandBuilder {
         public static Command intake() {
             return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.INTAKE));
         }
+        
 
         /**
          * @return final autonomy command from pathplanner

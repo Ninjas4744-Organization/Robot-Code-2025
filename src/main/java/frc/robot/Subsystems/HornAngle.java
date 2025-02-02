@@ -33,13 +33,13 @@ public class HornAngle extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     @Override
-    public void resetSubsystem() {
+    protected void resetSubsystemO() {
         if(!_paused)
             controller().setPosition(HornAngleConstants.kOpenState);
     }
 
     @Override
-    public boolean isResetted() {
+    protected boolean isResettedO() {
         if(!_paused)
             return controller().atGoal();
         return true;

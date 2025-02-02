@@ -37,16 +37,16 @@ public class SwerveConstants {
 
         kSwerveConstants.maxSpeed = 5;
         kSwerveConstants.maxAngularVelocity = 10.7;
-        kSwerveConstants.speedFactor = 1;
-        kSwerveConstants.rotationSpeedFactor = 1;
-        kSwerveConstants.maxAcceleration = 5;//15
-        kSwerveConstants.maxRotationAcceleration = 40;//54
+        kSwerveConstants.speedLimit = 5;
+        kSwerveConstants.rotationSpeedLimit = 10.7;
+        kSwerveConstants.accelerationLimit = 5;//15
+        kSwerveConstants.rotationAccelerationLimit = 40;//54
 
         kSwerveConstants.createShuffleBoard = false;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class,  NinjasSparkMaxController.class, false, false);
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class,  NinjasSparkMaxController.class, true, false, 0);
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
@@ -62,6 +62,11 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].angleMotorConstants.createShuffleboard = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
         }
+
+        kSwerveConstants.moduleConstants[0].CANCoderOffset = 0.493652;
+        kSwerveConstants.moduleConstants[1].CANCoderOffset = -0.359375;
+        kSwerveConstants.moduleConstants[2].CANCoderOffset = -0.270752;
+        kSwerveConstants.moduleConstants[3].CANCoderOffset = -0.134277;
     }
 
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
