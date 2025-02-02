@@ -11,14 +11,13 @@ public class ElevatorConstants {
     static {
         kControllerConstants.main.id = 21;
         kControllerConstants.main.inverted = false;
-        kControllerConstants.currentLimit = 50;
         kControllerConstants.subsystemName = "Elevator";
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(0, 0,0, 5,6,6,0,0);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(1, 0,0, 0,2,4,0,0.1);
         kControllerConstants.followers = new ControllerConstants[1];
         kControllerConstants.followers[0] = new ControllerConstants();
         kControllerConstants.followers[0].id = 22;
         kControllerConstants.followers[0].inverted = true;
-        kControllerConstants.positionGoalTolerance = 0;
+        kControllerConstants.positionGoalTolerance = 0.05;
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
