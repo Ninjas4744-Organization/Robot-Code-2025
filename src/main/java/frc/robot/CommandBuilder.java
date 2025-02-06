@@ -126,6 +126,7 @@ public class CommandBuilder {
             NamedCommands.registerCommand("L3", L3());
             NamedCommands.registerCommand("L4", L4());
             NamedCommands.registerCommand("Intake", intake());
+            NamedCommands.registerCommand("Wait Outtake", waitOuttake());
         }
 
         public static Command L1() {
@@ -145,7 +146,14 @@ public class CommandBuilder {
         }
 
         public static Command intake() {
-            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.INTAKE));
+            return Commands.sequence(
+                    Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L4)),
+                    Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY)
+            );
+        }
+
+        public static Command waitOuttake() {
+            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH);
         }
         
 

@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start right - back"
+            "pathName": "start center - back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
           }
         },
         {
@@ -17,9 +29,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "source right - front right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
           }
         }
       ]

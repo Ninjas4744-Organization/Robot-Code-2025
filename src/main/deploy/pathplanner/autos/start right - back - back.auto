@@ -11,15 +11,45 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "back - source left"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "source left - back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
           }
         }
       ]
