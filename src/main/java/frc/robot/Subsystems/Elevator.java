@@ -2,9 +2,13 @@ package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
-import com.ninjas4744.NinjasLib.RobotStateIO;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.StateMachine.RobotState;
@@ -22,6 +26,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
+    StructPublisher<Pose3d> _elevatorStage1Publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Elevator 1", Pose3d.struct).publish();
+    StructPublisher<Pose3d> _elevatorStage2Publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Elevator 2", Pose3d.struct).publish();
 
     private Elevator (boolean paused){
         super(paused);
@@ -57,7 +63,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL3State), RobotStates.L3);
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kL4State), RobotStates.L4);
 
-        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kCloseState), RobotStates.CLOSE);
+        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
     }
 
     @Override
@@ -66,6 +73,9 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
         if(_paused)
             return;
+
+        _elevatorStage1Publisher.set(new Pose3d(0, 0, (1 + Math.sin(RobotController.getTime() / 1000000.0)) / 4, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
+        _elevatorStage2Publisher.set(new Pose3d(0, 0, (1 + Math.sin(RobotController.getTime() / 1000000.0)) / 2, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
         SmartDashboard.putBoolean("Elevator Limit", _limit.get());
         if (!RobotState.isSimulated() && _limit.get()) {
