@@ -18,8 +18,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class SwerveConstants {
-    public static final double kDriverSpeedFactor = 0.5;
-    public static final double kDriverRotationSpeedFactor = 0.5;
+    public static final double kDriverSpeedFactor = 1;
+    public static final double kDriverRotationSpeedFactor = 1;
     public static final double kJoystickDeadband = 0.1;
     public static final boolean kInvertGyro = false;
 
@@ -39,10 +39,10 @@ public class SwerveConstants {
         kSwerveConstants.maxAngularVelocity = 10.7;
         kSwerveConstants.speedLimit = 5;
         kSwerveConstants.rotationSpeedLimit = 10.7;
-        kSwerveConstants.accelerationLimit = 5;//15
-        kSwerveConstants.rotationAccelerationLimit = 40;//54
+        kSwerveConstants.accelerationLimit = 15;//15
+        kSwerveConstants.rotationAccelerationLimit = 54;//54
 
-        kSwerveConstants.createShuffleBoard = false;
+        kSwerveConstants.createShuffleBoard = true;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
@@ -72,12 +72,12 @@ public class SwerveConstants {
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
     static {
         kSwerveControllerConstants.swerveConstants = kSwerveConstants;
-        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(1, 0, 0, 0);
+        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(2, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.057, 0.09, 0.003, 10);
         kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
-        kSwerveControllerConstants.driveAssistThreshold = 1;
-        kSwerveControllerConstants.driverFieldRelative = true;
+        kSwerveControllerConstants.driveAssistThreshold = 1.5;
+        kSwerveControllerConstants.driverFieldRelative = false;
         kSwerveControllerConstants.pathConstraints = new PathConstraints(5, 10, 8, 50);
 
         try {

@@ -32,11 +32,11 @@ public class RobotContainer {
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
 
         SwerveSubsystem.createInstance(false);
-        Elevator.createInstance(true);
+        Elevator.createInstance(false);
         Horn.createInstance(true);
         HornAngle.createInstance(true);
         Leds.createInstance(true);
-        Outtake.createInstance(true);
+        Outtake.createInstance(false);
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
@@ -85,12 +85,10 @@ public class RobotContainer {
     }
 
     private void configureTestBindings() {
-        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
+        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
         _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
-        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
-        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
-        _driverJoystick.L2().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
-        _driverJoystick.R2().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
+//        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
+//        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
       }
 
     public void periodic() {
@@ -98,7 +96,7 @@ public class RobotContainer {
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
 
-        SmartDashboard.putString("Coral Detection", CoralDetection.getCoralDetection().toString());
+        SmartDashboard.putString("Coral Detection", CoralObjectDetection.getCoralDetection().toString());
     }
 
     public void resetSubsystems() {

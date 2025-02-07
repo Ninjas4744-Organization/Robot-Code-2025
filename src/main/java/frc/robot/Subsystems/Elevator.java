@@ -2,10 +2,12 @@ package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
+import com.ninjas4744.NinjasLib.RobotStateIO;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
@@ -40,15 +42,12 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        if(!_paused)
-            runMotor(-0.35).until(_limit::get).schedule();
+        runMotor(-0.35).until(_limit::get).schedule();
     }
 
     @Override
     protected boolean isResettedO() {
-        if(!_paused)
-            return _limit.get();
-        return true;
+        return _limit.get();
     }
 
     @Override
@@ -69,7 +68,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
             return;
 
         SmartDashboard.putBoolean("Elevator Limit", _limit.get());
-        if (_limit.get()) {
+        if (!RobotState.isSimulated() && _limit.get()) {
             controller().resetEncoder();
             if (controller().getOutput() < 0) controller().stop();
         }

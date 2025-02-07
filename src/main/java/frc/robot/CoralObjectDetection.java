@@ -4,8 +4,11 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.List;
+
 public class CoralObjectDetection {
-    static PhotonCamera camera;
+    private static PhotonCamera _camera;
+    private static DetectedCoral _lastDetectedCoral = DetectedCoral.NONE;
 
     public enum DetectedCoral {
         NONE,
@@ -15,28 +18,29 @@ public class CoralObjectDetection {
     }
 
     static{
-        camera = new PhotonCamera("photonvision");
+        _camera = new PhotonCamera("photonvision");
     }
 
     public static DetectedCoral getCoralDetection() {
-        PhotonPipelineResult result = camera.getAllUnreadResults().get(0);
-        PhotonTrackedTarget target = result.getBestTarget();
-        double ta = target.getArea();
-        double tx = target.getYaw();
+        List<PhotonPipelineResult> results = _camera.getAllUnreadResults();
+        if(results.isEmpty())
+            return _lastDetectedCoral;
 
-        if(ta < CoralDetectionConstants.kBottomAreaThreshold)
+        PhotonPipelineResult result = results.get(results.size() - 1);
+        if(!result.hasTargets())
             return DetectedCoral.NONE;
-
-        else if(ta > CoralDetectionConstants.kTopAreaThreshold)
+        if(result.targets.size() > 1)
             return DetectedCoral.BOTH;
 
-        else {
-            if(tx < -CoralDetectionConstants.kSideThreshold)
-                return DetectedCoral.LEFT;
+        PhotonTrackedTarget target = result.getBestTarget();
+        double tx = target.getYaw();
 
-            else if(tx > CoralDetectionConstants.kSideThreshold)
-                return DetectedCoral.RIGHT;
-        }
+        if(tx < -CoralDetectionConstants.kSideThreshold)
+            return DetectedCoral.LEFT;
+
+        else if(tx > CoralDetectionConstants.kSideThreshold)
+            return DetectedCoral.RIGHT;
+
         return DetectedCoral.NONE;
     }
 }

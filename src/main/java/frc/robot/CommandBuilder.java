@@ -90,15 +90,15 @@ public class CommandBuilder {
             AutoBuilder.configure(
                 () -> new Pose2d(
                     RobotState.getInstance().getRobotPose().getX(),
-                    RobotState.getInstance().getRobotPose().getY() * (RobotState.getInstance().getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
-                    RobotState.getInstance().getRobotPose().getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getInstance().getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
+                    RobotState.getInstance().getRobotPose().getY() * (RobotState.getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
+                    RobotState.getInstance().getRobotPose().getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
                 ), // Robot pose supplier
 
                 (pose) -> {
                     RobotState.getInstance().setRobotPose(new Pose2d(
                         pose.getX(),
-                        pose.getY() * (RobotState.getInstance().getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
-                        pose.getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getInstance().getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
+                        pose.getY() * (RobotState.getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
+                        pose.getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
                     ));
                     RobotState.getInstance().resetGyro(pose.getRotation());
                 }, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -111,7 +111,7 @@ public class CommandBuilder {
 
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
 
-                () -> false/*RobotState.getInstance().getAlliance() == Alliance.Red*/, // Boolean supplier that mirrors path if red alliance
+                () -> false/*RobotState.getAlliance() == Alliance.Red*/, // Boolean supplier that mirrors path if red alliance
 
                 SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
             );

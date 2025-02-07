@@ -11,7 +11,7 @@ public enum RobotStates {
     L2,
     L3,
     L4,
-//    AT_CENTER_REEF,
+    AT_CENTER_REEF,
     GO_RIGHT_REEF,
     GO_LEFT_REEF,
     OUTTAKE_READY,
