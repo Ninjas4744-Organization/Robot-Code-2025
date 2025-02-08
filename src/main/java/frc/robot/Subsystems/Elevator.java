@@ -74,8 +74,10 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        _elevatorStage1Publisher.set(new Pose3d(0, 0, (1 + Math.sin(RobotController.getTime() / 1000000.0)) / 4, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
-        _elevatorStage2Publisher.set(new Pose3d(0, 0, (1 + Math.sin(RobotController.getTime() / 1000000.0)) / 2, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
+        double stage2Height = controller().getPosition();
+        double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
+        _elevatorStage1Publisher.set(new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
+        _elevatorStage2Publisher.set(new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
         SmartDashboard.putBoolean("Elevator Limit", _limit.get());
         if (!RobotState.isSimulated() && _limit.get()) {

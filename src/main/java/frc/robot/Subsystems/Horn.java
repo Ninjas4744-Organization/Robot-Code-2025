@@ -33,20 +33,17 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        if(!_paused)
-            controller().stop();
+        controller().stop();
     }
 
     @Override
     protected boolean isResettedO() {
-        if(!_paused)
-            return controller().getOutput() == 0;
-        return true;
+        return controller().getOutput() == 0;
     }
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().setPercent(HornConstants.kSpeedPercent), RobotStates.REMOVE_ALGAE);
+        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET, RobotStates.CLOSE);
     }
 }

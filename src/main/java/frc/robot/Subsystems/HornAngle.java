@@ -3,7 +3,6 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSparkMaxController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.HornAngleConstants;
 import frc.robot.StateMachine.RobotStates;
 
