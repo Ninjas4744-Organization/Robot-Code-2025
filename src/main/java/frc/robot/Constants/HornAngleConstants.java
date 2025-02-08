@@ -10,11 +10,10 @@ public class HornAngleConstants {
     static {
         kControllerConstants.main.id = 40;
         kControllerConstants.subsystemName = "HornAngle";
-        kControllerConstants.controlConstants = ControlConstants.createPID(0.1, 0, 0, 0);
+
         kControllerConstants.encoderConversionFactor = 0.12345;
+        kControllerConstants.controlConstants = ControlConstants.createPID(0.1, 0, 0, 0);
         kControllerConstants.positionGoalTolerance = 10;
-        kControllerConstants.isMaxSoftLimit = true;
-        kControllerConstants.maxSoftLimit = 120;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;

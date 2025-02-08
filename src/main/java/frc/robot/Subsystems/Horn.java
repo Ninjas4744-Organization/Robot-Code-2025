@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSparkMaxController;
+import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import frc.robot.Constants.HornConstants;
 import frc.robot.StateMachine.RobotStates;
@@ -23,7 +24,7 @@ public class Horn extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setController() {
-        _controller = new NinjasSparkMaxController(HornConstants.kControllerConstants);
+        _controller = new NinjasTalonFXController(HornConstants.kControllerConstants);
     }
 
     @Override
