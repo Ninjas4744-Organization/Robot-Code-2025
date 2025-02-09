@@ -32,11 +32,11 @@ public class RobotContainer {
         RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
 
         SwerveSubsystem.createInstance(false);
-        Elevator.createInstance(false);
+        Elevator.createInstance(true);
         Horn.createInstance(true);
         HornAngle.createInstance(true);
         Leds.createInstance(true);
-        Outtake.createInstance(false);
+        Outtake.createInstance(true);
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);

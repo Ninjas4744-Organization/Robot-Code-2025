@@ -18,10 +18,13 @@ public class CoralObjectDetection {
     }
 
     static{
-        _camera = new PhotonCamera("photonvision");
+        // _camera = new PhotonCamera("Coral");
     }
 
     public static DetectedCoral getCoralDetection() {
+        if(_camera == null)
+            return DetectedCoral.NONE;
+
         List<PhotonPipelineResult> results = _camera.getAllUnreadResults();
         if(results.isEmpty())
             return _lastDetectedCoral;
