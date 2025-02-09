@@ -42,7 +42,7 @@ public class SwerveConstants {
         kSwerveConstants.accelerationLimit = 15;//15
         kSwerveConstants.rotationAccelerationLimit = 54;//54
 
-        kSwerveConstants.createShuffleBoard = true;
+        kSwerveConstants.enableLogging = true;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
@@ -52,14 +52,14 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.createShuffleboard = false;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = false;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.1);
 
             kSwerveConstants.moduleConstants[i].angleMotorConstants.main.id = 11 + i * 2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 28.125;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.createShuffleboard = false;
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
         }
 

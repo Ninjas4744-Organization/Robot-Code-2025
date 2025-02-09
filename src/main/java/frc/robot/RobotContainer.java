@@ -19,6 +19,7 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.*;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
     private final CommandPS5Controller _driverJoystick;
@@ -43,6 +44,7 @@ public class RobotContainer {
 
         CommandBuilder.Auto.configureAutoBuilder();
         Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
+        Shuffleboard.getTab("Competition").addString("Coral Detection", () -> CoralObjectDetection.getCoralDetection().toString());
 
         _driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
         _operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);
@@ -94,8 +96,6 @@ public class RobotContainer {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
-
-        SmartDashboard.putString("Coral Detection", CoralObjectDetection.getCoralDetection().toString());
     }
 
     public void resetSubsystems() {

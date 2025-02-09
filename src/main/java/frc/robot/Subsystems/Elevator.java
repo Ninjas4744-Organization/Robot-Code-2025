@@ -9,10 +9,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     private static Elevator _instance;
@@ -26,14 +28,14 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
-    StructPublisher<Pose3d> _elevatorStage1Publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Elevator 1", Pose3d.struct).publish();
-    StructPublisher<Pose3d> _elevatorStage2Publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Elevator 2", Pose3d.struct).publish();
 
     private Elevator (boolean paused){
         super(paused);
 
-        if(!_paused)
+        if(!_paused){
             _limit = new DigitalInput(ElevatorConstants.kLimitSwitchID);
+            Shuffleboard.getTab("Competition").addBoolean("Elevator Limit", _limit::get);
+        }
     }
 
     @Override
@@ -76,10 +78,9 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
-        _elevatorStage1Publisher.set(new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
-        _elevatorStage2Publisher.set(new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
+        Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
+        Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
-        SmartDashboard.putBoolean("Elevator Limit", _limit.get());
         if (!RobotState.isSimulated() && _limit.get()) {
             controller().resetEncoder();
             if (controller().getOutput() < 0) controller().stop();
