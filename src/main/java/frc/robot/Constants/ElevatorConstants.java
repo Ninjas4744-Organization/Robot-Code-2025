@@ -26,9 +26,11 @@ public class ElevatorConstants {
     }
 
     public static final int kLimitSwitchID = 4;
-    public static final double kL1State = 0.1;
-    public static final double kL2state = 0.5;
-    public static final double kL3State = 0.9;
-    public static final double kL4State = 1.3;
+    public static final double[] kLStates = new double[]{
+            0.1,
+            0.5,
+            0.9,
+            1.3
+    };
     public static final double kCloseState = 0;
 }

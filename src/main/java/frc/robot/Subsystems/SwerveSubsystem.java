@@ -41,11 +41,13 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     protected void setFunctionMaps() {
         addFunctionToOnChangeMap(
           () -> {
+              SwerveIO.getInstance().setAccelerationLimit(SwerveConstants.kNormalAcc);
+
               if(!RobotState.isAutonomous())
                 SwerveController.getInstance().setState(SwerveState.DEFAULT);
           },
-          RobotStates.CORAL_READY,
-          RobotStates.CORAL_SEARCH,
+          RobotStates.CLOSE,
+          RobotStates.RESET,
           RobotStates.OUTTAKE_READY);
 
         addFunctionToOnChangeMap(() -> {
@@ -78,6 +80,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
             _targetPosePublisher.set(SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+
+        addFunctionToOnChangeMap(
+                () -> SwerveIO.getInstance().setAccelerationLimit(SwerveConstants.kNonFlippingAcc),
+                RobotStates.AT_SIDE_REEF);
     }
 
     public boolean atReefSide(){

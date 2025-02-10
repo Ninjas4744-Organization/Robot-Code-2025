@@ -108,7 +108,6 @@ public class CommandBuilder {
                 (drive) -> SwerveController.getInstance().Demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 
                 SwerveConstants.kAutonomyConfig, //Autonomy config
-
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
 
                 () -> false/*RobotState.getAlliance() == Alliance.Red*/, // Boolean supplier that mirrors path if red alliance
@@ -130,24 +129,24 @@ public class CommandBuilder {
         }
 
         public static Command L1() {
-            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L1));
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.L1);
         }
 
         public static Command L2() {
-            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L2));
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.L2);
         }
 
         public static Command L3() {
-            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L3));
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.L3);
         }
 
         public static Command L4() {
-            return Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L4));
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.L4);
         }
 
         public static Command intake() {
             return Commands.sequence(
-                    Commands.run(() -> StateMachine.getInstance().changeRobotState(RobotStates.L4)),
+                    CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY)
             );
         }
@@ -155,7 +154,6 @@ public class CommandBuilder {
         public static Command waitOuttake() {
             return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH);
         }
-        
 
         /**
          * @return final autonomy command from pathplanner

@@ -7,6 +7,7 @@ import com.ninjas4744.NinjasLib.Swerve.Swerve;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,6 +46,8 @@ public class RobotContainer {
         CommandBuilder.Auto.configureAutoBuilder();
         Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
         Shuffleboard.getTab("Competition").addString("Coral Detection", () -> CoralObjectDetection.getCoralDetection().toString());
+
+        LiveWindow.disableAllTelemetry();
 
         _driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
         _operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);

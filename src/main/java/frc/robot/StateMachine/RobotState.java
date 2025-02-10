@@ -2,9 +2,10 @@ package frc.robot.StateMachine;
 
 import com.ninjas4744.NinjasLib.RobotStateWithSwerve;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.Constants.Constants;
 
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
-    private DigitalInput _beamBreaker = new DigitalInput(0);
+    private final DigitalInput _beamBreaker = new DigitalInput(Constants.kBeamBreakerID);
 
     public RobotState(){
         _robotState = RobotStates.IDLE;

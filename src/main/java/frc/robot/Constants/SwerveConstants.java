@@ -20,6 +20,10 @@ import java.io.IOException;
 public class SwerveConstants {
     public static final double kDriverSpeedFactor = 1;
     public static final double kDriverRotationSpeedFactor = 1;
+
+    public static final double kNormalAcc = 10;
+    public static final double kNonFlippingAcc = 5;
+
     public static final double kJoystickDeadband = 0.1;
     public static final boolean kInvertGyro = false;
 
@@ -39,8 +43,8 @@ public class SwerveConstants {
         kSwerveConstants.maxAngularVelocity = 10.7;
         kSwerveConstants.speedLimit = 5;
         kSwerveConstants.rotationSpeedLimit = 10.7;
-        kSwerveConstants.accelerationLimit = 15;//15
-        kSwerveConstants.rotationAccelerationLimit = 54;//54
+        kSwerveConstants.accelerationLimit = 10;
+        kSwerveConstants.rotationAccelerationLimit = 54;
 
         kSwerveConstants.enableLogging = true;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
