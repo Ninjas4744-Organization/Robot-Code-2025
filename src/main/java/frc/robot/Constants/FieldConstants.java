@@ -55,6 +55,7 @@ public class FieldConstants {
     public static AprilTagFieldLayout getFieldLayout() {
         return getFieldLayoutWithIgnored(List.of());
     }
+
     public static Pose3d getTagPose(int id) {
         return getFieldLayout().getTagPose(id).get();
     }
@@ -69,9 +70,8 @@ public class FieldConstants {
         AprilTag closestTag = null;
         double closestTagDistance = Double.MAX_VALUE;
         for(AprilTag tag : tags){
-            Translation2d robotPose = RobotState.getInstance().getRobotPose().getTranslation();
-            Translation2d tagPose = getTagPose(tag.ID).toPose2d().getTranslation();
-            double distance = robotPose.getDistance(tagPose);
+            Pose2d tagPose = tag.pose.toPose2d();
+            double distance = RobotState.getInstance().getDistanceTo(tagPose).getNorm();
 
             if(distance < closestTagDistance){
                 closestTag = tag;

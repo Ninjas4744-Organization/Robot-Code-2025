@@ -13,6 +13,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     private static SwerveSubsystem _instance;
@@ -26,9 +27,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     private Pose2d _currentReefTag;
-    private final StructPublisher<Pose2d> _targetPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("Reef Target", Pose2d.struct)
-            .publish();
 
     private SwerveSubsystem(boolean paused){
         super(paused);
@@ -56,7 +54,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             SwerveController.getInstance().Demand.targetPose = new Pose2d(_currentReefTag.getTranslation(), _currentReefTag.getRotation().rotateBy(Rotation2d.k180deg));
             SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
 
-            _targetPosePublisher.set(SwerveController.getInstance().Demand.targetPose);
+            Logger.recordOutput("Reef Target", SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.L1, RobotStates.L2, RobotStates.L3, RobotStates.L4);
 
         addFunctionToPeriodicMap(() -> {
@@ -78,7 +76,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             );
             SwerveController.getInstance().setState(SwerveState.VELOCITY);
 
-            _targetPosePublisher.set(SwerveController.getInstance().Demand.targetPose);
+            Logger.recordOutput("Reef Target", SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
 
         addFunctionToOnChangeMap(
