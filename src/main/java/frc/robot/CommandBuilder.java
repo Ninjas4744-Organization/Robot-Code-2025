@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -88,29 +89,21 @@ public class CommandBuilder {
     public static class Auto{
         public static void configureAutoBuilder() {
             AutoBuilder.configure(
-                () -> new Pose2d(
-                    RobotState.getInstance().getRobotPose().getX(),
-                    RobotState.getInstance().getRobotPose().getY() * (RobotState.getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
-                    RobotState.getInstance().getRobotPose().getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
-                ), // Robot pose supplier
+                () -> RobotState.getInstance().getRobotPose(), // Robot pose supplier
 
-                (pose) -> {
-                    RobotState.getInstance().setRobotPose(new Pose2d(
-                        pose.getX(),
-                        pose.getY() * (RobotState.getAlliance() == DriverStation.Alliance.Red ? -1 : 1),
-                        pose.getRotation().rotateBy(Rotation2d.fromDegrees(RobotState.getAlliance() == DriverStation.Alliance.Red ? 180 : 0))
-                    ));
+                pose -> {
+                    RobotState.getInstance().setRobotPose(pose);
                     RobotState.getInstance().resetGyro(pose.getRotation());
                 }, // Method to reset odometry (will be called if your auto has a starting pose)
 
                 () -> SwerveIO.getInstance().getChassisSpeeds(false), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 
-                (drive) -> SwerveController.getInstance().Demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                drive -> SwerveController.getInstance().Demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 
                 SwerveConstants.kAutonomyConfig, //Autonomy config
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
 
-                () -> false/*RobotState.getAlliance() == Alliance.Red*/, // Boolean supplier that mirrors path if red alliance
+                () -> false, // Boolean supplier that mirrors path if red alliance
 
                 SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
             );
@@ -126,6 +119,7 @@ public class CommandBuilder {
             NamedCommands.registerCommand("L4", L4());
             NamedCommands.registerCommand("Intake", intake());
             NamedCommands.registerCommand("Wait Outtake", waitOuttake());
+            NamedCommands.registerCommand("Print 1", Commands.print("11111111111111"));
         }
 
         public static Command L1() {
@@ -152,7 +146,8 @@ public class CommandBuilder {
         }
 
         public static Command waitOuttake() {
-            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH);
+            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH)
+                    .andThen(Commands.runOnce(() -> SwerveController.getInstance().Demand.fieldRelative = false));
         }
 
         /**

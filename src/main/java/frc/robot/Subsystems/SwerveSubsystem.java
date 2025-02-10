@@ -69,6 +69,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            SwerveController.getInstance().setState(SwerveState.LOCKED_AXIS);
 
             SwerveController.getInstance().Demand.targetPose = target;
+            SwerveController.getInstance().Demand.fieldRelative = true;
             SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
                 SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
                 SwerveController.getInstance().pidTo(target.getTranslation()).getY(),

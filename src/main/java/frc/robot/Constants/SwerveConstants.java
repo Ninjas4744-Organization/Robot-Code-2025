@@ -1,6 +1,7 @@
 package frc.robot.Constants;
 
 import com.ninjas4744.NinjasLib.Controllers.NinjasSparkMaxController;
+import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveControllerConstants;
@@ -50,20 +51,20 @@ public class SwerveConstants {
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasSparkMaxController.class,  NinjasSparkMaxController.class, true, false, 0);
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasTalonFXController.class,  NinjasTalonFXController.class, true, false, 0);
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = false;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.1);
 
             kSwerveConstants.moduleConstants[i].angleMotorConstants.main.id = 11 + i * 2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 28.125;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = false;
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = true;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
         }
 
