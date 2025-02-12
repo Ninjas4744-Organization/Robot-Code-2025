@@ -81,11 +81,11 @@ public class RobotContainer {
     }
 
     private void configureOperatorBindings() {
-//        _driverJoystick.povDown().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
-//            StateMachine.getInstance().changeRobotState(RobotStates.RESET);
-//            if(!RobotState.isSimulated())
-//			    ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
-//        })));
+        _driverJoystick.povDown().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+            StateMachine.getInstance().changeRobotState(RobotStates.RESET);
+            if(!RobotState.isSimulated())
+			    ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
+        })));
 
 //        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
 //        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));

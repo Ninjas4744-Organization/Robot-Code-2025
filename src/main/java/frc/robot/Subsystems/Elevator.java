@@ -5,12 +5,8 @@ import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -28,7 +24,6 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
-//    private int L = 1;
 
     private Elevator (boolean paused){
         super(paused);
@@ -65,7 +60,6 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 //        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
 //        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
 //        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
-//        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[L - 1]), RobotStates.AT_SIDE_REEF);
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel()-1]), RobotStates.AT_SIDE_REEF);
 
 
