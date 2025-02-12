@@ -51,6 +51,7 @@ public class RobotContainer {
         CommandBuilder.Auto.configureAutoBuilder();
         Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
         Shuffleboard.getTab("Competition").addString("Coral Detection", () -> CoralObjectDetection.getCoralDetection().toString());
+        Shuffleboard.getTab("Competition").addInteger("Reef Level", () -> RobotState.getInstance().getReefLevel());
 
         LiveWindow.disableAllTelemetry();
 
@@ -62,19 +63,13 @@ public class RobotContainer {
     private void configureBindings() {
         StateMachine.getInstance().setTriggerForSimulationTesting(_driverJoystick.povLeft());
 
+        //Auto Intake
+        new Trigger(FieldConstants::nearCoralStation).onTrue(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE));
+        new Trigger(() -> !FieldConstants.nearCoralStation() && RobotState.getInstance().getRobotState() == RobotStates.INTAKE).onTrue(CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE));
 
         configureTestBindings();
         configureDriverBindings();
         configureOperatorBindings();
-    }
-    private void configureTrigger() {
-        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(1)<FieldConstants.intakPose));
-        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(2)<FieldConstants.intakPose));
-        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose()<FieldConstants.intakPose));
-        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose()<FieldConstants.intakPose));
-
-
-
     }
 
     private void configureDriverBindings() {
@@ -101,12 +96,11 @@ public class RobotContainer {
 //        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
 //        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
 //        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
-        _driverJoystick.cross().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1)));
-        _driverJoystick.circle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2)));
-        _driverJoystick.triangle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3)));
-        _driverJoystick.square().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4)));
 
-
+        _driverJoystick.cross().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1))));
+        _driverJoystick.circle().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2))));
+        _driverJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3))));
+        _driverJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4))));
     }
 
     private void configureTestBindings() {

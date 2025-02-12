@@ -6,9 +6,6 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
@@ -61,21 +58,21 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
             target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
 
-//            SwerveController.getInstance().Demand.targetPose = target;
-//            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+            SwerveController.getInstance().Demand.targetPose = target;
+            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
 
 //            SwerveController.getInstance().Demand.point = target;
 //            SwerveController.getInstance().Demand.angle = target.getRotation();
 //            SwerveController.getInstance().setState(SwerveState.LOCKED_AXIS);
 
-            SwerveController.getInstance().Demand.targetPose = target;
-            SwerveController.getInstance().Demand.fieldRelative = true;
-            SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
-                SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
-                SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
-                SwerveController.getInstance().lookAt(target.getRotation().getDegrees(), 1)
-            );
-            SwerveController.getInstance().setState(SwerveState.VELOCITY);
+//            SwerveController.getInstance().Demand.targetPose = target;
+//            SwerveController.getInstance().Demand.fieldRelative = true;
+//            SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(
+//                SwerveController.getInstance().pidTo(target.getTranslation()).getX(),
+//                SwerveController.getInstance().pidTo(target.getTranslation()).getY(),
+//                SwerveController.getInstance().lookAt(target.getRotation().getDegrees(), 1)
+//            );
+//            SwerveController.getInstance().setState(SwerveState.VELOCITY);
 
             Logger.recordOutput("Reef Target", SwerveController.getInstance().Demand.targetPose);
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);

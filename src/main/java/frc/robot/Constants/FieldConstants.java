@@ -5,12 +5,17 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.CommandBuilder;
 import frc.robot.StateMachine.RobotState;
+import frc.robot.StateMachine.RobotStates;
 
 import java.io.IOException;
 import java.util.List;
 
 public class FieldConstants {
+    public static final double kIntakeThreshold = 0.5;
+
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
     static {
@@ -85,5 +90,11 @@ public class FieldConstants {
     public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight){
         return tagPose.transformBy(new Transform2d(0, isRight ? 0.2 : -0.2, new Rotation2d()));
     }
-    public static final double intakPose=0.5;
+
+    public static boolean nearCoralStation(){
+        return RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(1).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(2).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(12).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(13).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold;
+    }
 }

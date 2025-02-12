@@ -22,7 +22,7 @@ public class SwerveConstants {
     public static final double kDriverSpeedFactor = 1;
     public static final double kDriverRotationSpeedFactor = 1;
 
-    public static final double kNormalAcc = 10;
+    public static final double kNormalAcc = 20;//10;
     public static final double kNonFlippingAcc = 5;
 
     public static final double kJoystickDeadband = 0.1;
@@ -40,11 +40,11 @@ public class SwerveConstants {
           new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0)
         );
 
-        kSwerveConstants.maxSpeed = 5;
+        kSwerveConstants.maxSpeed = 5.7;//5;
         kSwerveConstants.maxAngularVelocity = 10.7;
-        kSwerveConstants.speedLimit = 5;
+        kSwerveConstants.speedLimit = 5.7;//5;
         kSwerveConstants.rotationSpeedLimit = 10.7;
-        kSwerveConstants.accelerationLimit = 10;
+        kSwerveConstants.accelerationLimit = 20;//10;
         kSwerveConstants.rotationAccelerationLimit = 54;
 
         kSwerveConstants.enableLogging = true;

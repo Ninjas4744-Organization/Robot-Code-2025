@@ -123,19 +123,19 @@ public class CommandBuilder {
         }
 
         public static Command L1() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.L1);
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
         }
 
         public static Command L2() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.L2);
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
         }
 
         public static Command L3() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.L3);
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
         }
 
         public static Command L4() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.L4);
+            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
         }
 
         public static Command intake() {

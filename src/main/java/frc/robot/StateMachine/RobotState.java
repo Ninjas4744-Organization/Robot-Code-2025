@@ -3,6 +3,7 @@ package frc.robot.StateMachine;
 import com.ninjas4744.NinjasLib.RobotStateWithSwerve;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
     private final DigitalInput _beamBreaker = new DigitalInput(Constants.kBeamBreakerID);
@@ -10,6 +11,7 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
 
     public RobotState(){
         _robotState = RobotStates.IDLE;
+        setReefLevel(1);
     }
 
     public boolean isCoralInRobot(){
@@ -18,9 +20,14 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
         return false;
     }
 
-    public void setReefLevel(int level) {_reefLevel = level;}
+    public void setReefLevel(int level) {
+        _reefLevel = level;
+        Logger.recordOutput("Reef Level", level);
+    }
 
-    public int getReefLevel() {return _reefLevel;}
+    public int getReefLevel() {
+        return _reefLevel;
+    }
 
     public static RobotState getInstance() {
         return (RobotState)RobotStateWithSwerve.getInstance();

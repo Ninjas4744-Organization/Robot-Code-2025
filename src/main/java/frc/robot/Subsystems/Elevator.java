@@ -60,8 +60,9 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 //        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
 //        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
 //        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
-        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel()-1]), RobotStates.AT_SIDE_REEF);
-
+        addFunctionToOnChangeMap(() ->
+                controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
+                RobotStates.AT_SIDE_REEF);
 
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kCloseState), RobotStates.CLOSE);
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);

@@ -15,7 +15,7 @@ public class ElevatorConstants {
         kControllerConstants.followers = new ControllerConstants[1];
         kControllerConstants.followers[0] = new ControllerConstants();
         kControllerConstants.followers[0].id = 21;
-        kControllerConstants.followers[0].inverted = true;
+        kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
         kControllerConstants.controlConstants = ControlConstants.createProfiledPID(1, 0, 0, 0, 2, 4, 0, 0.1);
