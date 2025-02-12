@@ -30,7 +30,7 @@ public class SwerveConstants {
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
-        kSwerveConstants.openLoop = true;
+        kSwerveConstants.openLoop = false;
         kSwerveConstants.trackWidth = 0.7;
         kSwerveConstants.wheelBase = 0.7;
         kSwerveConstants.kinematics = new SwerveDriveKinematics(
@@ -51,38 +51,47 @@ public class SwerveConstants {
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
 
         for(int i = 0; i < 4; i++){
-            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i, new MainControllerConstants(), new MainControllerConstants(), kSwerveConstants.maxSpeed, 40 + i, NinjasTalonFXController.class,  NinjasTalonFXController.class, true, false, 0);
+            kSwerveConstants.moduleConstants[i] = new SwerveModuleConstants<>(i,
+                    new MainControllerConstants(),
+                    new MainControllerConstants(),
+                    kSwerveConstants.maxSpeed,
+                    6 + i,
+                    NinjasTalonFXController.class,
+                    NinjasTalonFXController.class,
+                    true,
+                    false,
+                    0);
+
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.main.inverted = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 68;
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.0521545447;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.056267331109070916;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
             kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = true;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.1);
 
             kSwerveConstants.moduleConstants[i].angleMotorConstants.main.id = 11 + i * 2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 28.125;
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 19.2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = true;
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(0.01, 0, 0.005, 0);
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = false;
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(1.5, 0, 0.0001, 0);
         }
 
-        kSwerveConstants.moduleConstants[0].CANCoderOffset = 0.493652;
-        kSwerveConstants.moduleConstants[1].CANCoderOffset = -0.359375;
-        kSwerveConstants.moduleConstants[2].CANCoderOffset = -0.270752;
-        kSwerveConstants.moduleConstants[3].CANCoderOffset = -0.134277;
+        kSwerveConstants.moduleConstants[0].CANCoderOffset = -0.290039;
+        kSwerveConstants.moduleConstants[1].CANCoderOffset = 0.224121;
+        kSwerveConstants.moduleConstants[2].CANCoderOffset = 0.235596;
+        kSwerveConstants.moduleConstants[3].CANCoderOffset = 0.274170;
     }
 
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
     static {
         kSwerveControllerConstants.swerveConstants = kSwerveConstants;
-        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(2, 0, 0, 0);
+        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(3, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.057, 0.09, 0.003, 10);
         kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
         kSwerveControllerConstants.driveAssistThreshold = 1.5;
-        kSwerveControllerConstants.driverFieldRelative = false;
+        kSwerveControllerConstants.driverFieldRelative = true;
         kSwerveControllerConstants.pathConstraints = new PathConstraints(5, 10, 8, 50);
 
         try {

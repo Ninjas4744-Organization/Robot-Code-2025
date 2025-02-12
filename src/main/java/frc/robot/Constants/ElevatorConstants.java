@@ -9,12 +9,12 @@ public class ElevatorConstants {
     public static final MainControllerConstants kControllerConstants = new MainControllerConstants();
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
     static {
-        kControllerConstants.main.id = 21;
+        kControllerConstants.main.id = 20;
         kControllerConstants.subsystemName = "Elevator";
 
         kControllerConstants.followers = new ControllerConstants[1];
         kControllerConstants.followers[0] = new ControllerConstants();
-        kControllerConstants.followers[0].id = 22;
+        kControllerConstants.followers[0].id = 21;
         kControllerConstants.followers[0].inverted = true;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;

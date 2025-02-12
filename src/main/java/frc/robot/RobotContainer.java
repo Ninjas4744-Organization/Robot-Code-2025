@@ -30,7 +30,11 @@ public class RobotContainer {
 
     public RobotContainer() {
         SwerveIO.setConstants(SwerveConstants.kSwerveConstants);
-        RobotStateWithSwerve.setInstance(new RobotState(), SwerveConstants.kSwerveConstants.kinematics, SwerveConstants.kInvertGyro, VisionConstants::calculateFOM);
+        RobotStateWithSwerve.setInstance(new RobotState(),
+                SwerveConstants.kSwerveConstants.kinematics,
+                SwerveConstants.kInvertGyro,
+                VisionConstants::calculateFOM,
+                Constants.kPigeonID);
 
         SwerveSubsystem.createInstance(false);
         Elevator.createInstance(true);
@@ -77,32 +81,32 @@ public class RobotContainer {
     }
 
     private void configureOperatorBindings() {
-        _driverJoystick.povDown().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
-            StateMachine.getInstance().changeRobotState(RobotStates.RESET);
-            if(!RobotState.isSimulated())
-			    ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
-        })));
+//        _driverJoystick.povDown().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+//            StateMachine.getInstance().changeRobotState(RobotStates.RESET);
+//            if(!RobotState.isSimulated())
+//			    ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
+//        })));
 
-        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
-        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
-        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
+//        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
+//        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
+//        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
     }
 
     private void configureTestBindings() {
-        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
-        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
-        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
-        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
+//        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
+//        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
+//        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
+//        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
     }
 
     public void periodic() {
-        for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
-            if (estimation.robotPose != null)
-                RobotState.getInstance().updateRobotPose(estimation);
+//        for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
+//            if (estimation.robotPose != null)
+//                RobotState.getInstance().updateRobotPose(estimation);
     }
 
     public void resetSubsystems() {
-        RobotState.getInstance().setRobotState(RobotStates.RESET);
-        CommandBuilder.Teleop.resetGyro(false).schedule();
+//        RobotState.getInstance().setRobotState(RobotStates.RESET);
+//        CommandBuilder.Teleop.resetGyro(false).schedule();
     }
 }

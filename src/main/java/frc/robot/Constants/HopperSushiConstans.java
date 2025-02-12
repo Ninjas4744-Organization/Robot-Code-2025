@@ -8,7 +8,7 @@ public class HopperSushiConstans {
     public static final MainControllerConstants kControllerConstants = new MainControllerConstants();
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
     static {
-        kControllerConstants.main.id = 60;
+        kControllerConstants.main.id = 40;
         kControllerConstants.subsystemName = "HopperSushi";
 
         kControllerConstants.encoderConversionFactor = 0.12345;
