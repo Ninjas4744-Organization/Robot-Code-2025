@@ -55,7 +55,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
 
             Logger.recordOutput("Reef Target", SwerveController.getInstance().Demand.targetPose);
-        }, RobotStates.L1, RobotStates.L2, RobotStates.L3, RobotStates.L4);
+        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
 
         addFunctionToPeriodicMap(() -> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);

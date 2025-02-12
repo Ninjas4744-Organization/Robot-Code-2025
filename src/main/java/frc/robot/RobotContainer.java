@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -61,9 +62,19 @@ public class RobotContainer {
     private void configureBindings() {
         StateMachine.getInstance().setTriggerForSimulationTesting(_driverJoystick.povLeft());
 
+
         configureTestBindings();
         configureDriverBindings();
         configureOperatorBindings();
+    }
+    private void configureTrigger() {
+        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(1)<FieldConstants.intakPose));
+        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(2)<FieldConstants.intakPose));
+        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose()<FieldConstants.intakPose));
+        new Trigger(RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose()<FieldConstants.intakPose));
+
+
+
     }
 
     private void configureDriverBindings() {
