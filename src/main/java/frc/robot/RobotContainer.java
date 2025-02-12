@@ -90,6 +90,12 @@ public class RobotContainer {
 //        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
 //        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
 //        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
+        _driverJoystick.cross().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1)));
+        _driverJoystick.circle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2)));
+        _driverJoystick.triangle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3)));
+        _driverJoystick.square().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4)));
+
+
     }
 
     private void configureTestBindings() {

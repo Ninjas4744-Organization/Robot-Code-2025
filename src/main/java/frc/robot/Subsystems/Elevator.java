@@ -28,7 +28,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
-    private int L = 1;
+//    private int L = 1;
 
     private Elevator (boolean paused){
         super(paused);
@@ -61,11 +61,13 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> L = 1, RobotStates.L1);
-        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
-        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
-        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
-        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[L - 1]), RobotStates.AT_SIDE_REEF);
+//        addFunctionToOnChangeMap(() -> L = 1, RobotStates.L1);
+//        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
+//        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
+//        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
+//        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[L - 1]), RobotStates.AT_SIDE_REEF);
+        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel()-1]), RobotStates.AT_SIDE_REEF);
+
 
         addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kCloseState), RobotStates.CLOSE);
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
@@ -78,7 +80,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        Logger.recordOutput("Elevator L", L);
+//        Logger.recordOutput("Elevator L", L);
 
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;

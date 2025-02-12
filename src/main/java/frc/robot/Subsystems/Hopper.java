@@ -8,6 +8,7 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.HornAngleConstants;
+import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class Hopper extends StateMachineSubsystem<RobotStates> {

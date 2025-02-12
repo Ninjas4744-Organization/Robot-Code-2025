@@ -48,12 +48,12 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                     || wantedState == RobotStates.REMOVE_ALGAE
                     || wantedState == RobotStates.OUTTAKE_READY
                     || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.INTAKE;
-
-            case L1, L2, L3, L4 -> wantedState == RobotStates.AT_CENTER_REEF
-                    || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
+//                    || wantedState == RobotStates.INTAKE;
+
+//            case L1, L2, L3, L4 -> wantedState == RobotStates.AT_CENTER_REEF
+//                    || wantedState == RobotStates.RESET
+//                    || wantedState == RobotStates.CLOSE;
 
             case AT_CENTER_REEF -> wantedState == RobotStates.GO_RIGHT_REEF
                     || wantedState == RobotStates.GO_LEFT_REEF
@@ -84,26 +84,26 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
                 () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
 
-        addEndCondition(RobotStates.L1, new StateEndCondition<>(
-                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
+//        addEndCondition(RobotStates.L1, new StateEndCondition<>(
+//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
+//
+//        addEndCondition(RobotStates.L2, new StateEndCondition<>(
+//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
+//
+//        addEndCondition(RobotStates.L3, new StateEndCondition<>(
+//              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
+//
+//        addEndCondition(RobotStates.L4, new StateEndCondition<>(
+//              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
 
-        addEndCondition(RobotStates.L2, new StateEndCondition<>(
-                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-
-        addEndCondition(RobotStates.L3, new StateEndCondition<>(
-              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-
-        addEndCondition(RobotStates.L4, new StateEndCondition<>(
-              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-
-        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-               () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && (CoralObjectDetection.getCoralDetection() == DetectedCoral.LEFT || CoralObjectDetection.getCoralDetection() == DetectedCoral.NONE), RobotStates.GO_RIGHT_REEF));
-
-        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-              () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.RIGHT, RobotStates.GO_LEFT_REEF));
-
-        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-             () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.BOTH, RobotStates.CORAL_READY));
+//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
+//               () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && (CoralObjectDetection.getCoralDetection() == DetectedCoral.LEFT || CoralObjectDetection.getCoralDetection() == DetectedCoral.NONE), RobotStates.GO_RIGHT_REEF));
+//
+//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
+//              () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.RIGHT, RobotStates.GO_LEFT_REEF));
+//
+//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
+//             () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.BOTH, RobotStates.CORAL_READY));
 
         addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
                 () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
