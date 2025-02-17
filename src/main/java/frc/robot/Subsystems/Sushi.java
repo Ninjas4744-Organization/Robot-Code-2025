@@ -3,28 +3,27 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
-import frc.robot.Constants.HopperSushiConstans;
+import frc.robot.Constants.SushiConstants;
 import frc.robot.StateMachine.RobotStates;
 
-public class HopperSushi extends StateMachineMotoredSubsystem<RobotStates> {
-    private static HopperSushi _instance;
+public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
+    private static Sushi _instance;
 
-    public static HopperSushi getInstance(){
+    public static Sushi getInstance(){
         return _instance;
     }
-    public HopperSushi(boolean paused) {
+    public Sushi(boolean paused) {
         super(paused);
     }
 
     @Override
     protected void setController() {
-        _controller = new NinjasTalonFXController(HopperSushiConstans.kControllerConstants);
+        _controller = new NinjasTalonFXController(SushiConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        _simulatedController = new NinjasSimulatedController(HopperSushiConstans.kSimulatedControllerConstants);
-
+        _simulatedController = new NinjasSimulatedController(SushiConstants.kSimulatedControllerConstants);
     }
 
     @Override
@@ -39,8 +38,7 @@ public class HopperSushi extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> controller().setPosition(HopperSushiConstans.kIntakeState), RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> controller().setPosition(HopperSushiConstans.kCloseState), RobotStates.RESET, RobotStates.CLOSE);
+        addFunctionToOnChangeMap(() -> controller().setPercent(SushiConstants.kPercent), RobotStates.INTAKE);
+        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.RESET, RobotStates.CLOSE);
     }
-
 }
