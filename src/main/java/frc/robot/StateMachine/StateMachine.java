@@ -79,9 +79,10 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     protected void setEndConditionMap() {
-        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
-                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
+//        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
+//                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
 
+        /* Object Detection */
 //        addEndCondition(RobotStates.L1, new StateEndCondition<>(
 //                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
 //
@@ -102,25 +103,25 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 //
 //        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
 //             () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.BOTH, RobotStates.CORAL_READY));
+        /* /Object Detection */
 
-        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
-
-        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
-
-        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
-                () -> Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
-
-        // ??
-        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-                () -> true, RobotStates.OUTTAKE));
-
-        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-                () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));
-
-        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
-                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
+//        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
+//                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+//
+//        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
+//                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+//
+//        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
+//                () -> Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+//
+//        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
+//                () -> true, RobotStates.OUTTAKE));
+//
+//        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
+//                () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));
+//
+//        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
+//                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
 
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()

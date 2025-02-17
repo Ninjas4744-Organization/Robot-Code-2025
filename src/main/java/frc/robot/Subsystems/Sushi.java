@@ -12,6 +12,11 @@ public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
     public static Sushi getInstance(){
         return _instance;
     }
+
+    public static void createInstance(boolean paused){
+        _instance = new Sushi(paused);
+    }
+
     public Sushi(boolean paused) {
         super(paused);
     }

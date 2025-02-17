@@ -9,14 +9,11 @@ public class SushiConstants {
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
     static {
         kControllerConstants.main.id = 40;
-        kControllerConstants.subsystemName = "HopperSushi";
-
-        kControllerConstants.encoderConversionFactor = 0.12345;
-        kControllerConstants.controlConstants = ControlConstants.createPID(0.1, 0, 0, 0);
-        kControllerConstants.positionGoalTolerance = 10;
+        kControllerConstants.subsystemName = "Sushi";
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
-    public static final double kPercent = 0.5;
+
+    public static final double kPercent = 0.1;
 }
