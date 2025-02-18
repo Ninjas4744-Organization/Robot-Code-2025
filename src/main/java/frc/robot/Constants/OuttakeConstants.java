@@ -6,7 +6,6 @@ import com.ninjas4744.NinjasLib.DataClasses.SimulatedControllerConstants;
 public class OuttakeConstants {
     public static final MainControllerConstants kControllerConstants = new MainControllerConstants();
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
-
     static {
         kControllerConstants.main.id = 30;
         kControllerConstants.subsystemName = "Outtake";

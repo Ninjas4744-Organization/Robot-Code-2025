@@ -113,29 +113,19 @@ public class CommandBuilder {
 
         /** Registers all auto commands to pathplanner */
         private static void registerCommands() {
-            NamedCommands.registerCommand("L1", L1());
-            NamedCommands.registerCommand("L2", L2());
-            NamedCommands.registerCommand("L3", L3());
-            NamedCommands.registerCommand("L4", L4());
             NamedCommands.registerCommand("Intake", intake());
             NamedCommands.registerCommand("Wait Outtake", waitOuttake());
             NamedCommands.registerCommand("Print 1", Commands.print("11111111111111"));
-        }
 
-        public static Command L1() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
-        }
+            /* Named commands for object detection */
+//          NamedCommands.registerCommand("L1", L1());
+//          NamedCommands.registerCommand("L2", L2());
+//          NamedCommands.registerCommand("L3", L3());
+//          NamedCommands.registerCommand("L4", L4());
 
-        public static Command L2() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
-        }
-
-        public static Command L3() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
-        }
-
-        public static Command L4() {
-            return CommandBuilder.Teleop.changeRobotState(RobotStates.IDLE);
+            /* Named commands without object detection */
+            NamedCommands.registerCommand("Right", LRight(4));
+            NamedCommands.registerCommand("Left", LLeft(4));
         }
 
         public static Command intake() {
@@ -148,6 +138,38 @@ public class CommandBuilder {
         public static Command waitOuttake() {
             return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH)
                     .andThen(Commands.runOnce(() -> SwerveController.getInstance().Demand.fieldRelative = false));
+        }
+
+          /* Commands for object detection */
+//        public static Command L1() {
+//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L1);
+//        }
+//
+//        public static Command L2() {
+//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L2);
+//        }
+//
+//        public static Command L3() {
+//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L3);
+//        }
+//
+//        public static Command L4() {
+//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L4);
+//        }
+
+        /* Commands without object detection */
+        public static Command LRight(int level) {
+            return Commands.sequence(
+                    Commands.run(() -> RobotState.getInstance().setReefLevel(level)),
+                    CommandBuilder.Teleop.changeRobotState(RobotStates.GO_RIGHT_REEF)
+            );
+        }
+
+        public static Command LLeft(int level) {
+            return Commands.sequence(
+                    Commands.run(() -> RobotState.getInstance().setReefLevel(level)),
+                    CommandBuilder.Teleop.changeRobotState(RobotStates.GO_LEFT_REEF)
+            );
         }
 
         /**

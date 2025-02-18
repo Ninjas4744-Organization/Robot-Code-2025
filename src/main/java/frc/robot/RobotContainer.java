@@ -38,11 +38,12 @@ public class RobotContainer {
                 Constants.kPigeonID);
 
         SwerveSubsystem.createInstance(false);
-        Elevator.createInstance(true);
+        Elevator.createInstance(false);
         Horn.createInstance(true);
         HornAngle.createInstance(true);
         Leds.createInstance(true);
         Outtake.createInstance(true);
+        Sushi.createInstance(false);
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
@@ -93,21 +94,30 @@ public class RobotContainer {
 			    ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
         })));
 
+        /* Object Detection */
 //        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.L1)));
 //        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
 //        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
 
-        _driverJoystick.cross().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1))));
-        _driverJoystick.circle().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2))));
-        _driverJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3))));
-        _driverJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4))));
+//        _driverJoystick.cross().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1))));
+//        _driverJoystick.circle().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2))));
+//        _driverJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3))));
+//        _driverJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4))));
+//        _driverJoystick.L1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.GO_LEFT_REEF)));
+//        _driverJoystick.R1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.GO_RIGHT_REEF)));
+
+        /* Test */
+        _driverJoystick.cross().onTrue(Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.AT_SIDE_REEF)));
+        _driverJoystick.circle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.CLOSE)));
+        _driverJoystick.triangle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(Math.max(1, (RobotState.getInstance().getReefLevel() + 1) % 5))));
+        _driverJoystick.square().onTrue(Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.INTAKE)));
     }
 
     private void configureTestBindings() {
 //        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
 //        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
-//        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
-//        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
+        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.5)));
+        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.5)));
     }
 
     public void periodic() {
@@ -117,7 +127,7 @@ public class RobotContainer {
     }
 
     public void resetSubsystems() {
-//        RobotState.getInstance().setRobotState(RobotStates.RESET);
-//        CommandBuilder.Teleop.resetGyro(false).schedule();
+        RobotState.getInstance().setRobotState(RobotStates.RESET);
+        CommandBuilder.Teleop.resetGyro(false).schedule();
     }
 }
