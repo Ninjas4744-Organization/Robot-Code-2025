@@ -2,13 +2,7 @@ package frc.robot.StateMachine;
 
 import com.ninjas4744.NinjasLib.DataClasses.StateEndCondition;
 import com.ninjas4744.NinjasLib.StateMachineIO;
-import com.ninjas4744.NinjasLib.Swerve.SwerveController;
-import frc.robot.Constants.CoralDetectionConstants;
-import frc.robot.Constants.HornConstants;
-import frc.robot.Constants.OuttakeConstants;
-import frc.robot.CoralObjectDetection;
 import frc.robot.Subsystems.*;
-import frc.robot.CoralObjectDetection.DetectedCoral;
 import edu.wpi.first.wpilibj.Timer;
 
 public class StateMachine extends StateMachineIO<RobotStates> {
@@ -21,8 +15,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
     }
 
     private Timer _outtakeTimer;
-    private Timer _hornTimer;
-    private Timer _coralTimer;
+//    private Timer _hornTimer;
+//    private Timer _coralTimer;
 
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
@@ -34,8 +28,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET/*
-                    || wantedState == RobotStates.L1*/;
+                    || wantedState == RobotStates.RESET;
 
             case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.RESET
@@ -44,10 +37,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
             case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
                     || wantedState == RobotStates.GO_RIGHT_REEF
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.OUTTAKE_READY//?
                     || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.INTAKE;//?
+                    || wantedState == RobotStates.CLOSE;
 
 //            case L1, L2, L3, L4 -> wantedState == RobotStates.AT_CENTER_REEF
 //                    || wantedState == RobotStates.RESET
@@ -112,7 +103,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 //                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
 //
 //        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
-//                () -> Elevator.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+//                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
 //
 //        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
 //                () -> true, RobotStates.OUTTAKE));
@@ -125,24 +116,25 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()
-                    && Horn.getInstance().isResetted()
+                    && Sushi.getInstance().isResetted()
+                    && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));
 
         addEndCondition(RobotStates.RESET, new StateEndCondition<>(
                 () -> Elevator.getInstance().isResetted()
-                    && Horn.getInstance().isResetted()
-                    && HornAngle.getInstance().isResetted()
+                    && Sushi.getInstance().isResetted()
+                    && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));
     }
 
     @Override
     protected void setFunctionMaps() {
         _outtakeTimer = new Timer();
-        _hornTimer = new Timer();
-        _coralTimer = new Timer();
+//        _hornTimer = new Timer();
+//        _coralTimer = new Timer();
 
         addFunctionToOnChangeMap(_outtakeTimer::restart, RobotStates.OUTTAKE);
-        addFunctionToOnChangeMap(_hornTimer::restart, RobotStates.REMOVE_ALGAE);
+//        addFunctionToOnChangeMap(_hornTimer::restart, RobotStates.REMOVE_ALGAE);
 //        addFunctionToOnChangeMap(_coralTimer::restart, RobotStates.AT_CENTER_REEF);//?
     }
 

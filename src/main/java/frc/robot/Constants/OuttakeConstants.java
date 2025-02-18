@@ -16,6 +16,7 @@ public class OuttakeConstants {
 
     public static final double kOuttakeState = 1;
     public static final double kIntakeState = 0.7;
+    public static final double kRemoveAlgae = -1;
     public static final double kCloseState = 0;
 
     public static final double kOuttakeTime = 1;

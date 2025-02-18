@@ -39,10 +39,9 @@ public class RobotContainer {
 
         SwerveSubsystem.createInstance(false);
         Elevator.createInstance(false);
-        Horn.createInstance(true);
-        HornAngle.createInstance(true);
         Leds.createInstance(true);
         Outtake.createInstance(true);
+        OuttakeAngle.createInstance(true);
         Sushi.createInstance(false);
 
         StateMachineIO.setInstance(new StateMachine(false));
@@ -75,7 +74,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         SwerveSubsystem.getInstance()
-          .setDefaultCommand(CommandBuilder.Teleop.swerveDrive(
+          .setDefaultCommand(CommandBuilder.swerveDrive(
             () -> new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
             () -> new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
             () -> isSwerveLookAt,
@@ -83,8 +82,8 @@ public class RobotContainer {
 
         _driverJoystick.R1().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
 
-        _driverJoystick.L1().onTrue(CommandBuilder.Teleop.resetGyro(false));
-        _driverJoystick.L2().onTrue(CommandBuilder.Teleop.resetGyro(true));
+        _driverJoystick.L1().onTrue(CommandBuilder.resetGyro(false));
+        _driverJoystick.L2().onTrue(CommandBuilder.resetGyro(true));
     }
 
     private void configureOperatorBindings() {
@@ -128,6 +127,6 @@ public class RobotContainer {
 
     public void resetSubsystems() {
         RobotState.getInstance().setRobotState(RobotStates.RESET);
-        CommandBuilder.Teleop.resetGyro(false).schedule();
+        CommandBuilder.resetGyro(false).schedule();
     }
 }

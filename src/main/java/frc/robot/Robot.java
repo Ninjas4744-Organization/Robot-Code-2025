@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -67,11 +68,11 @@ public class Robot extends LoggedRobot {
 	public void autonomousInit() {
 		SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
 		SwerveController.getInstance().Demand.fieldRelative = false;
-		RobotState.getInstance().setRobotState(RobotStates.CORAL_READY);
+		RobotState.getInstance().setRobotState(RobotStates.RESET);
 		_autoCommand = _autoChooser.get();
 
 		if (_autoCommand != null)
-			_autoCommand.schedule();
+			Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY).andThen(_autoCommand).schedule();
 	}
 
 	@Override

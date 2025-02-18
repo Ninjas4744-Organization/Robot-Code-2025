@@ -45,6 +45,7 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setFunctionMaps() {
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
+        addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);
     }
 }

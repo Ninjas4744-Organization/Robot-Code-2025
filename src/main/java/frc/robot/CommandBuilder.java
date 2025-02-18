@@ -7,15 +7,11 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -26,13 +22,12 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class CommandBuilder {
-    public static class Teleop{
-        public static Command swerveDrive(
+    public static Command swerveDrive(
             Supplier<Translation2d> translation,
             Supplier<Translation2d> rotation,
             BooleanSupplier isLookAt,
             BooleanSupplier isBayblade) {
-            return Commands.runOnce(
+        return Commands.runOnce(
                 () -> {
                     double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
                     double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
@@ -52,19 +47,20 @@ public class CommandBuilder {
                             lx * SwerveConstants.kDriverSpeedFactor,
                             finalRotation);
                 }, SwerveSubsystem.getInstance());
-        }
+    }
 
-        public static Command resetGyro(boolean forceZero) {
-            return Commands.runOnce(() -> {
-                if (forceZero) RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
-                else {
-                    if (VisionIO.getInstance().hasTargets())
-                        RobotState.getInstance().resetGyro(RobotState.getInstance().getRobotPose().getRotation());
-                    else RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
-                }
-            });
-        }
+    public static Command resetGyro(boolean forceZero) {
+        return Commands.runOnce(() -> {
+            if (forceZero) RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
+            else {
+                if (VisionIO.getInstance().hasTargets())
+                    RobotState.getInstance().resetGyro(RobotState.getInstance().getRobotPose().getRotation());
+                else RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
+            }
+        });
+    }
 
+    public static class Teleop{
         public static Command changeRobotState(RobotStates state) {
             return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
         }
