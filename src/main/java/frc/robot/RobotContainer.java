@@ -38,7 +38,7 @@ public class RobotContainer {
                 Constants.kPigeonID);
 
         SwerveSubsystem.createInstance(false);
-        Elevator.createInstance(false);
+        Elevator.createInstance(true);
         Leds.createInstance(true);
         Outtake.createInstance(true);
         OuttakeAngle.createInstance(true);
@@ -120,9 +120,9 @@ public class RobotContainer {
     }
 
     public void periodic() {
-//        for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
-//            if (estimation.robotPose != null)
-//                RobotState.getInstance().updateRobotPose(estimation);
+        for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
+            if (estimation.robotPose != null)
+                RobotState.getInstance().updateRobotPose(estimation);
     }
 
     public void resetSubsystems() {

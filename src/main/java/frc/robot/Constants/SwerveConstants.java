@@ -67,14 +67,14 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.056267331109070916;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
             kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = true;
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.1);
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.controlConstants = ControlConstants.createTorqueCurrent(5, 0.19);
 
             kSwerveConstants.moduleConstants[i].angleMotorConstants.main.id = 11 + i * 2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 19.2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
             kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = false;
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(1.5, 0, 0.0001, 0);
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(4, 0, 0, 0);
         }
 
         kSwerveConstants.moduleConstants[0].CANCoderOffset = -0.290039;
