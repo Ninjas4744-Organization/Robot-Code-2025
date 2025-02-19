@@ -22,33 +22,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class CommandBuilder {
-    public static Command swerveDrive(
-            Supplier<Translation2d> translation,
-            Supplier<Translation2d> rotation,
-            BooleanSupplier isLookAt,
-            BooleanSupplier isBayblade) {
-        return Commands.runOnce(
-                () -> {
-                    double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
-                    double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
-                    double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
-                    double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
-
-                    double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
-
-                    if (isLookAt.getAsBoolean())
-                        finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
-
-                    if (isBayblade.getAsBoolean())
-                        finalRotation = 1;
-
-                    SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(
-                            ly * SwerveConstants.kDriverSpeedFactor,
-                            lx * SwerveConstants.kDriverSpeedFactor,
-                            finalRotation);
-                }, SwerveSubsystem.getInstance());
-    }
-
     public static Command resetGyro(boolean forceZero) {
         return Commands.runOnce(() -> {
             if (forceZero) RobotState.getInstance().resetGyro(Rotation2d.fromDegrees(0));
@@ -60,9 +33,36 @@ public class CommandBuilder {
         });
     }
 
+    public static Command changeRobotState(RobotStates state) {
+        return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
+    }
+
     public static class Teleop{
-        public static Command changeRobotState(RobotStates state) {
-            return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
+        public static Command swerveDrive(
+                Supplier<Translation2d> translation,
+                Supplier<Translation2d> rotation,
+                BooleanSupplier isLookAt,
+                BooleanSupplier isBayblade) {
+            return Commands.runOnce(
+                    () -> {
+                        double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
+                        double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
+                        double rx = -MathUtil.applyDeadband(rotation.get().getX(), SwerveConstants.kJoystickDeadband);
+                        double ry = -MathUtil.applyDeadband(rotation.get().getY(), SwerveConstants.kJoystickDeadband);
+
+                        double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
+
+                        if (isLookAt.getAsBoolean())
+                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
+
+                        if (isBayblade.getAsBoolean())
+                            finalRotation = 1;
+
+                        SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(
+                                ly * SwerveConstants.kDriverSpeedFactor,
+                                lx * SwerveConstants.kDriverSpeedFactor,
+                                finalRotation);
+                    }, SwerveSubsystem.getInstance());
         }
 
         public static Command runIfTestMode(Command command) {
@@ -120,13 +120,13 @@ public class CommandBuilder {
 //          NamedCommands.registerCommand("L4", L4());
 
             /* Named commands without object detection */
-            NamedCommands.registerCommand("Right", LRight(4));
-            NamedCommands.registerCommand("Left", LLeft(4));
+            NamedCommands.registerCommand("Right", Right(4));
+            NamedCommands.registerCommand("Left", Left(4));
         }
 
         public static Command intake() {
             return Commands.sequence(
-                    CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE),
+                    CommandBuilder.changeRobotState(RobotStates.INTAKE),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY)
             );
         }
@@ -154,17 +154,17 @@ public class CommandBuilder {
 //        }
 
         /* Commands without object detection */
-        public static Command LRight(int level) {
+        public static Command Right(int level) {
             return Commands.sequence(
-                    Commands.run(() -> RobotState.getInstance().setReefLevel(level)),
-                    CommandBuilder.Teleop.changeRobotState(RobotStates.GO_RIGHT_REEF)
+                    Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
+                    CommandBuilder.changeRobotState(RobotStates.GO_RIGHT_REEF)
             );
         }
 
-        public static Command LLeft(int level) {
+        public static Command Left(int level) {
             return Commands.sequence(
-                    Commands.run(() -> RobotState.getInstance().setReefLevel(level)),
-                    CommandBuilder.Teleop.changeRobotState(RobotStates.GO_LEFT_REEF)
+                    Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
+                    CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)
             );
         }
 

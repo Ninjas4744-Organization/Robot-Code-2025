@@ -2,6 +2,7 @@ package frc.robot.StateMachine;
 
 import com.ninjas4744.NinjasLib.DataClasses.StateEndCondition;
 import com.ninjas4744.NinjasLib.StateMachineIO;
+import frc.robot.Constants.OuttakeConstants;
 import frc.robot.Subsystems.*;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -21,7 +22,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
         return switch (currentState) {
-            case RESET, CLOSE, REMOVE_ALGAE -> wantedState == RobotStates.IDLE;
+            case RESET, CLOSE -> wantedState == RobotStates.IDLE;
 
             case IDLE -> wantedState == RobotStates.CORAL_SEARCH
                     || wantedState == RobotStates.CORAL_READY;
@@ -49,6 +50,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 //                    || wantedState == RobotStates.RESET
 //                    || wantedState == RobotStates.CLOSE;
 
+            case REMOVE_ALGAE -> wantedState == RobotStates.RESET
+                    || wantedState == RobotStates.CLOSE;
+
             case GO_RIGHT_REEF, GO_LEFT_REEF -> wantedState == RobotStates.AT_SIDE_REEF
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
@@ -70,8 +74,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     protected void setEndConditionMap() {
-//        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
-//                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
+        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
+                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
 
         /* Object Detection */
 //        addEndCondition(RobotStates.L1, new StateEndCondition<>(
@@ -96,21 +100,21 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 //             () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.BOTH, RobotStates.CORAL_READY));
         /* /Object Detection */
 
-//        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-//                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
-//
-//        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-//                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
-//
-//        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
-//                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
-//
-//        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-//                () -> true, RobotStates.OUTTAKE));
-//
-//        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-//                () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));
-//
+        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+
+        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+
+        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
+                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
+
+        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
+                () -> true, RobotStates.OUTTAKE));
+
+        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
+                () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));
+
 //        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
 //                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
 
