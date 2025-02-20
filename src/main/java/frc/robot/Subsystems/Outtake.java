@@ -4,6 +4,7 @@ import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import frc.robot.Constants.OuttakeConstants;
+import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
@@ -43,7 +44,12 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kOuttakeState), RobotStates.OUTTAKE);
+        addFunctionToOnChangeMap(() ->
+            controller().setPercent(RobotState.getInstance().getReefLevel() != 1
+            ? OuttakeConstants.kOuttakeState
+            : OuttakeConstants.kL1OuttakeState)
+        , RobotStates.OUTTAKE);
+
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(() -> controller().setPercent(OuttakeConstants.kCloseState), RobotStates.CLOSE, RobotStates.RESET);

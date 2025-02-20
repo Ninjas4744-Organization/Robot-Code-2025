@@ -6,6 +6,8 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants.OuttakeAngleConstants;
+import frc.robot.Constants.OuttakeConstants;
+import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
@@ -52,8 +54,13 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.CLOSE, RobotStates.INTAKE, RobotStates.AT_SIDE_REEF);
-        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kAlgeaState), RobotStates.REMOVE_ALGAE);
+        addFunctionToOnChangeMap(() ->
+            controller().setPercent(RobotState.getInstance().getReefLevel() != 1
+            ? OuttakeAngleConstants.kCoralState
+            : OuttakeAngleConstants.kL1State), RobotStates.AT_SIDE_REEF);
+
+        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.CLOSE, RobotStates.INTAKE);
+        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kAlgaeState), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
     }
 }
