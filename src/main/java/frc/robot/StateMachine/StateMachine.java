@@ -115,16 +115,16 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         /* /Object Detection */
 
         addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-                () -> /*SwerveSubsystem.getInstance().atReefSide()*/true, RobotStates.AT_SIDE_REEF));
+                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
 
         addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-                () -> /*SwerveSubsystem.getInstance().atReefSide()*/true, RobotStates.AT_SIDE_REEF));
+                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
 
         addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
                 () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
 
         addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-                () -> _preOuttakeTimer.get() > 0.5, RobotStates.OUTTAKE));
+                () -> _preOuttakeTimer.get() > 0.25, RobotStates.OUTTAKE));
 
         addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
                 () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));

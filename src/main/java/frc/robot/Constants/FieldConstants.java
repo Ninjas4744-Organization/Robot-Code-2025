@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FieldConstants {
-    public static final double kIntakeThreshold = 0.5;
+    public static final double kIntakeThreshold = 1.5;
 
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
@@ -88,7 +88,7 @@ public class FieldConstants {
     }
 
     public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight){
-        return tagPose.transformBy(new Transform2d(0, isRight ? 0.2 : -0.2, new Rotation2d()));
+        return tagPose.transformBy(new Transform2d(0, isRight ? 0.17 : -0.2, new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){

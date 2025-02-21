@@ -13,11 +13,12 @@ public class VisionConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.VisionConstants kVisionConstants = new com.ninjas4744.NinjasLib.DataClasses.VisionConstants();
     static{
         kVisionConstants.cameras = Map.of(
-//                "Front", new Transform3d(0.3175, 0.0775, 0, new Rotation3d(0, Units.degreesToRadians(30), 0))
+                "Front", new Transform3d(0.1225 + 0.1, -0.0825, -0.155, new Rotation3d(0, Units.degreesToRadians(-20), 0))
+//                "Back", new Transform3d(-0.0745, 0, -0.054, new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(180)))
         );
 
         kVisionConstants.maxAmbiguity = 0.2;
-        kVisionConstants.maxDistance = 6;
+        kVisionConstants.maxDistance = 7;
         kVisionConstants.fieldLayoutGetter = FieldConstants::getFieldLayoutWithIgnored;
 
         kVisionConstants.simulationConstants = new SimulationConstants();
@@ -33,11 +34,11 @@ public class VisionConstants {
     }
 
     public static double calculateFOM(VisionOutput estimation) {
-        double a = 0.55, b = 0.15, c = 2.2, d = 0.12;
+        double a = 1.33, b = 0.153, c = 4.839, d = 0.29;
 
-        double distFOM = b * Math.exp(a * (estimation.closestTagDist - c)) / estimation.amountOfTargets + d;
+        double distFOM = (b * Math.exp(a * (estimation.closestTagDist - c)) + d) / estimation.amountOfTargets;
         double speedFOM = 0.1 * RobotState.getInstance().getRobotVelocity().getNorm();
 
         return distFOM + speedFOM;
-    };
+    }
 }

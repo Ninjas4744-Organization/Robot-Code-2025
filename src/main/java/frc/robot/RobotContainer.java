@@ -93,18 +93,18 @@ public class RobotContainer {
 //        _driverJoystick.circle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.CLOSE)));
 //        _driverJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.Teleop.changeRobotState(RobotStates.INTAKE)));
 
-        _operatorJoystick.povDown().onTrue (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1))));
-        _operatorJoystick.povRight().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2))));
-        _operatorJoystick.povUp().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3))));
-        _operatorJoystick.povLeft().onTrue (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4))));
-        _operatorJoystick.L1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)));
-        _operatorJoystick.R1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_RIGHT_REEF)));
+        _driverJoystick.povDown().onTrue (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(1))));
+        _driverJoystick.povRight().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(2))));
+        _driverJoystick.povUp().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(3))));
+        _driverJoystick.povLeft().onTrue (CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setReefLevel(4))));
+        _driverJoystick.L1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)));
+        _driverJoystick.R1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_RIGHT_REEF)));
 
-        _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
-        _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
-        _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
+        _driverJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
+        _driverJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
+        _driverJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
 
-        _operatorJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+        _driverJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
             StateMachine.getInstance().changeRobotState(RobotStates.RESET);
             if(!RobotState.isSimulated())
                 ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();

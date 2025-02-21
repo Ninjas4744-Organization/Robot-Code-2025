@@ -92,7 +92,7 @@ public class SwerveConstants {
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
         kSwerveControllerConstants.driveAssistThreshold = 1.5;
         kSwerveControllerConstants.driverFieldRelative = true;
-        kSwerveControllerConstants.pathConstraints = new PathConstraints(5, 10, 8, 50);
+        kSwerveControllerConstants.pathConstraints = new PathConstraints(3, 2, 8, 50);
 
         try {
             kSwerveControllerConstants.robotConfig = RobotConfig.fromGUISettings();
