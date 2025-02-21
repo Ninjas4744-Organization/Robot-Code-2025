@@ -3,6 +3,7 @@ package frc.robot;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.TimedRobot;

@@ -6,8 +6,8 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -25,6 +25,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
+    private Timer _limitTimer = new Timer();
 
     private Elevator (boolean paused){
         super(paused);
@@ -65,8 +66,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
                 controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
                 RobotStates.AT_SIDE_REEF);
 
-        addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
-        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
+        addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET, RobotStates.CLOSE);
+//        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0.5)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
     }
 
     @Override
@@ -82,9 +83,13 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
         Logger.recordOutput("Elevator Limit", _limit.get());
-        if (!RobotState.isSimulated() && _limit.get()) {
+        if (!RobotState.isSimulated() && !_limit.get())
+            _limitTimer.restart();
+
+        if(_limitTimer.get() >= 0.1){
             controller().resetEncoder();
-            if (controller().getOutput() < 0) controller().stop();
+            if (controller().getOutput() < 0)
+                controller().stop();
         }
     }
 }

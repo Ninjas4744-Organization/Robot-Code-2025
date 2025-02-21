@@ -58,25 +58,25 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //        }, RobotStates.);
 
         addFunctionToPeriodicMap(() -> {
-            _currentReefTag = FieldConstants.getClosestReefTag();
-            Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
-            target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
-
-            Logger.recordOutput("Reef Target", target);
-            Logger.recordOutput("isPIDInsteadOfDriveAssist", isPIDInsteadOfDriveAssist);
-            if(isPIDInsteadOfDriveAssist == 2){
-                Translation2d pid = SwerveController.getInstance().pidTo(target.getTranslation());
-                SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(pid.getX(), pid.getY(), SwerveController.getInstance().lookAtTarget(target, Rotation2d.kZero));
-                SwerveController.getInstance().Demand.fieldRelative = true;
-                SwerveController.getInstance().setState(SwerveState.VELOCITY);
-            }
-            else if(isPIDInsteadOfDriveAssist == 1){
-                SwerveController.getInstance().Demand.targetPose = target;
-                SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
-            }else{
-                if(RobotState.getInstance().getDistanceTo(target).getNorm() <= SwerveConstants.kSwerveControllerConstants.driveAssistThreshold)
-                    isPIDInsteadOfDriveAssist = RobotState.getInstance().getDistanceTo(target).getNorm() <= 0.2 ? 2 : 1;
-            }
+//            _currentReefTag = FieldConstants.getClosestReefTag();
+//            Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
+//            target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
+//
+//            Logger.recordOutput("Reef Target", target);
+//            Logger.recordOutput("isPIDInsteadOfDriveAssist", isPIDInsteadOfDriveAssist);
+//            if(isPIDInsteadOfDriveAssist == 2){
+//                Translation2d pid = SwerveController.getInstance().pidTo(target.getTranslation());
+//                SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(pid.getX(), pid.getY(), SwerveController.getInstance().lookAtTarget(target, Rotation2d.kZero));
+//                SwerveController.getInstance().Demand.fieldRelative = true;
+//                SwerveController.getInstance().setState(SwerveState.VELOCITY);
+//            }
+//            else if(isPIDInsteadOfDriveAssist == 1){
+//                SwerveController.getInstance().Demand.targetPose = target;
+//                SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+//            }else{
+//                if(RobotState.getInstance().getDistanceTo(target).getNorm() <= SwerveConstants.kSwerveControllerConstants.driveAssistThreshold)
+//                    isPIDInsteadOfDriveAssist = RobotState.getInstance().getDistanceTo(target).getNorm() <= 0.2 ? 2 : 1;
+//            }
 
 //            SwerveController.getInstance().Demand.point = target;
 //            SwerveController.getInstance().Demand.angle = target.getRotation();

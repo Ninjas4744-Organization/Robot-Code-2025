@@ -6,6 +6,8 @@ public enum RobotStates {
     CORAL_SEARCH,
     CORAL_READY,
     INTAKE,
+    INDEX_BACK,
+    INDEX,
     REMOVE_ALGAE,
 //    L1,
 //    L2,
