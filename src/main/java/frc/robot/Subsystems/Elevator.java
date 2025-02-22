@@ -32,7 +32,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
         if(!_paused){
             _limit = new DigitalInput(ElevatorConstants.kLimitSwitchID);
-            Shuffleboard.getTab("Competition").addBoolean("Elevator Limit", _limit::get);
+            Shuffleboard.getTab("Competition").addBoolean("Elevator Limit", this::getLimit);
         }
     }
 
@@ -46,14 +46,18 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         _simulatedController = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
     }
 
+    private boolean getLimit(){
+        return !_limit.get();
+    }
+
     @Override
     protected void resetSubsystemO() {
-        runMotor(ElevatorConstants.kResetSpeed).until(_limit::get).schedule();
+        runMotor(ElevatorConstants.kResetSpeed).until(this::getLimit).schedule();
     }
 
     @Override
     protected boolean isResettedO() {
-        return _limit.get();
+        return !_limit.get();
     }
 
     @Override
@@ -82,8 +86,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
         Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
-        Logger.recordOutput("Elevator Limit", _limit.get());
-        if (!RobotState.isSimulated() && !_limit.get())
+        if (!RobotState.isSimulated() && !getLimit())
             _limitTimer.restart();
 
         if(_limitTimer.get() >= 0.1){

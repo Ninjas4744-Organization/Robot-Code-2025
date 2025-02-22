@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.LedsConstants;
 import frc.robot.StateMachine.RobotStates;
-import frc.robot.StateMachine.StateMachine;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -25,26 +24,27 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         _instance = new Leds(paused);
     }
 
-    AddressableLED _leds;
+    AddressableLED _ledsLeft;
+    AddressableLED _ledsRight;
     AddressableLEDBuffer _ledsBuffer;
-    Timer _timer;
+    Timer _timer = new Timer();
 
     private Leds(boolean paused) {
         super(paused);
 
         if(!_paused) {
-            _leds = new AddressableLED(LedsConstants.kLedsPort);
+            _ledsLeft = new AddressableLED(LedsConstants.kLedsLeftPort);
+//            _ledsRight = new AddressableLED(LedsConstants.kLedsRightPort);
             _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kBuffer);
-            _leds.setLength(_ledsBuffer.getLength());
-            _leds.start();
+            _ledsLeft.setLength(_ledsBuffer.getLength());
+            _ledsLeft.setData(_ledsBuffer);
+            _ledsLeft.start();
         }
     }
 
     public void setPattern(LEDPattern _pattern) {
-        if(!_paused) {
+        if(!_paused)
             _pattern.applyTo(_ledsBuffer);
-            _leds.setData(_ledsBuffer);
-        }
     }
 
     public void intakeLights() {
@@ -87,10 +87,20 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kBlack)), RobotStates.RESET, RobotStates.CORAL_SEARCH);
+        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kRed)), RobotStates.RESET, RobotStates.CORAL_SEARCH);
         addFunctionToOnChangeMap(this::intakeLights, RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(1.5))), RobotStates.TEST);
+        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
+        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.5))), RobotStates.TEST);
         addFunctionToOnChangeMap(this::rainbow, RobotStates.REMOVE_ALGAE);
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+
+        if(!_paused){
+            _ledsLeft.setData(_ledsBuffer);
+//            _ledsRight.setData(_ledsBuffer);
+        }
     }
 }

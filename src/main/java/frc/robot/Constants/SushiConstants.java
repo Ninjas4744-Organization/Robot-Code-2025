@@ -15,5 +15,5 @@ public class SushiConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kPercent = 0.1;
+    public static final double kPercent = 0.2;
 }

@@ -105,7 +105,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     public boolean atReefSide(){
         if(!_paused)
             return RobotState.getInstance().getRobotPose().getTranslation()
-                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.0075;
+                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
         return true;
     }
 

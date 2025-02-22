@@ -39,7 +39,7 @@ public class RobotContainer {
 
         SwerveSubsystem.createInstance(false);
         Elevator.createInstance(false);
-        Leds.createInstance(true);
+        Leds.createInstance(false);
         Outtake.createInstance(false);
         OuttakeAngle.createInstance(false);
         Sushi.createInstance(false);
@@ -50,7 +50,6 @@ public class RobotContainer {
 
         CommandBuilder.Auto.configureAutoBuilder();
         Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
-        Shuffleboard.getTab("Competition").addString("Coral Detection", () -> CoralObjectDetection.getCoralDetection().toString());
         Shuffleboard.getTab("Competition").addInteger("Reef Level", () -> RobotState.getInstance().getReefLevel());
         Shuffleboard.getTab("Competition").addBoolean("Beam Breaker", () -> RobotState.getInstance().isCoralInRobot());
 
@@ -119,20 +118,18 @@ public class RobotContainer {
     }
 
     private void configureTestBindings() {
-//        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
-//        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
+        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
+        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
         _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.15)));
         _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.15)));
+        _driverJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(0.05)));
+        _driverJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(-0.05)));
     }
 
     public void periodic() {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
-
-        Logger.recordOutput("Beam Breaker", RobotState.getInstance().isCoralInRobot());
-        Logger.recordOutput("Elevator At Goal", Elevator.getInstance().atGoal());
-        Logger.recordOutput("Outtake At Goal", OuttakeAngle.getInstance().atGoal());
     }
 
     public void resetSubsystems() {
