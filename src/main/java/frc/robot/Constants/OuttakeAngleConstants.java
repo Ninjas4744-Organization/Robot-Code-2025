@@ -13,11 +13,11 @@ public class OuttakeAngleConstants {
         kControllerConstants.subsystemName = "OuttakeAngle";
 
         kControllerConstants.encoderConversionFactor = 18 / 100.0 * 360;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(4, 0, 0.2, 0, 30, 30, 0, 0.125);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(4 / (18 / 100.0 * 360), 0, 0.2 / (18 / 100.0 * 360), 0, 30 / (18 / 100.0 * 360), 30 / (18 / 100.0 * 360), 0, 0.125, 0);
         kControllerConstants.positionGoalTolerance = 5;
         kControllerConstants.encoderHomePosition = 180;
         kControllerConstants.isMaxSoftLimit = true;
-        kControllerConstants.maxSoftLimit = 15 / (18 / 100.0 * 360);
+        kControllerConstants.maxSoftLimit = 15;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;

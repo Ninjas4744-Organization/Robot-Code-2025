@@ -1,5 +1,6 @@
 package frc.robot.Constants;
 
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.ControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
@@ -19,10 +20,10 @@ public class ElevatorConstants {
         kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(2, 0, 0, 0, 50, 75, 0, 0.29);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(2 / (0.25 * 0.05 * Math.PI), 0, 0, 0, 50 / (0.25 * 0.05 * Math.PI), 75 / (0.25 * 0.05 * Math.PI), 0, 0.29, 0);
         kControllerConstants.positionGoalTolerance = 0.025;
         kControllerConstants.isMaxSoftLimit = true;
-        kControllerConstants.maxSoftLimit = 1.12 / (0.25 * 0.05 * Math.PI);
+        kControllerConstants.maxSoftLimit = 1.12;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;

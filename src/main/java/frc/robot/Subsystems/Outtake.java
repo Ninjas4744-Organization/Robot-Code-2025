@@ -50,7 +50,12 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
             : OuttakeConstants.kL1OuttakeState)
         , RobotStates.OUTTAKE);
 
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIntakeState), RobotStates.INTAKE);
+        addFunctionToPeriodicMap(() -> {
+            if(controller().getCurrent() < 40)
+                controller().setVelocity(OuttakeConstants.kIntakeState);
+            else
+                controller().setVelocity(OuttakeConstants.kIndexBackState);
+        }, RobotStates.INTAKE);
         addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexBackState), RobotStates.INDEX_BACK);
         addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexState), RobotStates.INDEX);
 
