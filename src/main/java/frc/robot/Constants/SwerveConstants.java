@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class SwerveConstants {
     public static final double kDriverSpeedFactor = 1;
-    public static final double kDriverRotationSpeedFactor = 1;
+    public static final double kDriverRotationSpeedFactor = 0.75;
 
     public static final double kNormalAcc = 20;//10;
     public static final double kNonFlippingAcc = 5;
@@ -58,7 +58,7 @@ public class SwerveConstants {
                     6 + i,
                     NinjasTalonFXController.class,
                     NinjasTalonFXController.class,
-                    true,
+                    false,
                     false,
                     0);
 
@@ -73,7 +73,7 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].angleMotorConstants.currentLimit = 50;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.encoderConversionFactor = 19.2;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.subsystemName = "Swerve Module " + i + " Angle Motor";
-            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = true;
+            kSwerveConstants.moduleConstants[i].angleMotorConstants.enableLogging = false;
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(4 / 19.2, 0, 0, 0);
         }
 

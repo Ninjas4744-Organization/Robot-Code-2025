@@ -20,8 +20,8 @@ public class ElevatorConstants {
         kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(2 / (0.25 * 0.05 * Math.PI), 0, 0, 0, 50 / (0.25 * 0.05 * Math.PI), 75 / (0.25 * 0.05 * Math.PI), 0, 0.29, 0);
-        kControllerConstants.positionGoalTolerance = 0.025;
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(40, 0, 0, 0, 2, 4, 0, 0.29, 0);
+        kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;
         kControllerConstants.maxSoftLimit = 1.12;
 
@@ -34,8 +34,10 @@ public class ElevatorConstants {
             0,
             0.18,
             0.5,
-            1.12-0.015
+            1.12-0.015-0.01
     };
     public static final double kCloseState = 0;
-    public static final double kResetSpeed = -0.15;
+    public static final double kRemoveAlgae = 0.4;
+    public static final double kResetSpeed = -0.25;
+    public static final double kL1ResetSpeed = -0.25;
 }

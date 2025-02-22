@@ -87,8 +87,8 @@ public class FieldConstants {
         return getOffsetTagPose(closestTag.pose.toPose2d(), 0.375);
     }
 
-    public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight){
-        return tagPose.transformBy(new Transform2d(0, isRight ? 0.17 : -0.2, new Rotation2d()));
+    public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight, boolean isL4){
+        return tagPose.transformBy(new Transform2d(0, !isL4 ? (isRight ? 0.15 : -0.22) : (isRight ? 0.12 : -0.25), new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){

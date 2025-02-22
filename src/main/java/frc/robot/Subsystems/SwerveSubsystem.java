@@ -59,7 +59,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         addFunctionToPeriodicMap(() -> {
             _currentReefTag = FieldConstants.getClosestReefTag();
-            Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF);
+            Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag, RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF, RobotState.getInstance().getReefLevel() == 4);
             target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
             SwerveController.getInstance().Demand.targetPose = target;
 
@@ -105,7 +105,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     public boolean atReefSide(){
         if(!_paused)
             return RobotState.getInstance().getRobotPose().getTranslation()
-                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
+                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.04;
         return true;
     }
 

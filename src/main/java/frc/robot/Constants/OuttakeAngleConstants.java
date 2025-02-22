@@ -1,5 +1,6 @@
 package frc.robot.Constants;
 
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SimulatedControllerConstants;
@@ -12,19 +13,20 @@ public class OuttakeAngleConstants {
         kControllerConstants.main.inverted = true;
         kControllerConstants.subsystemName = "OuttakeAngle";
 
-        kControllerConstants.encoderConversionFactor = 18 / 100.0 * 360;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(4 / (18 / 100.0 * 360), 0, 0.2 / (18 / 100.0 * 360), 0, 30 / (18 / 100.0 * 360), 30 / (18 / 100.0 * 360), 0, 0.125, 0);
-        kControllerConstants.positionGoalTolerance = 5;
-        kControllerConstants.encoderHomePosition = 180;
-        kControllerConstants.isMaxSoftLimit = true;
-        kControllerConstants.maxSoftLimit = 15;
+        kControllerConstants.encoderConversionFactor = 18 / 100.0;
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(30, 0, 0.75, 0, 4, 2, 0, 0.22, 0.29);
+        kControllerConstants.controlConstants.GravityType = GravityTypeValue.Arm_Cosine;
+        kControllerConstants.positionGoalTolerance = 5 / 360.0;
+        kControllerConstants.encoderHomePosition = 135 / 360.0;
+        kControllerConstants.isMinSoftLimit = false;
+        kControllerConstants.minSoftLimit = 15;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final int kCoralState = 180;
-    public static final int kAlgaeState = 75;
-    public static final int kL1State = 0;
+    public static final double kCoralState = 135 / 360.0;
+    public static final double kAlgaeState = 35 / 360.0;
+    public static final double kL1State = 0;
     public static final int kLimitSwitchID = 3;
 }

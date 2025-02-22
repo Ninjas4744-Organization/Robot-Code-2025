@@ -2,6 +2,7 @@ package frc.robot.StateMachine;
 
 import com.ninjas4744.NinjasLib.DataClasses.StateEndCondition;
 import com.ninjas4744.NinjasLib.StateMachineIO;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OuttakeConstants;
 import frc.robot.Subsystems.*;
 import edu.wpi.first.wpilibj.Timer;
@@ -124,22 +125,22 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
 
         addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-                () -> _preOuttakeTimer.get() > 0.25, RobotStates.OUTTAKE));
+                () -> RobotState.getInstance().getReefLevel() != 4 || _preOuttakeTimer.get() > 0.25, RobotStates.OUTTAKE));
 
         addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-                () -> _outtakeTimer.get() > OuttakeConstants.kOuttakeTime, RobotStates.CLOSE));
+                () -> !RobotState.getInstance().isCoralInRobot() && _outtakeTimer.get() > 0.125, RobotStates.CLOSE));
 
 //        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
 //                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
 
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
-                () -> Elevator.getInstance().isResetted()
+                () -> (Elevator.getInstance().isResetted() || Elevator.getInstance().getCurrent() > 55)
                     && Sushi.getInstance().isResetted()
                     && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));
 
         addEndCondition(RobotStates.RESET, new StateEndCondition<>(
-                () -> Elevator.getInstance().isResetted()
+                () -> (Elevator.getInstance().isResetted() || Elevator.getInstance().getCurrent() > 55)
                     && Sushi.getInstance().isResetted()
                     && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));

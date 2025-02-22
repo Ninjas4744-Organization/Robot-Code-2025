@@ -10,6 +10,7 @@ public class OuttakeConstants {
     static {
         kControllerConstants.main.id = 30;
         kControllerConstants.subsystemName = "Outtake";
+        kControllerConstants.currentLimit = 70;
 
         kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(9, 0.2);
 
@@ -17,7 +18,7 @@ public class OuttakeConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kOuttakeState = 100;
+    public static final double kOuttakeState = 50;
     public static final double kL1OuttakeState = -10;
     public static final double kIntakeState = 15;
     public static final double kIndexBackState = -5;

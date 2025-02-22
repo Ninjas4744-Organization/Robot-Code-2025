@@ -51,7 +51,7 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
         , RobotStates.OUTTAKE);
 
         addFunctionToPeriodicMap(() -> {
-            if(controller().getCurrent() < 40)
+            if(controller().getCurrent() < 55)
                 controller().setVelocity(OuttakeConstants.kIntakeState);
             else
                 controller().setVelocity(OuttakeConstants.kIndexBackState);

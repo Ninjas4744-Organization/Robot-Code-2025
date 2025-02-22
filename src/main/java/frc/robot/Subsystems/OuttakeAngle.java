@@ -46,7 +46,7 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        runMotor(-0.05).until(_limit::get).schedule();
+        runMotor(0.07).until(_limit::get).schedule();
     }
 
     @Override
@@ -74,6 +74,7 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
             return;
 
         Logger.recordOutput("Outtake Limit", _limit.get());
+        Logger.recordOutput("Outtake Angle at goal", controller().atGoal());
         if (!RobotState.isSimulated() && _limit.get()) {
             controller().resetEncoder();
 //            if (controller().getOutput() > 0) // Check sign
