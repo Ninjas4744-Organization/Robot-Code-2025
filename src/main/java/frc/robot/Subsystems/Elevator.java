@@ -26,7 +26,6 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     private DigitalInput _limit;
-    private Timer _limitTimer = new Timer();
 
     private Elevator (boolean paused){
         super(paused);
@@ -93,15 +92,11 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
         Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
         Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
-        Logger.recordOutput("Elevator at goal", controller().atGoal());
 
-        if (!RobotState.isSimulated() && !getLimit())
-            _limitTimer.restart();
-
-        if(_limitTimer.get() >= 0.1){
+        if (!RobotState.isSimulated() && getLimit()){
             controller().resetEncoder();
-            if (controller().getOutput() < 0)
-                controller().stop();
+//            if (controller().getOutput() < 0)
+//                controller().stop();
         }
     }
 }

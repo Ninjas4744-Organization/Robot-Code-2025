@@ -73,6 +73,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             }
             else if(isPIDInsteadOfDriveAssist == 1){
                 SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+                if(SwerveController.getInstance().isDriveAssistFinished())
+                    isPIDInsteadOfDriveAssist = 2;
             }else{
                 if(RobotState.getInstance().getDistanceTo(target).getNorm() <= SwerveConstants.kSwerveControllerConstants.driveAssistThreshold)
                     isPIDInsteadOfDriveAssist = RobotState.getInstance().getDistanceTo(target).getNorm() <= 0.2 ? 2 : 1;
@@ -105,7 +107,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     public boolean atReefSide(){
         if(!_paused)
             return RobotState.getInstance().getRobotPose().getTranslation()
-                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.04;
+                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
         return true;
     }
 

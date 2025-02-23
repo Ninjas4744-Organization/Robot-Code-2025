@@ -37,6 +37,10 @@ public class CommandBuilder {
         return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
     }
 
+    public static Command changeReefLevel(boolean up){
+        return Commands.runOnce(() -> setReefLevel(MathUtil.clamp(RobotState.getInstance().getReefLevel() + (up ? 1 : -1), 1, 4)).schedule());
+    }
+
     public static Command setReefLevel(int level){
         return Commands.runOnce(() -> {
             if(RobotState.getInstance().getRobotState() != RobotStates.GO_RIGHT_REEF

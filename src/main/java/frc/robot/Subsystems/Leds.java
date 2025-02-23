@@ -1,10 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.LedsConstants;
 import frc.robot.StateMachine.RobotStates;
@@ -24,27 +21,31 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         _instance = new Leds(paused);
     }
 
-    AddressableLED _ledsLeft;
-    AddressableLED _ledsRight;
+    AddressableLED _leds;
     AddressableLEDBuffer _ledsBuffer;
+    AddressableLEDBufferView _leftBuffer;
+    AddressableLEDBufferView _rightBuffer;
     Timer _timer = new Timer();
 
     private Leds(boolean paused) {
         super(paused);
 
         if(!_paused) {
-            _ledsLeft = new AddressableLED(LedsConstants.kLedsLeftPort);
-//            _ledsRight = new AddressableLED(LedsConstants.kLedsRightPort);
-            _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kBuffer);
-            _ledsLeft.setLength(_ledsBuffer.getLength());
-            _ledsLeft.setData(_ledsBuffer);
-            _ledsLeft.start();
+            _leds = new AddressableLED(LedsConstants.kPort);
+            _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
+            _leftBuffer = _ledsBuffer.createView(0, 21);
+            _rightBuffer = _ledsBuffer.createView(22, 43);
+            _leds.setLength(_ledsBuffer.getLength());
+            _leds.setData(_ledsBuffer);
+            _leds.start();
         }
     }
 
     public void setPattern(LEDPattern _pattern) {
-        if(!_paused)
-            _pattern.applyTo(_ledsBuffer);
+        if(!_paused){
+            _pattern.applyTo(_leftBuffer);
+            _pattern.applyTo(_rightBuffer);
+        }
     }
 
     public void intakeLights() {
@@ -103,8 +104,7 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         super.periodic();
 
         if(!_paused){
-            _ledsLeft.setData(_ledsBuffer);
-//            _ledsRight.setData(_ledsBuffer);
+            _leds.setData(_ledsBuffer);
         }
     }
 }

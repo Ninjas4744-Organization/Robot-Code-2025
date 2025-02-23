@@ -74,7 +74,6 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
             return;
 
         Logger.recordOutput("Outtake Limit", _limit.get());
-        Logger.recordOutput("Outtake Angle at goal", controller().atGoal());
         if (!RobotState.isSimulated() && _limit.get()) {
             controller().resetEncoder();
 //            if (controller().getOutput() > 0) // Check sign

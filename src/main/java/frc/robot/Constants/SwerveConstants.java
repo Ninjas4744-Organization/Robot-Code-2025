@@ -86,7 +86,7 @@ public class SwerveConstants {
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
     static {
         kSwerveControllerConstants.swerveConstants = kSwerveConstants;
-        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(3, 0, 0, 0);
+        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(5, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.057, 0.09, 0.003, 10);
         kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
