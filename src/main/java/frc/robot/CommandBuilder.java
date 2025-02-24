@@ -45,10 +45,7 @@ public class CommandBuilder {
 
     public static Command setReefLevel(int level){
         return Commands.runOnce(() -> {
-            if(RobotState.getInstance().getRobotState() != RobotStates.GO_RIGHT_REEF
-                    && RobotState.getInstance().getRobotState() != RobotStates.GO_LEFT_REEF
-                    && RobotState.getInstance().getRobotState() != RobotStates.AT_SIDE_REEF
-                    && RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE_READY
+            if(RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE_READY
                     && RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE)
                 RobotState.getInstance().setReefLevel(level);
         });

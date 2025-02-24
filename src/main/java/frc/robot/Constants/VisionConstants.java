@@ -16,8 +16,8 @@ public class VisionConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.VisionConstants kVisionConstants = new com.ninjas4744.NinjasLib.DataClasses.VisionConstants();
     static{
         kVisionConstants.cameras = Map.of(
-                "Front", new Transform3d(0.1675 + 0.1, -0.0075, -0.11, new Rotation3d(0, Units.degreesToRadians(-20), 0))
-//                "Back", new Transform3d(-0.0745, 0, -0.054, new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(180)))
+                "FrontLeft", new Transform3d(0.2129, -0.2015, -0.065, new Rotation3d(0, Units.degreesToRadians(-20), 0)),
+                "FrontRight", new Transform3d(0.27765, 0.22965, -0.04573, new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(-15)))
         );
 
         kVisionConstants.maxAmbiguity = 0.2;
