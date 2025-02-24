@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.Centimeters;
 
 public class LedsConstants {
     public static final int kPort = 0;
-    public static final int kLength = 44;
+    public static final int kLength = 19;
     public static final Distance kLedSpacing = Centimeters.of(4);
 
 }

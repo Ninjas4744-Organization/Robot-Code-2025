@@ -33,9 +33,10 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         if(!_paused) {
             _leds = new AddressableLED(LedsConstants.kPort);
             _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
-            _leftBuffer = _ledsBuffer.createView(0, 21);
-            _rightBuffer = _ledsBuffer.createView(22, 43);
+//            _leftBuffer = _ledsBuffer.createView(0, 19);
+//            _rightBuffer = _ledsBuffer.createView(20, 38);
             _leds.setLength(_ledsBuffer.getLength());
+            LEDPattern.solid(Color.kRed).applyTo(_ledsBuffer);
             _leds.setData(_ledsBuffer);
             _leds.start();
         }
@@ -43,8 +44,10 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     public void setPattern(LEDPattern _pattern) {
         if(!_paused){
-            _pattern.applyTo(_leftBuffer);
-            _pattern.applyTo(_rightBuffer);
+//            _pattern.applyTo(_leftBuffer);
+//            _pattern.applyTo(_rightBuffer);
+            _pattern.applyTo(_ledsBuffer);
+            _leds.setData(_ledsBuffer);
         }
     }
 
@@ -60,20 +63,6 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         if(!_paused) {
             _timer.restart();
             LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> 1 - _timer.get());
-            setPattern(_pattern);
-        }
-    }
-
-    public void elevatorUp(double current, double end) {
-        if(!_paused) {
-            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> current / end);
-            setPattern(_pattern);
-        }
-    }
-
-    public void elevatorDown(double current, double end) {
-        if(!_paused) {
-            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> 1 - current / end);
             setPattern(_pattern);
         }
     }
@@ -95,7 +84,7 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreenYellow).blink(Seconds.of(0.25))), RobotStates.INDEX_BACK);
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreenYellow).blink(Seconds.of(0.125))), RobotStates.INDEX);
         addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.5))), RobotStates.TEST);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kRed)), RobotStates.TEST);
         addFunctionToOnChangeMap(this::rainbow, RobotStates.REMOVE_ALGAE);
     }
 
