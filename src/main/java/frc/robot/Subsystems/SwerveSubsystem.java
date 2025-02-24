@@ -4,6 +4,7 @@ import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand.SwerveState;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -29,6 +30,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     private Pose2d _currentReefTag;
     private int _isPIDInsteadOfDriveAssist = 0;
+    private PIDController _xEndPID = new PIDController(8, 1.5 ,0.1);
+    private PIDController _yEndPID = new PIDController(8, 1.5 ,0.1);
+    private PIDController _0EndPID = new PIDController(0.1, 0, 0);
 
     private SwerveSubsystem(boolean paused){
         super(paused);
@@ -76,7 +80,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             Logger.recordOutput("isPIDInsteadOfDriveAssist", _isPIDInsteadOfDriveAssist);
             if(_isPIDInsteadOfDriveAssist == 2){
                 Translation2d pid = SwerveController.getInstance().pidTo(target.getTranslation());
-                SwerveController.getInstance().Demand.velocity = new ChassisSpeeds(pid.getX(), pid.getY(), SwerveController.getInstance().lookAt(target.getRotation().getDegrees(), 1));
+                SwerveController.getInstance().Demand.velocity =
+                        new ChassisSpeeds(_xEndPID.calculate(RobotState.getInstance().getRobotPose().getX(), target.getX()),
+                                _yEndPID.calculate(RobotState.getInstance().getRobotPose().getY(), target.getY()),
+                                _0EndPID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), target.getRotation().getDegrees()));
                 SwerveController.getInstance().Demand.fieldRelative = true;
                 SwerveController.getInstance().setState(SwerveState.VELOCITY);
             }

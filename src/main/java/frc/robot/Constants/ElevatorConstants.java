@@ -29,7 +29,7 @@ public class ElevatorConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final int kLimitSwitchID = 0;
+    public static final int kLimitSwitchID = 2;
     public static final double[] kLStates = new double[]{
             0,
             0.18-0.025-0.01,

@@ -87,6 +87,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
+        Logger.recordOutput("Elevator Limit", getLimit());
+
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
         Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));

@@ -12,7 +12,7 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
 
     public RobotState(){
         _robotState = RobotStates.IDLE;
-        setReefLevel(1);
+        setReefLevel(3);
         setAlgaeLevel(2);
     }
 

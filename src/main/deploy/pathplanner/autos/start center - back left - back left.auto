@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Left"
           }
         },
         {
@@ -43,7 +43,37 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "back left - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left"
           }
         },
         {
