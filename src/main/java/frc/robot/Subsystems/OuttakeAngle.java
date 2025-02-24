@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants.OuttakeAngleConstants;
 import frc.robot.Constants.OuttakeConstants;
+import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
@@ -28,10 +29,8 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     public OuttakeAngle(boolean paused) {
         super(paused);
-        if(!_paused){
+        if(!_paused)
             _limit = new DigitalInput(OuttakeAngleConstants.kLimitSwitchID);
-            Shuffleboard.getTab("Competition").addBoolean("Outtake Limit", _limit::get);
-        }
     }
 
     @Override
@@ -73,7 +72,6 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        Logger.recordOutput("Outtake Limit", _limit.get());
         if (!RobotState.isSimulated() && _limit.get()) {
             controller().resetEncoder();
 //            if (controller().getOutput() > 0) // Check sign

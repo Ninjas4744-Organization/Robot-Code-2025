@@ -7,6 +7,8 @@ import com.ninjas4744.NinjasLib.Swerve.Swerve;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,9 +51,6 @@ public class RobotContainer {
         FieldConstants.getFieldLayout();
 
         CommandBuilder.Auto.configureAutoBuilder();
-        Shuffleboard.getTab("Competition").addString("Robot State", () -> RobotState.getInstance().getRobotState().toString());
-        Shuffleboard.getTab("Competition").addInteger("Reef Level", () -> RobotState.getInstance().getReefLevel());
-        Shuffleboard.getTab("Competition").addBoolean("Beam Breaker", () -> RobotState.getInstance().isCoralInRobot());
 
         LiveWindow.disableAllTelemetry();
 
@@ -138,10 +137,22 @@ public class RobotContainer {
         _driverJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(-0.05)));
     }
 
+    public static <T> void logToShuffleboard(String key, T value){
+        NetworkTableInstance.getDefault().getTable("Competition").getEntry(key).setValue(value);
+    }
+
+    public static NetworkTableValue getFromShuffleboard(String key){
+        return NetworkTableInstance.getDefault().getTable("Competition").getEntry(key).getValue();
+    }
+
     public void periodic() {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
+
+        logToShuffleboard("Robot State", RobotState.getInstance().getRobotState().toString());
+        logToShuffleboard("Reef Level", RobotState.getInstance().getReefLevel());
+        logToShuffleboard("Beam Breaker", RobotState.getInstance().isCoralInRobot());
     }
 
     public void resetSubsystems() {

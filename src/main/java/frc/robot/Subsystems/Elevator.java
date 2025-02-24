@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
@@ -30,10 +31,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     private Elevator (boolean paused){
         super(paused);
 
-        if(!_paused){
+        if(!_paused)
             _limit = new DigitalInput(ElevatorConstants.kLimitSwitchID);
-            Shuffleboard.getTab("Competition").addBoolean("Elevator Limit", this::getLimit);
-        }
     }
 
     @Override
