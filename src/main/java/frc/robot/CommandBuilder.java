@@ -7,11 +7,13 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -67,8 +69,9 @@ public class CommandBuilder {
 
                         double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
 
-                        if (isLookAt.getAsBoolean())
-                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
+//                        if (isLookAt.getAsBoolean())
+//                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
+//                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
 
                         if (isBayblade.getAsBoolean())
                             finalRotation = 1;

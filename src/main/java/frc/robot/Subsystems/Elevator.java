@@ -66,15 +66,15 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 //        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
 //        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
 //        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
-        addFunctionToOnChangeMap(() ->
+        addFunctionToPeriodicMap(() ->
                 controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
                 RobotStates.AT_SIDE_REEF);
 
-        addFunctionToOnChangeMap(() -> controller().setPosition(ElevatorConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
+        addFunctionToPeriodicMap(() -> controller().setPosition(RobotState.getInstance().getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
 
         addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
-        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
+        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
     }
 
     public double getCurrent(){

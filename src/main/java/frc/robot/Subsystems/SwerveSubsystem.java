@@ -6,6 +6,7 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.FieldConstants;
@@ -95,6 +96,28 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
 
+        addFunctionToPeriodicMap(() -> {
+            _currentReefTag = FieldConstants.getClosestReefTag();
+            Pose2d target = _currentReefTag;
+            target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
+
+            SwerveController.getInstance().Demand.targetPose = target;
+            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+
+            Logger.recordOutput("Reef Target", target);
+        }, RobotStates.GO_ALGAE);
+
+        addFunctionToOnChangeMap(() -> {
+            _currentReefTag = FieldConstants.getClosestReefTag().transformBy(new Transform2d(0, -0.2, Rotation2d.kZero));
+            Pose2d target = _currentReefTag;
+            target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
+
+            SwerveController.getInstance().Demand.targetPose = target;
+            SwerveController.getInstance().setState(SwerveState.DRIVE_ASSIST);
+
+            Logger.recordOutput("Reef Target", target);
+        }, RobotStates.GO_ALGAE_BACK);
+
         addFunctionToOnChangeMap(() -> {
             isPIDInsteadOfDriveAssist = 0;
             SwerveIO.getInstance().setAccelerationLimit(SwerveConstants.kNonFlippingAcc);
@@ -104,10 +127,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         RobotStates.AT_SIDE_REEF);
     }
 
-    public boolean atReefSide(){
+    public boolean atGoal(){
         if(!_paused)
             return RobotState.getInstance().getRobotPose().getTranslation()
-                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.02;
+                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < 0.03
+                    && Math.abs(SwerveController.getInstance().Demand.targetPose.getRotation().minus(RobotState.getInstance().getRobotPose().getRotation()).getDegrees()) < 5;
         return true;
     }
 

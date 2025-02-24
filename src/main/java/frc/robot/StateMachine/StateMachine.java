@@ -2,8 +2,6 @@ package frc.robot.StateMachine;
 
 import com.ninjas4744.NinjasLib.DataClasses.StateEndCondition;
 import com.ninjas4744.NinjasLib.StateMachineIO;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.OuttakeConstants;
 import frc.robot.Subsystems.*;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -40,9 +38,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
                     || wantedState == RobotStates.GO_RIGHT_REEF
-                    || wantedState == RobotStates.REMOVE_ALGAE
                     || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
+                    || wantedState == RobotStates.CLOSE
+                    || wantedState == RobotStates.INTAKE;
 
 //            case L1, L2, L3, L4 -> wantedState == RobotStates.AT_CENTER_REEF
 //                    || wantedState == RobotStates.RESET
@@ -62,7 +60,15 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                     || wantedState == RobotStates.CLOSE
                     || wantedState == RobotStates.RESET;
 
-            case REMOVE_ALGAE, OUTTAKE -> wantedState == RobotStates.RESET
+            case GO_ALGAE -> wantedState == RobotStates.REMOVE_ALGAE
+                    || wantedState == RobotStates.RESET
+                    || wantedState == RobotStates.CLOSE;
+
+            case OUTTAKE, GO_ALGAE_BACK -> wantedState == RobotStates.RESET
+                    || wantedState == RobotStates.CLOSE;
+
+            case REMOVE_ALGAE -> wantedState == RobotStates.GO_ALGAE_BACK
+                    || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
 
             case GO_RIGHT_REEF, GO_LEFT_REEF -> wantedState == RobotStates.AT_SIDE_REEF
@@ -116,10 +122,10 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         /* /Object Detection */
 
         addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+                () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.AT_SIDE_REEF));
 
         addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReefSide(), RobotStates.AT_SIDE_REEF));
+                () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.AT_SIDE_REEF));
 
         addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
                 () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal(), RobotStates.OUTTAKE_READY));
@@ -128,7 +134,16 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 () -> RobotState.getInstance().getReefLevel() != 4 || _preOuttakeTimer.get() > 0.25, RobotStates.OUTTAKE));
 
         addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-                () -> !RobotState.getInstance().isCoralInRobot() && _outtakeTimer.get() > 0.125, RobotStates.CLOSE));
+                () -> !RobotState.getInstance().isCoralInRobot() && _outtakeTimer.get() > 0.2, RobotStates.CLOSE));
+
+        addEndCondition(RobotStates.GO_ALGAE, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.REMOVE_ALGAE));
+
+//        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
+//                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal() && Outtake.getInstance().getCurrent() > 55, RobotStates.GO_ALGAE_BACK));
+
+        addEndCondition(RobotStates.GO_ALGAE_BACK, new StateEndCondition<>(
+                () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.CLOSE));
 
 //        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
 //                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
@@ -155,6 +170,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
         addFunctionToOnChangeMap(_outtakeTimer::restart, RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(_preOuttakeTimer::restart, RobotStates.OUTTAKE_READY);
+        addFunctionToOnChangeMap(() -> RobotState.getInstance().setAlgaeLevel(2), RobotStates.CLOSE);
 //        addFunctionToOnChangeMap(_hornTimer::restart, RobotStates.REMOVE_ALGAE);
 //        addFunctionToOnChangeMap(_coralTimer::restart, RobotStates.AT_CENTER_REEF);//?
     }

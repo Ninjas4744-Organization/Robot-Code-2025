@@ -18,7 +18,7 @@ public class OuttakeConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kOuttakeState = 50;
+    public static final double kOuttakeState = 75;
     public static final double kL1OuttakeState = -10;
     public static final double kIntakeState = 15;
     public static final double kIndexBackState = -5;

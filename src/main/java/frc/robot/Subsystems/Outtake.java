@@ -62,4 +62,8 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
     }
+
+    public double getCurrent(){
+        return controller().getCurrent();
+    }
 }

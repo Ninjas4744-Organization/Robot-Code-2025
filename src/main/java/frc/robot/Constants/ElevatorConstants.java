@@ -32,12 +32,13 @@ public class ElevatorConstants {
     public static final int kLimitSwitchID = 0;
     public static final double[] kLStates = new double[]{
             0,
-            0.18,
-            0.5,
-            1.12-0.015-0.01
+            0.18-0.025-0.01,
+            0.5-0.02+0.015,
+            1.12-0.015-0.01+0.01+0.01-0.01
     };
     public static final double kCloseState = 0;
-    public static final double kRemoveAlgae = 0.4;
+    public static final double kRemoveAlgae = 0.4-0.03-0.03-0.01;
+    public static final double kRemoveAlgae2 = 0.7;
     public static final double kResetSpeed = -0.25;
     public static final double kL1ResetSpeed = -0.25;
 }
