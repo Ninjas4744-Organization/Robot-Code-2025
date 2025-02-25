@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.154311475409837,
-        "y": 2.523030737704916
+        "x": 6.269569672131147,
+        "y": 1.8132684426229497
       },
       "isLocked": false,
       "linkedName": "start center"
@@ -20,8 +20,8 @@
         "y": 2.8842499999999998
       },
       "prevControl": {
-        "x": 5.8695,
-        "y": 1.4997499999999995
+        "x": 4.399487704918033,
+        "y": 0.5905225409836055
       },
       "nextControl": null,
       "isLocked": false,
