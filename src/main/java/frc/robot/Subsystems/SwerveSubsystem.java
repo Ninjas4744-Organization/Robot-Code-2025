@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.RobotContainer;
@@ -30,17 +32,19 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     private Pose2d _currentReefTag;
     private int _isPIDInsteadOfDriveAssist = 0;
-    private PIDController _xEndPID = new PIDController(8, 1.5 ,0.1);
-    private PIDController _yEndPID = new PIDController(8, 1.5 ,0.1);
-    private PIDController _0EndPID = new PIDController(0.1, 0, 0);
+    private final PIDController _xEndPID = new PIDController(8, 1.5, 0.1);
+    private final PIDController _yEndPID = new PIDController(8, 1.5, 0.1);
+    private final PIDController _0EndPID = new PIDController(0.1, 0, 0);
+    private double _outtakeExtraMove = 0;
 
     private SwerveSubsystem(boolean paused){
         super(paused);
 
         if(!paused){
             SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
-//            RobotContainer.logToShuffleboard("L Change", 0);
-//            RobotContainer.logToShuffleboard("L Change Reset", false);
+            SmartDashboard.putData("Competition/Outtake Right Increase", Commands.runOnce(() -> _outtakeExtraMove += 0.005).withName("Right"));
+            SmartDashboard.putData("Competition/Outtake Left Increase", Commands.runOnce(() -> _outtakeExtraMove -= 0.005).withName("Left"));
+            SmartDashboard.putNumber("Competition/Outtake Extra Threshold", 0);
         }
     }
 
@@ -71,7 +75,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             Pose2d target = FieldConstants.getOffsetReefTagPose(_currentReefTag,
                     RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF,
                     RobotState.getInstance().getReefLevel() == 4,
-                    0/*RobotContainer.getFromShuffleboard("L Change").getDouble()*/);
+                    _outtakeExtraMove);
 
             target = new Pose2d(target.getTranslation(), target.getRotation().rotateBy(Rotation2d.k180deg));
             SwerveController.getInstance().Demand.targetPose = target;
@@ -130,8 +134,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     public boolean atGoal(){
         if(!_paused)
-            return RobotState.getInstance().getRobotPose().getTranslation()
-                    .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()) < FieldConstants.kOuttakeDistThreshold
+            return RobotState.getInstance().getDistanceTo(SwerveController.getInstance().Demand.targetPose).getNorm() < FieldConstants.kOuttakeDistThreshold + SmartDashboard.getNumber("Outtake Extra Threshold", 0) / 100
                     && Math.abs(SwerveController.getInstance().Demand.targetPose.getRotation().minus(RobotState.getInstance().getRobotPose().getRotation()).getDegrees()) < FieldConstants.kOuttakeAngleThreshold;
         return true;
     }
@@ -143,13 +146,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        RobotContainer.logToShuffleboard("Dist To Reef", RobotState.getInstance().getRobotPose().getTranslation()
-                .getDistance(SwerveController.getInstance().Demand.targetPose.getTranslation()));
-
-//        if(RobotContainer.getFromShuffleboard("L Change Reset").getBoolean()){
-//            RobotContainer.logToShuffleboard("L Change", 0);
-//            RobotContainer.logToShuffleboard("L Change Reset", false);
-//        }
+        SmartDashboard.putNumber("Competition/Dist To Reef", RobotState.getInstance()
+                .getDistanceTo(SwerveController.getInstance().Demand.targetPose).getNorm() * 100);
+        SmartDashboard.putNumber("Competition/Outtake Extra Move", _outtakeExtraMove * 100);
 
         SwerveController.getInstance().periodic();
     }

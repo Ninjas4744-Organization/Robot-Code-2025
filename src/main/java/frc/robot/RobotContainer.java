@@ -137,22 +137,14 @@ public class RobotContainer {
         _driverJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(-0.05)));
     }
 
-    public static <T> void logToShuffleboard(String key, T value){
-        NetworkTableInstance.getDefault().getTable("Competition").getEntry(key).setValue(value);
-    }
-
-    public static NetworkTableValue getFromShuffleboard(String key){
-        return NetworkTableInstance.getDefault().getTable("Competition").getEntry(key).getValue();
-    }
-
     public void periodic() {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
 
-        logToShuffleboard("Robot State", RobotState.getInstance().getRobotState().toString());
-        logToShuffleboard("Reef Level", RobotState.getInstance().getReefLevel());
-        logToShuffleboard("Beam Breaker", RobotState.getInstance().isCoralInRobot());
+        SmartDashboard.putString("Competition/Robot State", RobotState.getInstance().getRobotState().toString());
+        SmartDashboard.putNumber("Competition/Reef Level", RobotState.getInstance().getReefLevel());
+        SmartDashboard.putBoolean("Competition/Beam Breaker", RobotState.getInstance().isCoralInRobot());
     }
 
     public void resetSubsystems() {

@@ -45,7 +45,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		_robotContainer = new RobotContainer();
-	 	_autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser());
+	 	_autoChooser = new LoggedDashboardChooser<>("Competition/Auto Chooser", AutoBuilder.buildAutoChooser());
 	}
 
 	@Override
