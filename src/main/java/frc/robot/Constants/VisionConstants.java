@@ -2,6 +2,7 @@ package frc.robot.Constants;
 
 import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -17,7 +18,7 @@ public class VisionConstants {
     static{
         kVisionConstants.cameras = Map.of(
                 "FrontRight", new Transform3d(0.2129+0.015+0.0805, -0.2015, -0.065, new Rotation3d(0, Units.degreesToRadians(-20), 0)),
-                "FrontLeft", new Transform3d(0.27765+0.09+0.0805, 0.22965, -0.04573, new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(-15 + 4)))
+                "FrontLeft", new Transform3d(0.27765+0.09+0.0805+0.0244, 0.22965, -0.04573, new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(-15 + 7.5/*6*/)))
         );
 
         kVisionConstants.maxAmbiguity = 0.2;

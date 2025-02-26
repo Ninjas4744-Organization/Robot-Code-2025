@@ -32,8 +32,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     private Pose2d _currentReefTag;
     private int _isPIDInsteadOfDriveAssist = 0;
-    private final PIDController _xEndPID = new PIDController(8, 1.5, 0.1);
-    private final PIDController _yEndPID = new PIDController(8, 1.5, 0.1);
+    private final PIDController _xEndPID = new PIDController(9, 1.5, 0.1);
+    private final PIDController _yEndPID = new PIDController(9, 1.5, 0.1);
     private final PIDController _0EndPID = new PIDController(0.1, 0, 0);
     private double _outtakeExtraMove = 0;
 
@@ -41,6 +41,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         super(paused);
 
         if(!paused){
+            _0EndPID.enableContinuousInput(-180, 180);
             SwerveController.setConstants(SwerveConstants.kSwerveControllerConstants, SwerveIO.getInstance());
             SmartDashboard.putData("Competition/Outtake Right Increase", Commands.runOnce(() -> _outtakeExtraMove += 0.005).withName("Right"));
             SmartDashboard.putData("Competition/Outtake Left Increase", Commands.runOnce(() -> _outtakeExtraMove -= 0.005).withName("Left"));
@@ -134,7 +135,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     public boolean atGoal(){
         if(!_paused)
-            return RobotState.getInstance().getDistanceTo(SwerveController.getInstance().Demand.targetPose).getNorm() < FieldConstants.kOuttakeDistThreshold + SmartDashboard.getNumber("Outtake Extra Threshold", 0) / 100
+            return RobotState.getInstance().getDistanceTo(SwerveController.getInstance().Demand.targetPose).getNorm() < (RobotState.getInstance().getRobotState() == RobotStates.GO_LEFT_REEF ? FieldConstants.kLeftOuttakeDistThreshold : FieldConstants.kRightOuttakeDistThreshold) + SmartDashboard.getNumber("Outtake Extra Threshold", 0) / 100
                     && Math.abs(SwerveController.getInstance().Demand.targetPose.getRotation().minus(RobotState.getInstance().getRobotPose().getRotation()).getDegrees()) < FieldConstants.kOuttakeAngleThreshold;
         return true;
     }

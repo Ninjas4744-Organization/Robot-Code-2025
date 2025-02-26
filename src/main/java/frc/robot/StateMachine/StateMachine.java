@@ -38,6 +38,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
                     || wantedState == RobotStates.GO_RIGHT_REEF
+                    || wantedState == RobotStates.AT_SIDE_REEF
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE
                     || wantedState == RobotStates.INTAKE;

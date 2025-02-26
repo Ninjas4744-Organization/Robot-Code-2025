@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.CommandBuilder;
@@ -15,8 +16,9 @@ import java.util.List;
 
 public class FieldConstants {
     public static final double kIntakeThreshold = 1.5;
-    public static final double kOuttakeDistThreshold = 0.007;
-    public static final double kOuttakeAngleThreshold = 2;
+    public static final double kLeftOuttakeDistThreshold = 0.007 + 0.005/* + 0.006 - 0.002*/;
+    public static final double kRightOuttakeDistThreshold = kLeftOuttakeDistThreshold/* + 0.01*/;
+    public static final double kOuttakeAngleThreshold = 3;
 
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
@@ -90,7 +92,7 @@ public class FieldConstants {
     }
 
     public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight, boolean isL4, double extraChange){
-        return tagPose.transformBy(new Transform2d(0, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + extraChange) : (isRight ? 0.14 + extraChange : -0.18 + extraChange), new Rotation2d()));
+        return tagPose.transformBy(new Transform2d(0, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + extraChange) : (isRight ? 0.14 + extraChange : -0.18 - 0.015 + extraChange), new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){

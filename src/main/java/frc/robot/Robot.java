@@ -3,6 +3,7 @@ package frc.robot;
 import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
@@ -70,6 +71,7 @@ public class Robot extends LoggedRobot {
 		SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
 		SwerveController.getInstance().Demand.fieldRelative = false;
 		RobotState.getInstance().setRobotState(RobotStates.RESET);
+		RobotState.getInstance().resetGyro(Rotation2d.k180deg);
 		_autoCommand = _autoChooser.get();
 
 		if (_autoCommand != null)

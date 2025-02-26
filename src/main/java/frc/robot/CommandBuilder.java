@@ -142,7 +142,7 @@ public class CommandBuilder {
         public static Command intake() {
             return Commands.sequence(
                     CommandBuilder.changeRobotState(RobotStates.INTAKE),
-                    Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY)
+                    Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()/*RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY*/)
             );
         }
 
