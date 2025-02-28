@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -66,17 +64,20 @@ public class CommandBuilder {
 
                         double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
 
-//                        if (isLookAt.getAsBoolean())
-//                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
+                        if (isLookAt.getAsBoolean())
+                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
 //                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
 
                         if (isBayblade.getAsBoolean())
                             finalRotation = 1;
 
-                        SwerveController.getInstance().Demand.driverInput = new ChassisSpeeds(
+                        SwerveController.getInstance().setControl(
+                            SwerveController.getInstance().fromPercent(new ChassisSpeeds(
                                 ly * SwerveConstants.kDriverSpeedFactor,
                                 lx * SwerveConstants.kDriverSpeedFactor,
-                                finalRotation);
+                                finalRotation)),
+                            SwerveConstants.kDriverFieldRelative, "Driver"
+                        );
                     }, SwerveSubsystem.getInstance());
         }
 
@@ -109,7 +110,7 @@ public class CommandBuilder {
 
                 () -> SwerveIO.getInstance().getChassisSpeeds(false), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 
-                drive -> SwerveController.getInstance().Demand.velocity = drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                drive -> SwerveController.getInstance().setControl(drive, false, "Auto"), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 
                 SwerveConstants.kAutonomyConfig, //Autonomy config
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
@@ -147,28 +148,9 @@ public class CommandBuilder {
         }
 
         public static Command waitOuttake() {
-            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH)
-                    .andThen(Commands.runOnce(() -> SwerveController.getInstance().Demand.fieldRelative = false));
+            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_SEARCH);
         }
 
-          /* Commands for object detection */
-//        public static Command L1() {
-//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L1);
-//        }
-//
-//        public static Command L2() {
-//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L2);
-//        }
-//
-//        public static Command L3() {
-//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L3);
-//        }
-//
-//        public static Command L4() {
-//            return CommandBuilder.Teleop.changeRobotState(RobotStates.L4);
-//        }
-
-        /* Commands without object detection */
         public static Command Right(int level) {
             return Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
@@ -181,17 +163,6 @@ public class CommandBuilder {
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)
             );
-        }
-
-        /**
-         * @return final autonomy command from pathplanner
-         */
-        public static Command autoCommand(String auto) {
-            SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
-            SwerveController.getInstance().Demand.fieldRelative = false;
-            RobotState.getInstance().setRobotState(RobotStates.CORAL_READY);
-
-            return AutoBuilder.buildAuto(auto);
         }
     }
 }

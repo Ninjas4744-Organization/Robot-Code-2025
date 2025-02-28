@@ -62,9 +62,9 @@ public class RobotContainer {
     private void configureBindings() {
         StateMachine.getInstance().setTriggerForSimulationTesting(_driverJoystick.povLeft());
 
-        //Auto Intake
-//        new Trigger(FieldConstants::nearCoralStation).onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
-//        new Trigger(() -> !FieldConstants.nearCoralStation() && RobotState.getInstance().getRobotState() == RobotStates.INTAKE).onTrue(CommandBuilder.changeRobotState(RobotStates.IDLE));
+        //Auto Intake, NOTE: may or may not crash auto
+        new Trigger(FieldConstants::nearCoralStation).onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
+        new Trigger(() -> !FieldConstants.nearCoralStation() && RobotState.getInstance().getRobotState() == RobotStates.INTAKE).onTrue(CommandBuilder.changeRobotState(RobotStates.IDLE));
 
         configureTestBindings();
         configureDriverBindings();
@@ -79,7 +79,7 @@ public class RobotContainer {
             () -> isSwerveLookAt,
             () -> false));
 
-//        _driverJoystick.R1().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
+        _driverJoystick.R1().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
 
         _driverJoystick.L1().onTrue(CommandBuilder.resetGyro(false));
         _driverJoystick.R1().onTrue(CommandBuilder.resetGyro(true));
@@ -123,10 +123,7 @@ public class RobotContainer {
         _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
         _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
         _operatorJoystick.triangle().onTrue(CommandBuilder.changeRobotState(RobotStates.AT_SIDE_REEF));
-        _operatorJoystick.square().onTrue(Commands.sequence(
-            Commands.runOnce(() -> RobotState.getInstance().setAlgaeLevel(Math.max(((RobotState.getInstance().getAlgaeLevel() + 1) % 3), 1))),
-            CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE)
-        ));
+        _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
     }
 
     private void configureTestBindings() {
