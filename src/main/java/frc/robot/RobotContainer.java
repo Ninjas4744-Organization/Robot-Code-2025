@@ -9,6 +9,7 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +49,7 @@ public class RobotContainer {
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
+        LimelightVision.init();
         FieldConstants.getFieldLayout();
 
         CommandBuilder.Auto.configureAutoBuilder();
@@ -139,6 +141,7 @@ public class RobotContainer {
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
+        RobotState.getInstance().updateRobotPose(LimelightVision.getVisionEstimation());
 
         SmartDashboard.putString("Competition/Robot State", RobotState.getInstance().getRobotState().toString());
         SmartDashboard.putNumber("Competition/Reef Level", RobotState.getInstance().getReefLevel());
