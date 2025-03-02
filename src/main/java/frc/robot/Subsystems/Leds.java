@@ -23,6 +23,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     AddressableLED _leds;
     AddressableLEDBuffer _ledsBuffer;
+    AddressableLEDBufferView _leftBuffer;
+    AddressableLEDBufferView _rightBuffer;
     Timer _timer = new Timer();
 
     private Leds(boolean paused) {
@@ -32,6 +34,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
             _leds = new AddressableLED(LedsConstants.kPort);
             _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
             _leds.setLength(_ledsBuffer.getLength());
+            _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 19);
+            _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 20, 38);
             _leds.setData(_ledsBuffer);
             _leds.start();
         }
@@ -39,7 +43,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     public void setPattern(LEDPattern _pattern) {
         if(!_paused){
-            _pattern.applyTo(_ledsBuffer);
+            _pattern.applyTo(_leftBuffer);
+            _pattern.applyTo(_rightBuffer);
         }
     }
 

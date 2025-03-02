@@ -20,7 +20,7 @@ public class OuttakeConstants {
 
     public static final double kL4OuttakeState = 75;
     public static final double kOuttakeState = 13;
-    public static final double kL1OuttakeState = 5;
+    public static final double kL1OuttakeState = -5;
     public static final double kIntakeState = 15;
     public static final double kIndexBackState = -5;
     public static final double kIndexState = 5;

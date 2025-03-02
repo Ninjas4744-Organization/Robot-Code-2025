@@ -136,6 +136,10 @@ public class CommandBuilder {
 //          NamedCommands.registerCommand("L4", L4());
 
             /* Named commands without object detection */
+            NamedCommands.registerCommand("Right 4", Right(4));
+            NamedCommands.registerCommand("Left 4", Left(4));
+            NamedCommands.registerCommand("Right 3", Right(3));
+            NamedCommands.registerCommand("Left 3", Left(3));
             NamedCommands.registerCommand("Right", Right(4));
             NamedCommands.registerCommand("Left", Left(4));
         }
