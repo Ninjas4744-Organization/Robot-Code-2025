@@ -66,7 +66,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
             Logger.recordOutput("Reef Target", _currentReefTarget);
 
-            if(RobotState.getInstance().getDistance(_currentReefTarget) < 0.25)
+            if(RobotState.getInstance().getDistance(_currentReefTarget) < 0.5)
                 SwerveController.getInstance().setState("Reef PID");
 
 //            SwerveController.getInstance().setControl(
@@ -80,7 +80,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            );
 
             double anglePid = _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees());
-            double forwardDrive = atGoalX() ? 1 : 0;
+            double forwardDrive = atGoalX() ? SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation()).getNorm() : 0;//atGoalX() ? 1 : 0;
             Logger.recordOutput("atGoalX", atGoalX());
             Logger.recordOutput("forward timer", _forwardDriveTimer.get());
 
@@ -112,8 +112,11 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     private boolean atGoalY(){
-        if(!_paused)
-            return _forwardDriveTimer.get() > 0.25;
+        if(!_paused) {
+            double thresh = 0.02;
+            Logger.recordOutput("y dist", Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX()));
+            return Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX()) < thresh;
+        }
         return true;
     }
 

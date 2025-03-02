@@ -87,7 +87,7 @@ public class SwerveConstants {
         kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(2, 0, 0.1, 0);
 //        kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.01, 0.05, 0, 5);
         kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.1, 0.05, 0, 5);
-        kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(5, 1, 0.05, 0);
+        kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(3, 1, 0.2, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
         kSwerveControllerConstants.driveAssistThreshold = 1.5;
         kSwerveControllerConstants.pathConstraints = new PathConstraints(2, 2, 8, 50);
