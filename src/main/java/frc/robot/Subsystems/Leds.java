@@ -1,8 +1,10 @@
 package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.LedsConstants;
 import frc.robot.StateMachine.RobotStates;
 
@@ -30,15 +32,22 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
     private Leds(boolean paused) {
         super(paused);
 
-        if(!_paused) {
-            _leds = new AddressableLED(LedsConstants.kPort);
-            _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
-            _leds.setLength(_ledsBuffer.getLength());
-            _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 19);
-            _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 20, 38);
-            _leds.setData(_ledsBuffer);
-            _leds.start();
-        }
+        if(_paused)
+            return;
+
+        _leds = new AddressableLED(LedsConstants.kPort);
+        _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
+        _leds.setLength(_ledsBuffer.getLength());
+        _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 19);
+        _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 20, 38);
+        _leds.setData(_ledsBuffer);
+        _leds.start();
+
+        double time = 4;
+        Commands.sequence(
+            Commands.runOnce(() -> _timer.get()),
+            Commands.run(() -> setPattern(LEDPattern.solid(Color.kPurple).mask(LEDPattern.progressMaskLayer(() -> _timer.get() / time)))).until(() -> _timer.get() >= time)
+        ).schedule();
     }
 
     public void setPattern(LEDPattern _pattern) {

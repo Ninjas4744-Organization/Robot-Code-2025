@@ -20,7 +20,7 @@ public class ElevatorConstants {
         kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(16, 0, 0, 0, 5, 7, 2, 0.47, 0.4);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(32, 0, 0, 0, 5, 5, 75, 0, 0.47, 0.4);
         kControllerConstants.controlConstants.GravityType = GravityTypeValue.Elevator_Static;
         kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;

@@ -6,12 +6,9 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
@@ -62,13 +59,12 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-//        addFunctionToOnChangeMap(() -> L = 1, RobotStates.L1);
-//        addFunctionToOnChangeMap(() -> L = 2, RobotStates.L2);
-//        addFunctionToOnChangeMap(() -> L = 3, RobotStates.L3);
-//        addFunctionToOnChangeMap(() -> L = 4, RobotStates.L4);
         addFunctionToPeriodicMap(() ->
-                controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
-                RobotStates.AT_SIDE_REEF);
+        {
+            if(SwerveSubsystem.getInstance().atPidingZone())
+                controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
+        },
+        RobotStates.AT_SIDE_REEF, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
 
         addFunctionToPeriodicMap(() -> controller().setPosition(FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
 

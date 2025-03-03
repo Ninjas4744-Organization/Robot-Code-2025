@@ -14,7 +14,7 @@ public class OuttakeAngleConstants {
         kControllerConstants.subsystemName = "OuttakeAngle";
 
         kControllerConstants.encoderConversionFactor = 18 / 100.0;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(30, 0, 0.75, 0, 4, 2, 0, 0.22, 0.29);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(30, 0, 0.75, 0, 4, 2, 0, 0, 0.22, 0.29);
         kControllerConstants.controlConstants.GravityType = GravityTypeValue.Arm_Cosine;
         kControllerConstants.positionGoalTolerance = 5 / 360.0;
         kControllerConstants.encoderHomePosition = 135 / 360.0;
