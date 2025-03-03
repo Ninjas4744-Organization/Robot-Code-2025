@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "L4"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "start right - back right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Right"
           }
         },
         {

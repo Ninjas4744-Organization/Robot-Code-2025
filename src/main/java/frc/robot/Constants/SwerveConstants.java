@@ -22,11 +22,9 @@ public class SwerveConstants {
     public static final double kDriverSpeedFactor = 0.8;
     public static final double kDriverRotationSpeedFactor = 0.6;
 
-    public static final double kNormalAcc = 8;//10;
-    public static final double kNonFlippingAcc = 5;
-
     public static final double kJoystickDeadband = 0.05;
     public static final boolean kInvertGyro = false;
+    public static final boolean kDriverFieldRelative = true;
 
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
@@ -86,13 +84,12 @@ public class SwerveConstants {
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();
     static {
         kSwerveControllerConstants.swerveConstants = kSwerveConstants;
-        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(5, 0, 0.1, 0);
+        kSwerveControllerConstants.drivePIDConstants = ControlConstants.createPID(2, 0, 0.1, 0);
 //        kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.01, 0.05, 0, 5);
         kSwerveControllerConstants.rotationPIDConstants = ControlConstants.createPID(0.1, 0.05, 0, 5);
-        kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(0.14, 0, 0, 0);
+        kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(3, 1, 0.2, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
         kSwerveControllerConstants.driveAssistThreshold = 1.5;
-        kSwerveControllerConstants.driverFieldRelative = true;
         kSwerveControllerConstants.pathConstraints = new PathConstraints(2, 2, 8, 50);
 
         try {

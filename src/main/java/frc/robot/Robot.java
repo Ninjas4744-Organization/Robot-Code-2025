@@ -1,14 +1,10 @@
 package frc.robot;
 
-import com.ninjas4744.NinjasLib.DataClasses.SwerveDemand;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,7 +41,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		_robotContainer = new RobotContainer();
-	 	_autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser());
+	 	_autoChooser = new LoggedDashboardChooser<>("Competition/Auto Chooser", AutoBuilder.buildAutoChooser());
 	}
 
 	@Override
@@ -67,9 +63,9 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		SwerveController.getInstance().setState(SwerveDemand.SwerveState.VELOCITY);
-		SwerveController.getInstance().Demand.fieldRelative = false;
+		SwerveController.getInstance().setState("Auto");
 		RobotState.getInstance().setRobotState(RobotStates.RESET);
+		RobotState.getInstance().resetGyro(Rotation2d.k180deg);
 		_autoCommand = _autoChooser.get();
 
 		if (_autoCommand != null)

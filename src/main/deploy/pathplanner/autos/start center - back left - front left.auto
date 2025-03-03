@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Right 4"
           }
         },
         {
@@ -43,13 +43,25 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Right 4"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front left - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         }
       ]

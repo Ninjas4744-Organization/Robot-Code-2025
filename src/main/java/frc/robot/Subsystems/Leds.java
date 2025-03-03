@@ -33,10 +33,9 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         if(!_paused) {
             _leds = new AddressableLED(LedsConstants.kPort);
             _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
-//            _leftBuffer = _ledsBuffer.createView(0, 19);
-//            _rightBuffer = _ledsBuffer.createView(20, 38);
             _leds.setLength(_ledsBuffer.getLength());
-            LEDPattern.solid(Color.kRed).applyTo(_ledsBuffer);
+            _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 19);
+            _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 20, 38);
             _leds.setData(_ledsBuffer);
             _leds.start();
         }
@@ -44,10 +43,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     public void setPattern(LEDPattern _pattern) {
         if(!_paused){
-//            _pattern.applyTo(_leftBuffer);
-//            _pattern.applyTo(_rightBuffer);
-            _pattern.applyTo(_ledsBuffer);
-            _leds.setData(_ledsBuffer);
+            _pattern.applyTo(_leftBuffer);
+            _pattern.applyTo(_rightBuffer);
         }
     }
 
@@ -67,6 +64,20 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         }
     }
 
+    public void elevatorUp(double current, double end) {
+        if(!_paused) {
+            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> current / end);
+            setPattern(_pattern);
+        }
+    }
+
+    public void elevatorDown(double current, double end) {
+        if(!_paused) {
+            LEDPattern _pattern = LEDPattern.progressMaskLayer(() -> 1 - current / end);
+            setPattern(_pattern);
+        }
+    }
+
     public void rainbow() {
         if(!_paused) {
             LEDPattern _pattern = LEDPattern.rainbow(255, 128);
@@ -77,15 +88,15 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kRed)), RobotStates.CORAL_SEARCH);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kDarkRed).blink(Seconds.of(0.5))), RobotStates.RESET);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kRed).blink(Seconds.of(0.5))), RobotStates.CLOSE);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreenYellow).blink(Seconds.of(0.5))), RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreenYellow).blink(Seconds.of(0.25))), RobotStates.INDEX_BACK);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreenYellow).blink(Seconds.of(0.125))), RobotStates.INDEX);
-        addFunctionToOnChangeMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kRed)), RobotStates.TEST);
-        addFunctionToOnChangeMap(this::rainbow, RobotStates.REMOVE_ALGAE);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.CORAL_SEARCH);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kDarkRed).blink(Seconds.of(0.125))), RobotStates.RESET);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kRed).blink(Seconds.of(0.125))), RobotStates.CLOSE);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.25))), RobotStates.INTAKE, RobotStates.INDEX_BACK, RobotStates.INDEX);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_SIDE_REEF);
+        addFunctionToPeriodicMap(this::rainbow, RobotStates.REMOVE_ALGAE);
     }
 
     @Override

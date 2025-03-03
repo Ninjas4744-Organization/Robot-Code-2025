@@ -16,8 +16,6 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     private Timer _outtakeTimer;
     private Timer _preOuttakeTimer;
-//    private Timer _hornTimer;
-//    private Timer _coralTimer;
 
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
@@ -38,6 +36,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
                     || wantedState == RobotStates.GO_RIGHT_REEF
+                    || wantedState == RobotStates.AT_SIDE_REEF
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE
                     || wantedState == RobotStates.INTAKE;
@@ -98,29 +97,6 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         addEndCondition(RobotStates.INDEX, new StateEndCondition<>(
                 () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
 
-        /* Object Detection */
-//        addEndCondition(RobotStates.L1, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-//
-//        addEndCondition(RobotStates.L2, new StateEndCondition<>(
-//                () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-//
-//        addEndCondition(RobotStates.L3, new StateEndCondition<>(
-//              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-//
-//        addEndCondition(RobotStates.L4, new StateEndCondition<>(
-//              () -> SwerveController.getInstance().isDriveAssistFinished(), RobotStates.AT_CENTER_REEF));
-
-//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-//               () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && (CoralObjectDetection.getCoralDetection() == DetectedCoral.LEFT || CoralObjectDetection.getCoralDetection() == DetectedCoral.NONE), RobotStates.GO_RIGHT_REEF));
-//
-//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-//              () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.RIGHT, RobotStates.GO_LEFT_REEF));
-//
-//        addEndCondition(RobotStates.AT_CENTER_REEF, new StateEndCondition<>(
-//             () -> _coralTimer.get() > CoralDetectionConstants.kDetectionTime && CoralObjectDetection.getCoralDetection() == DetectedCoral.BOTH, RobotStates.CORAL_READY));
-        /* /Object Detection */
-
         addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
                 () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.AT_SIDE_REEF));
 
@@ -145,17 +121,14 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         addEndCondition(RobotStates.GO_ALGAE_BACK, new StateEndCondition<>(
                 () -> SwerveSubsystem.getInstance().atGoal(), RobotStates.CLOSE));
 
-//        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
-//                () -> _hornTimer.get() > HornConstants.kRemoveAlgaeTime, RobotStates.CLOSE));
-
         addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
-                () -> (Elevator.getInstance().isResetted() || Elevator.getInstance().getCurrent() > 55)
+                () -> (Elevator.getInstance().isResetted())
                     && Sushi.getInstance().isResetted()
                     && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));
 
         addEndCondition(RobotStates.RESET, new StateEndCondition<>(
-                () -> (Elevator.getInstance().isResetted() || Elevator.getInstance().getCurrent() > 55)
+                () -> (Elevator.getInstance().isResetted())
                     && Sushi.getInstance().isResetted()
                     && OuttakeAngle.getInstance().isResetted()
                     && Outtake.getInstance().isResetted(), RobotStates.IDLE));
@@ -164,15 +137,10 @@ public class StateMachine extends StateMachineIO<RobotStates> {
     @Override
     protected void setFunctionMaps() {
         _outtakeTimer = new Timer();
-//        _hornTimer = new Timer();
-//        _coralTimer = new Timer();
         _preOuttakeTimer = new Timer();
 
         addFunctionToOnChangeMap(_outtakeTimer::restart, RobotStates.OUTTAKE);
         addFunctionToOnChangeMap(_preOuttakeTimer::restart, RobotStates.OUTTAKE_READY);
-        addFunctionToOnChangeMap(() -> RobotState.getInstance().setAlgaeLevel(2), RobotStates.CLOSE);
-//        addFunctionToOnChangeMap(_hornTimer::restart, RobotStates.REMOVE_ALGAE);
-//        addFunctionToOnChangeMap(_coralTimer::restart, RobotStates.AT_CENTER_REEF);//?
     }
 
     @Override

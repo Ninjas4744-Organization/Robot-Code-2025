@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.CommandBuilder;
@@ -11,12 +12,14 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FieldConstants {
     public static final double kIntakeThreshold = 1.5;
-    public static final double kOuttakeDistThreshold = 0.03;
-    public static final double kOuttakeAngleThreshold = 5;
+    public static final double kLeftOuttakeDistThreshold = 0.007 + 0.005/* + 0.006 - 0.002*/;
+    public static final double kRightOuttakeDistThreshold = kLeftOuttakeDistThreshold/* + 0.01*/;
+    public static final double kOuttakeAngleThreshold = 3;
 
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
@@ -67,36 +70,44 @@ public class FieldConstants {
         return getFieldLayout().getTagPose(id).get();
     }
 
+    public static AprilTag getTagFromPose(Pose2d pose) {
+        List<AprilTag> tags = getFieldLayout().getTags();
+        for (AprilTag tag : tags)
+            if (tag.pose.toPose2d().equals(pose))
+                return tag;
+
+        return null;
+    }
+
     public static Pose2d getOffsetTagPose(Pose2d tagPose, double offset) {
         return tagPose.transformBy(new Transform2d(offset, 0, new Rotation2d()));
     }
 
     public static Pose2d getClosestReefTag(){
         List<AprilTag> tags = getFieldLayoutWithAllowed(List.of(6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22)).getTags();
+        List<Pose2d> poses = new ArrayList<>();
+        for(AprilTag tag : tags)
+            poses.add(tag.pose.toPose2d());
 
-        AprilTag closestTag = null;
-        double closestTagDistance = Double.MAX_VALUE;
-        for(AprilTag tag : tags){
-            Pose2d tagPose = tag.pose.toPose2d();
-            double distance = RobotState.getInstance().getDistanceTo(tagPose).getNorm();
-
-            if(distance < closestTagDistance){
-                closestTag = tag;
-                closestTagDistance = distance;
-            }
-        }
-
-        return getOffsetTagPose(closestTag.pose.toPose2d(), 0.423);
+        return RobotState.getInstance().getRobotPose().nearest(poses);
     }
 
-    public static Pose2d getOffsetReefTagPose(Pose2d tagPose, boolean isRight, boolean isL4, double extraChange){
-        return tagPose.transformBy(new Transform2d(0, !isL4 ? (isRight ? 0.21 + extraChange : -0.15 + extraChange) : (isRight ? 0.2 + extraChange : -0.18 + extraChange), new Rotation2d()));
+    public static Pose2d getClosestReefTarget(boolean isRight, boolean isL4, double extraChange){
+        return getClosestReefTag().transformBy(new Transform2d(0.420, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + extraChange) : (isRight ? 0.14 + extraChange : -0.18 - 0.015 - 0.006 + extraChange), new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){
-        return RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(1).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
-        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(2).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
-        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(12).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold
-        || RobotState.getInstance().getDistanceTo(FieldConstants.getTagPose(13).toPose2d()).getNorm() < FieldConstants.kIntakeThreshold;
+        return RobotState.getInstance().getDistance(FieldConstants.getTagPose(1).toPose2d()) < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistance(FieldConstants.getTagPose(2).toPose2d()) < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistance(FieldConstants.getTagPose(12).toPose2d()) < FieldConstants.kIntakeThreshold
+        || RobotState.getInstance().getDistance(FieldConstants.getTagPose(13).toPose2d()) < FieldConstants.kIntakeThreshold;
+    }
+
+    public static int getAlgaeLevel() {
+        return switch (getTagFromPose(getClosestReefTag()).ID) {
+            case 6, 8, 10, 17, 19, 21 -> 1;
+            case 7, 9, 11, 18, 20, 22 -> 2;
+            default -> 1;
+        };
     }
 }

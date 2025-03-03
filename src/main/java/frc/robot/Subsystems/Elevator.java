@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -28,7 +29,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     private DigitalInput _limit;
 
-    private Elevator (boolean paused){
+    private Elevator(boolean paused){
         super(paused);
 
         if(!_paused)
@@ -69,15 +70,11 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
                 controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
                 RobotStates.AT_SIDE_REEF);
 
-        addFunctionToPeriodicMap(() -> controller().setPosition(RobotState.getInstance().getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
+        addFunctionToPeriodicMap(() -> controller().setPosition(FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
 
         addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
         addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
-    }
-
-    public double getCurrent(){
-        return controller().getCurrent();
     }
 
     @Override
@@ -86,6 +83,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
         if(_paused)
             return;
+
+        Logger.recordOutput("Elevator Limit", getLimit());
 
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;

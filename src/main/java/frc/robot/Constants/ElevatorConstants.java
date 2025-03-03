@@ -20,7 +20,8 @@ public class ElevatorConstants {
         kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(40, 0, 0, 0, 2, 4, 0, 0.29, 0);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(16, 0, 0, 0, 5, 7, 2, 0.47, 0.4);
+        kControllerConstants.controlConstants.GravityType = GravityTypeValue.Elevator_Static;
         kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;
         kControllerConstants.maxSoftLimit = 1.12;
@@ -29,7 +30,7 @@ public class ElevatorConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final int kLimitSwitchID = 0;
+    public static final int kLimitSwitchID = 2;
     public static final double[] kLStates = new double[]{
             0,
             0.18-0.025-0.01,

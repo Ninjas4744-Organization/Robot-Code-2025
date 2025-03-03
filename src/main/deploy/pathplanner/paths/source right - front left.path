@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2480000000000002,
-        "y": 1.09
+        "x": 1.234733606557377,
+        "y": 1.1779200819672133
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8665,
-        "y": 2.1724999999999994
+        "x": 2.8532336065573767,
+        "y": 2.260420081967213
       },
       "isLocked": false,
       "linkedName": "source right"
     },
     {
       "anchor": {
-        "x": 3.83175,
-        "y": 5.16575
+        "x": 3.668237704918033,
+        "y": 5.409579918032787
       },
       "prevControl": {
-        "x": 1.9109999999999998,
-        "y": 4.649000000000001
+        "x": 1.5027786885245908,
+        "y": 6.528512295081967
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,8 +44,8 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 500.0,
     "nominalVoltage": 12.0,

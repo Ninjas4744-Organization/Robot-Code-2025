@@ -8,27 +8,16 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
     private final DigitalInput _beamBreaker = new DigitalInput(Constants.kBeamBreakerID);
     private static int _reefLevel;
-    private static int _algaeLevel;
 
     public RobotState(){
         _robotState = RobotStates.IDLE;
-        setReefLevel(1);
-        setAlgaeLevel(2);
+        setReefLevel(3);
     }
 
     public boolean isCoralInRobot(){
         if(!isSimulated())
             return !_beamBreaker.get();
         return false;
-    }
-
-    public void setAlgaeLevel(int level) {
-        _algaeLevel = level;
-        Logger.recordOutput("Algae Level", level);
-    }
-
-    public int getAlgaeLevel() {
-        return _algaeLevel;
     }
 
     public void setReefLevel(int level) {

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start right - front"
+            "pathName": "start bottom center - back right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Left"
+            "name": "Right 4"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "front - source left"
+            "pathName": "back right - source right"
           }
         },
         {
@@ -37,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "source left - front"
+            "pathName": "source right - front right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Right"
+            "name": "Right 4"
           }
         },
         {
@@ -51,11 +51,23 @@
           "data": {
             "name": "Wait Outtake"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front right - source right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "start right",
+  "folder": null,
   "choreoAuto": false
 }
