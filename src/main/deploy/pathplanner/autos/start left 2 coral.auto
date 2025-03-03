@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start center - back left"
+            "pathName": "start left - back left"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Right 4"
+            "name": "Left 4"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Right 4"
+            "name": "Left 4"
           }
         },
         {
@@ -68,6 +68,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "start center",
+  "folder": "start left",
   "choreoAuto": false
 }

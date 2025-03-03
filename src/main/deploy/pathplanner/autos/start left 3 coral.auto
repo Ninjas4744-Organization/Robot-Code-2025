@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Left"
+            "name": "Left 4"
           }
         },
         {
@@ -37,19 +37,61 @@
         {
           "type": "path",
           "data": {
-            "pathName": "source left - back left"
+            "pathName": "source left - front left"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Right"
+            "name": "Left 4"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front left - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front left - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         }
       ]

@@ -1,0 +1,211 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start center - back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "back - source right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source right - front right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front right - source right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source right - front right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front right - source right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source right - front"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front - source right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source right - front"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Left 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front left - source left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Outtake"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
