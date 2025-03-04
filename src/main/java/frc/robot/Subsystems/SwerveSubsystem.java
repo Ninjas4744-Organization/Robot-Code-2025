@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,12 +32,13 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     private Pose2d _currentReefTarget = new Pose2d();
-    private final ProfiledPIDController _xPID = new ProfiledPIDController(6, 0, 0.2, new TrapezoidProfile.Constraints(3.5, 7));
-    private final ProfiledPIDController _yPID = new ProfiledPIDController(6, 0, 0.2, new TrapezoidProfile.Constraints(3.5, 7));
-    private final ProfiledPIDController _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(8, 50));
+    private final ProfiledPIDController _xPID = new ProfiledPIDController(8, 0, 0.2, new TrapezoidProfile.Constraints(2, 1));
+    private final ProfiledPIDController _yPID = new ProfiledPIDController(8, 0, 0.2, new TrapezoidProfile.Constraints(2, 1));
+    private final ProfiledPIDController _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
     private double _outtakeExtraMove = 0;
     private Timer _forwardDriveTimer = new Timer();
     private boolean _preAtGoalX = false;
+    private boolean isRight = false;
 
     private SwerveSubsystem(boolean paused){
         super(paused);
@@ -62,13 +64,13 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         addFunctionToPeriodicMap(() -> {
             _currentReefTarget = FieldConstants.getClosestReefTarget(
-                    RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF,
+                    isRight,
                     RobotState.getInstance().getReefLevel() == 4,
                     _outtakeExtraMove);
             _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
             Logger.recordOutput("Reef Target", _currentReefTarget);
 
-            if(atPidingZone())
+            if(atPidingZone() && RobotState.getInstance().getReefLevel() != 1)
                 SwerveController.getInstance().setState("Reef PID");
 
 //            SwerveController.getInstance().setControl(
@@ -91,6 +93,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            _preAtGoalX = atGoalX();
 //
 //            Translation2d pidTrans = SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation());
+
             ChassisSpeeds pid = new ChassisSpeeds(
                     _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
                     _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
@@ -102,7 +105,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //                true,
 //                "Reef PID"
 //            );
-        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF, RobotStates.AT_SIDE_REEF, RobotStates.OUTTAKE_READY);
+
+        addFunctionToOnChangeMap(() -> {
+            _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
+            _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
+            _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
+            isRight = RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF;
+        }, RobotStates.GO_LEFT_REEF, RobotStates.GO_RIGHT_REEF);
 
         addFunctionToOnChangeMap(() -> {
             SwerveController.getInstance().setState("Stop");
@@ -156,6 +166,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             return;
 
         atGoal();
+        Logger.recordOutput("atGoalX", atGoalX());
+        Logger.recordOutput("atGoalY", atGoalY());
+        Logger.recordOutput("atGoal0", atGoal0());
 
         SmartDashboard.putNumber("Competition/Dist To Reef", RobotState.getInstance()
                 .getDistance(_currentReefTarget) * 100);

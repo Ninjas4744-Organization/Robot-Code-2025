@@ -94,7 +94,7 @@ public class FieldConstants {
     }
 
     public static Pose2d getClosestReefTarget(boolean isRight, boolean isL4, double extraChange){
-        return getClosestReefTag().transformBy(new Transform2d(0.350, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + extraChange) : (isRight ? 0.14 + extraChange : -0.18 - 0.015 - 0.006 + extraChange), new Rotation2d()));
+        return getClosestReefTag().transformBy(new Transform2d(0.42, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + extraChange) : (isRight ? 0.14 + extraChange : -0.18 - 0.015 - 0.006 + 0.01 + extraChange), new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){

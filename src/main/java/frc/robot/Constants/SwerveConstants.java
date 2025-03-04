@@ -19,7 +19,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class SwerveConstants {
-    public static final double kDriverSpeedFactor = 0.5;
+    public static final double kDriverSpeedFactor = 1;
     public static final double kDriverRotationSpeedFactor = 0.5;
 
     public static final double kJoystickDeadband = 0.05;
@@ -38,11 +38,11 @@ public class SwerveConstants {
           new Translation2d(-SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0)
         );
 
-        kSwerveConstants.maxSpeed = 4.8;//5;
+        kSwerveConstants.maxSpeed = 4.5;//4.5;
         kSwerveConstants.maxAngularVelocity = 10.7;
-        kSwerveConstants.speedLimit = 4.8;//5;
+        kSwerveConstants.speedLimit = 4.5;//4.5;
         kSwerveConstants.rotationSpeedLimit = 10.7;
-        kSwerveConstants.accelerationLimit = 20;//10;
+        kSwerveConstants.accelerationLimit = 11.8;//10;
         kSwerveConstants.rotationAccelerationLimit = 54;
 
         kSwerveConstants.enableLogging = true;
@@ -90,7 +90,7 @@ public class SwerveConstants {
         kSwerveControllerConstants.axisLockPIDConstants = ControlConstants.createPID(6, 0, 0.2, 0);
         kSwerveControllerConstants.rotationPIDContinuousConnections = Pair.of(-180.0, 180.0);
         kSwerveControllerConstants.driveAssistThreshold = 1.5;
-        kSwerveControllerConstants.pathConstraints = new PathConstraints(2, 2, 8, 50);
+        kSwerveControllerConstants.pathConstraints = new PathConstraints(2, 2, 8, 10.69886608888889);
 
         try {
             kSwerveControllerConstants.robotConfig = RobotConfig.fromGUISettings();

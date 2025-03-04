@@ -63,8 +63,13 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         {
             if(SwerveSubsystem.getInstance().atPidingZone())
                 controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
-        },
-        RobotStates.AT_SIDE_REEF, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+        }, RobotStates.AT_SIDE_REEF);
+
+        addFunctionToPeriodicMap(() ->
+        {
+            if(SwerveSubsystem.getInstance().atPidingZone())
+                controller().setPosition(ElevatorConstants.kLStates[1]);
+        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
 
         addFunctionToPeriodicMap(() -> controller().setPosition(FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
 
