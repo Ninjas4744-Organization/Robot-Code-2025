@@ -6,6 +6,7 @@ import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -50,6 +51,11 @@ public class CommandBuilder {
     }
 
     public static class Teleop{
+        private static PIDController _lookAtCenterReefPID = new PIDController(0.02, 0, 0);
+        static {
+            _lookAtCenterReefPID.enableContinuousInput(-180, 180);
+        }
+
         public static Command swerveDrive(
                 Supplier<Translation2d> translation,
                 Supplier<Translation2d> rotation,
@@ -65,7 +71,8 @@ public class CommandBuilder {
                         double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
 
                         if (isLookAt.getAsBoolean())
-                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
+                            finalRotation = _lookAtCenterReefPID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), RobotState.getInstance().getTransform(new Pose2d(4.49, 4.03, Rotation2d.kZero)).getTranslation().getAngle().getDegrees());
+//                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
 //                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
 
                         if (isBayblade.getAsBoolean())
