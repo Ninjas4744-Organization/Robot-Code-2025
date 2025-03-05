@@ -38,8 +38,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         _leds = new AddressableLED(LedsConstants.kPort);
         _ledsBuffer = new AddressableLEDBuffer(LedsConstants.kLength);
         _leds.setLength(_ledsBuffer.getLength());
-        _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 19);
-        _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 20, 38);
+        _leftBuffer = new AddressableLEDBufferView(_ledsBuffer, 0, 16);
+        _rightBuffer = new AddressableLEDBufferView(_ledsBuffer, 17, 33);
         _leds.setData(_ledsBuffer);
         _leds.start();
 

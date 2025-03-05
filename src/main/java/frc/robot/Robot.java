@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
+import frc.robot.Subsystems.SwerveSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -83,6 +84,7 @@ public class Robot extends LoggedRobot {
 		if (_autoCommand != null)
 			_autoCommand.cancel();
 
+		SwerveSubsystem.getInstance().changePidsToTeleop();
 		_robotContainer.resetSubsystems();
 	}
 

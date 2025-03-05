@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "start left - back left"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start left - back left"
           }
         },
         {
@@ -35,15 +35,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "source left - front left"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
           }
         },
         {
@@ -65,15 +65,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "source left - front left"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Right 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
           }
         },
         {

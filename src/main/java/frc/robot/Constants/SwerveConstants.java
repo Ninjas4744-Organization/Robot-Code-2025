@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class SwerveConstants {
     public static final double kDriverSpeedFactor = 1;
-    public static final double kDriverRotationSpeedFactor = 0.5;
+    public static final double kDriverRotationSpeedFactor = 1;
 
     public static final double kJoystickDeadband = 0.05;
     public static final boolean kInvertGyro = false;
@@ -29,8 +29,8 @@ public class SwerveConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.SwerveConstants kSwerveConstants = new com.ninjas4744.NinjasLib.DataClasses.SwerveConstants();
     static{
         kSwerveConstants.openLoop = false;
-        kSwerveConstants.trackWidth = 0.7;
-        kSwerveConstants.wheelBase = 0.7;
+        kSwerveConstants.trackWidth = 0.685;
+        kSwerveConstants.wheelBase = 0.685;
         kSwerveConstants.kinematics = new SwerveDriveKinematics(
           new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, SwerveConstants.kSwerveConstants.trackWidth / 2.0),
           new Translation2d(SwerveConstants.kSwerveConstants.wheelBase / 2.0, -SwerveConstants.kSwerveConstants.trackWidth / 2.0),
@@ -39,11 +39,11 @@ public class SwerveConstants {
         );
 
         kSwerveConstants.maxSpeed = 4.5;//4.5;
-        kSwerveConstants.maxAngularVelocity = 10.7;
+        kSwerveConstants.maxAngularVelocity = 9.2;
         kSwerveConstants.speedLimit = 4.5;//4.5;
-        kSwerveConstants.rotationSpeedLimit = 10.7;
+        kSwerveConstants.rotationSpeedLimit = 9.2;
         kSwerveConstants.accelerationLimit = 11.8;//10;
-        kSwerveConstants.rotationAccelerationLimit = 54;
+        kSwerveConstants.rotationAccelerationLimit = 63.79;
 
         kSwerveConstants.enableLogging = true;
         kSwerveConstants.moduleConstants = new SwerveModuleConstants[4];
@@ -61,7 +61,7 @@ public class SwerveConstants {
                     0);
 
             kSwerveConstants.moduleConstants[i].driveMotorConstants.main.id = 10 + i * 2;
-            kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 100;
+            kSwerveConstants.moduleConstants[i].driveMotorConstants.currentLimit = 72;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.encoderConversionFactor = 0.056267331109070916;
             kSwerveConstants.moduleConstants[i].driveMotorConstants.subsystemName = "Swerve Module " + i + " Drive Motor";
             kSwerveConstants.moduleConstants[i].driveMotorConstants.enableLogging = false;

@@ -36,7 +36,7 @@ public class RobotContainer {
                 Constants.kPigeonID);
 
         SwerveSubsystem.createInstance(false);
-        Elevator.createInstance(true);
+        Elevator.createInstance(false);
         Leds.createInstance(false);
         Outtake.createInstance(false);
         OuttakeAngle.createInstance(false);
@@ -60,8 +60,8 @@ public class RobotContainer {
         StateMachine.getInstance().setTriggerForSimulationTesting(_driverJoystick.povLeft());
 
         //Auto Intake, NOTE: may or may not crash auto
-        new Trigger(FieldConstants::nearCoralStation).onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
-        new Trigger(() -> !FieldConstants.nearCoralStation() && RobotState.getInstance().getRobotState() == RobotStates.INTAKE).onTrue(CommandBuilder.changeRobotState(RobotStates.IDLE));
+//        new Trigger(FieldConstants::nearCoralStation).onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
+//        new Trigger(() -> !FieldConstants.nearCoralStation() && RobotState.getInstance().getRobotState() == RobotStates.INTAKE).onTrue(CommandBuilder.changeRobotState(RobotStates.IDLE));
 
         configureTestBindings();
         configureDriverBindings();
@@ -76,7 +76,7 @@ public class RobotContainer {
             () -> isSwerveLookAt,
             () -> false));
 
-//        _driverJoystick.R1().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
+        _driverJoystick.cross().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
 
         _driverJoystick.L1().onTrue(CommandBuilder.resetGyro(false));
         _driverJoystick.R1().onTrue(CommandBuilder.resetGyro(true));
@@ -110,12 +110,9 @@ public class RobotContainer {
             if(!RobotState.isSimulated())
                 ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
         })));
-        _operatorJoystick.povUp().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
 
         _operatorJoystick.L1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeReefLevel(false)));
         _operatorJoystick.R1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeReefLevel(true)));
-        _operatorJoystick.L2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)));
-        _operatorJoystick.R2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_RIGHT_REEF)));
 
         _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
         _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));

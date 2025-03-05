@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "start right - back right"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start right - back right"
           }
         },
         {
@@ -35,15 +35,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "source right - front right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Left 4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Left 4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "source right - front right"
+                }
+              }
+            ]
           }
         },
         {
@@ -65,15 +72,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "source right - front right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Right 4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Right 4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "source right - front right"
+                }
+              }
+            ]
           }
         },
         {
