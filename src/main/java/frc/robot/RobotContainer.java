@@ -20,6 +20,7 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.*;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
     private final CommandPS5Controller _driverJoystick;
@@ -116,7 +117,7 @@ public class RobotContainer {
 
         _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
         _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
-        _operatorJoystick.triangle().onTrue(CommandBuilder.changeRobotState(RobotStates.AT_SIDE_REEF));
+        _operatorJoystick.triangle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.OUTTAKE_READY)));
         _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
     }
 
@@ -134,6 +135,8 @@ public class RobotContainer {
             if (estimation.robotPose != null)
                 RobotState.getInstance().updateRobotPose(estimation);
 //        RobotState.getInstance().updateRobotPose(LimelightVision.getVisionEstimation());
+        Logger.recordOutput("Right", VisionIO.getInstance().getVisionEstimations()[0].robotPose);
+        Logger.recordOutput("Left", VisionIO.getInstance().getVisionEstimations()[1].robotPose);
 
         SmartDashboard.putString("Competition/Robot State", RobotState.getInstance().getRobotState().toString());
         SmartDashboard.putNumber("Competition/Reef Level", RobotState.getInstance().getReefLevel());

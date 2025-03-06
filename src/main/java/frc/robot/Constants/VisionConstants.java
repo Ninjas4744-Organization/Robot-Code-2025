@@ -2,9 +2,11 @@ package frc.robot.Constants;
 
 import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
+import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 import frc.robot.StateMachine.RobotState;
@@ -39,22 +41,24 @@ public class VisionConstants {
 
     static InterpolatingDoubleTreeMap distFOMMap = new InterpolatingDoubleTreeMap();
     static{
-        distFOMMap.put(0.0, 0.0);
-        distFOMMap.put(0.5, 0.1);
-        distFOMMap.put(1.0, 0.2);
-        distFOMMap.put(3.0, 1.0);
-        distFOMMap.put(6.0, 3.0);
-        distFOMMap.put(7.0, 7.0);
-        distFOMMap.put(8.0, 12.0);
+        distFOMMap.put(0.0, 0.5);
+        distFOMMap.put(0.5, 1.0);
+        distFOMMap.put(1.0, 2.0);
+        distFOMMap.put(3.0, 4.0);
+        distFOMMap.put(6.0, 20.0);
+        distFOMMap.put(7.0, 80.0);
+        distFOMMap.put(8.0, 160.0);
     }
     public static double[] calculateFOM(VisionOutput estimation) {
 //        double a = 1.33, b = 0.153, c = 4.839, d = 0.29;
 //        double distFOM = (b * Math.exp(a * (estimation.closestTagDist - c)) + d) / estimation.amountOfTargets;
 
         double distFOM = distFOMMap.get(estimation.closestTagDist) / estimation.amountOfTargets;
-        double speedFOM = 0;//0.1 * RobotState.getInstance().getRobotVelocity().getNorm();
+        double speedFOM = new Translation2d(
+                SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond,
+                SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond).getNorm() / 3;
         double FOM = distFOM + speedFOM;
 
-        return new double[] { FOM, FOM, FOM * 4 };
+        return new double[] { FOM, FOM, FOM };
     }
 }

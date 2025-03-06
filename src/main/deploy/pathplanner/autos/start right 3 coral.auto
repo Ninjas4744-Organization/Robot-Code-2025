@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Wait Reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Left 4"
           }
         },

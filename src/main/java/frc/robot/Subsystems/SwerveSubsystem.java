@@ -3,12 +3,10 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -55,9 +53,16 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         }
     }
 
-    public void changePidsToTeleop(){
-        _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 2));
-        _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 2));
+    public void setPidsToTeleop(){
+        _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
+        _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
+        _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
+        _0PID.enableContinuousInput(-180, 180);
+    }
+
+    public void setPidsToAuto(){
+        _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
+        _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
         _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
         _0PID.enableContinuousInput(-180, 180);
     }
@@ -81,7 +86,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
                     RobotState.getInstance().getReefLevel() == 4,
                     _outtakeExtraMove);
             _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
-            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(stage == 2 ? 0.02 : 0, 0, Rotation2d.kZero));
+            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(stage == 2 ? 0.03 : 0, 0, Rotation2d.kZero));
             Logger.recordOutput("Reef Target", _currentReefTarget);
 
             if(atPidingZone() && !startedPiding){

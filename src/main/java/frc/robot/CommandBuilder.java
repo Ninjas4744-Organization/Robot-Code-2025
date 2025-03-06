@@ -134,6 +134,7 @@ public class CommandBuilder {
 
         /** Registers all auto commands to pathplanner */
         private static void registerCommands() {
+            NamedCommands.registerCommand("Wait Reset", waitReset());
             NamedCommands.registerCommand("Intake", intake());
             NamedCommands.registerCommand("Wait Outtake", waitOuttake());
             NamedCommands.registerCommand("Right 4", Right(4));
@@ -142,7 +143,11 @@ public class CommandBuilder {
             NamedCommands.registerCommand("Left 3", Left(3));
         }
 
-        public static Command intake() {
+        private static Command waitReset(){
+            return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY);
+        }
+
+        private static Command intake() {
             return Commands.sequence(
                     CommandBuilder.changeRobotState(RobotStates.INTAKE),
                     Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto"))
@@ -151,11 +156,11 @@ public class CommandBuilder {
             );
         }
 
-        public static Command waitOuttake() {
+        private static Command waitOuttake() {
             return Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CLOSE).andThen(Commands.runOnce(() -> SwerveController.getInstance().setState("Auto")));
         }
 
-        public static Command Right(int level) {
+        private static Command Right(int level) {
             return Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
@@ -164,7 +169,7 @@ public class CommandBuilder {
             );
         }
 
-        public static Command Left(int level) {
+        private static Command Left(int level) {
             return Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),

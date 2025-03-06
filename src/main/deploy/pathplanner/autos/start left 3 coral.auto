@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Wait Reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Left 4"
           }
         },
@@ -35,15 +41,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Left 4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "source left - front left"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Left 4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "source left - front left"
+                }
+              }
+            ]
           }
         },
         {
@@ -65,15 +78,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Right 4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "source left - front left"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Right 4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "source left - front left"
+                }
+              }
+            ]
           }
         },
         {

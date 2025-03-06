@@ -66,11 +66,13 @@ public class Robot extends LoggedRobot {
 	public void autonomousInit() {
 		SwerveController.getInstance().setState("Auto");
 		RobotState.getInstance().setRobotState(RobotStates.RESET);
-		RobotState.getInstance().resetGyro(Rotation2d.k180deg);
+//		RobotState.getInstance().resetGyro(Rotation2d.k180deg);
+		CommandBuilder.resetGyro(false).schedule();
 		_autoCommand = _autoChooser.get();
+		SwerveSubsystem.getInstance().setPidsToAuto();
 
 		if (_autoCommand != null)
-			Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY).andThen(_autoCommand).schedule();
+			_autoCommand.schedule();
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class Robot extends LoggedRobot {
 		if (_autoCommand != null)
 			_autoCommand.cancel();
 
-		SwerveSubsystem.getInstance().changePidsToTeleop();
+		SwerveSubsystem.getInstance().setPidsToTeleop();
 		_robotContainer.resetSubsystems();
 	}
 
