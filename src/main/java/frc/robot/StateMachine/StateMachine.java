@@ -20,7 +20,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
         return switch (currentState) {
-            case RESET, CLOSE -> wantedState == RobotStates.IDLE;
+            case RESET, CLOSE -> wantedState == RobotStates.IDLE
+            || wantedState == RobotStates.RESET;
 
             case IDLE -> wantedState == RobotStates.CORAL_SEARCH
                     || wantedState == RobotStates.CORAL_READY;

@@ -79,7 +79,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
         addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
-        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().atGoal()).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
+        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().getPosition() < 0.15).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
     }
 
     @Override
