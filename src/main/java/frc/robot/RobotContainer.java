@@ -117,7 +117,11 @@ public class RobotContainer {
 
         _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
         _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
-        _operatorJoystick.triangle().onTrue(Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.OUTTAKE_READY)));
+        _operatorJoystick.triangle().onTrue(Commands.either(
+                CommandBuilder.changeRobotState(RobotStates.AT_SIDE_REEF),
+                Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.OUTTAKE_READY)),
+                () -> RobotState.getInstance().getRobotState() != RobotStates.AT_SIDE_REEF
+        ));
         _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
     }
 

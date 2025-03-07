@@ -27,12 +27,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.GO_LEFT_REEF
-                    || wantedState == RobotStates.GO_RIGHT_REEF;
+                    || wantedState == RobotStates.RESET;
 
             case INTAKE -> wantedState == RobotStates.INDEX_BACK
-                    || wantedState == RobotStates.INDEX
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
 
@@ -42,15 +39,6 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE
                     || wantedState == RobotStates.INTAKE;
-
-//            case L1, L2, L3, L4 -> wantedState == RobotStates.AT_CENTER_REEF
-//                    || wantedState == RobotStates.RESET
-//                    || wantedState == RobotStates.CLOSE;
-
-//            case AT_CENTER_REEF -> wantedState == RobotStates.GO_RIGHT_REEF
-//                    || wantedState == RobotStates.GO_LEFT_REEF
-//                    || wantedState == RobotStates.RESET
-//                    || wantedState == RobotStates.CLOSE;
 
             case INDEX_BACK -> wantedState == RobotStates.INDEX
                     || wantedState == RobotStates.CLOSE

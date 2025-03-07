@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OuttakeAngleConstants;
 import frc.robot.Constants.OuttakeConstants;
 import frc.robot.RobotContainer;
@@ -45,7 +47,7 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        runMotor(0.07).until(_limit::get).schedule();
+        runMotor(OuttakeAngleConstants.kResetSpeed).until(_limit::get).schedule();
     }
 
     @Override
@@ -60,7 +62,9 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
             ? OuttakeAngleConstants.kCoralState
             : OuttakeAngleConstants.kL1State), RobotStates.AT_SIDE_REEF);
 
-        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.CLOSE, RobotStates.INTAKE);
+        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.INTAKE);
+
+        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(OuttakeAngleConstants.kCoralState)).until(() -> controller().atGoal()).andThen(runMotor(OuttakeAngleConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
         addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kAlgaeState), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
     }

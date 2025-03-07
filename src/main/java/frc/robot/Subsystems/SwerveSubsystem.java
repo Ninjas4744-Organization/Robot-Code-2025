@@ -81,6 +81,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
           RobotStates.RESET);
 
         addFunctionToPeriodicMap(() -> {
+            if(RobotState.getInstance().getReefLevel() == 1)
+                return;
+
             _currentReefTarget = FieldConstants.getClosestReefTarget(
                     isRight,
                     RobotState.getInstance().getReefLevel() == 4,
