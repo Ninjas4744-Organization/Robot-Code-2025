@@ -5,15 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "start right - back right"
+            "name": "Wait Reset"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start right - back right"
           }
         },
         {
@@ -35,15 +41,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "source right - front right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Left 4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Left 4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "source right - front right"
+                }
+              }
+            ]
           }
         },
         {

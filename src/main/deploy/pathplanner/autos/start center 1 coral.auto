@@ -5,9 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "start center - back"
+            "name": "Wait Reset"
           }
         },
         {
@@ -17,21 +17,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "start center - back"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Wait Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "back - source left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
           }
         }
       ]

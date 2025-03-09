@@ -103,8 +103,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             if(atGoal() && stage == 1)
                 stage = 2;
 
-            if(atPidingZone() && RobotState.getInstance().getReefLevel() != 1)
-                SwerveController.getInstance().setState("Reef PID");
+            if(!atPidingZone())
+                return;
+
+            SwerveController.getInstance().setState("Reef PID");
 
 //            SwerveController.getInstance().setControl(
 //                new ChassisSpeeds(

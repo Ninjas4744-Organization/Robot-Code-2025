@@ -5,15 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "start left - back left"
+            "name": "Wait Reset"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start left - back left"
           }
         },
         {

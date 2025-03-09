@@ -157,89 +157,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "5,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Competition/Outtake Right Increase",
-              "_title": "Right Increase",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Competition/Outtake Left Increase",
-              "_title": "Left Increase",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,2": {
-            "size": [
-              1,
-              2
-            ],
-            "content": {
-              "_type": "Number Slider",
-              "_source0": "network_table:///SmartDashboard/Competition/Outtake Extra Threshold",
-              "_title": "Extra Threshold",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Slider Settings/Min": 0.0,
-              "Slider Settings/Max": 1.0,
-              "Slider Settings/Block increment": 0.0625,
-              "Visuals/Display value": true,
-              "Visuals/Orientation": "VERTICAL"
-            }
-          },
-          "7,2": {
-            "size": [
-              1,
-              2
-            ],
-            "content": {
-              "_type": "Number Bar",
-              "_source0": "network_table:///SmartDashboard/Competition/Dist To Reef",
-              "_title": "Dist To Reef",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": 0.0,
-              "Range/Max": 2.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true,
-              "Visuals/Orientation": "VERTICAL"
-            }
-          },
-          "3,2": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Number Bar",
-              "_source0": "network_table:///SmartDashboard/Competition/Outtake Extra Move",
-              "_title": "Extra Move",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": -3.0,
-              "Range/Max": 3.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 7,
-              "Visuals/Show text": true,
-              "Visuals/Orientation": "HORIZONTAL"
-            }
-          },
-          "3,0": {
+          "0,2": {
             "size": [
               2,
               2
@@ -252,20 +170,26 @@
               "_showGlyph": false
             }
           },
-          "5,0": {
+          "8,2": {
             "size": [
               2,
               2
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Competition/Reef Level",
               "_title": "L",
               "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Range/Min": 1.0,
+              "Range/Max": 4.0,
+              "Range/Center": 1.0,
+              "Visuals/Num tick marks": 4,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
             }
           },
-          "7,0": {
+          "8,0": {
             "size": [
               2,
               2
@@ -291,6 +215,27 @@
               "_title": "Auto Chooser",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "2,0": {
+            "size": [
+              6,
+              4
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://photonvisionright_Port_1181_Input_MJPEG_Server",
+              "_title": "photonvisionright_Port_1181_Input_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 100.0,
+              "fps": 10,
+              "imageWidth": 320,
+              "imageHeight": 240
             }
           }
         }

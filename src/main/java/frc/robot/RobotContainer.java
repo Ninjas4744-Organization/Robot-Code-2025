@@ -6,6 +6,7 @@ import com.ninjas4744.NinjasLib.StateMachineIO;
 import com.ninjas4744.NinjasLib.Swerve.Swerve;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -77,7 +78,7 @@ public class RobotContainer {
             () -> isSwerveLookAt,
             () -> false));
 
-        _driverJoystick.cross().onTrue(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt));
+        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt)));
 
         _driverJoystick.L1().onTrue(CommandBuilder.resetGyro(false));
         _driverJoystick.R1().onTrue(CommandBuilder.resetGyro(true));
