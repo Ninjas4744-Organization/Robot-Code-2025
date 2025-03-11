@@ -234,8 +234,86 @@
               "Controls/Rotation": "NONE",
               "compression": 100.0,
               "fps": 10,
-              "imageWidth": 320,
-              "imageHeight": 240
+              "imageWidth": 160,
+              "imageHeight": 120
+            }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Competition/Outtake Right Increase",
+              "_title": "/SmartDashboard/Competition/Outtake Right Increase",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Competition/Outtake Left Increase",
+              "_title": "/SmartDashboard/Competition/Outtake Left Increase",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Competition/Outtake Extra Threshold",
+              "_title": "/SmartDashboard/Competition/Outtake Extra Threshold",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Competition/Dist To Reef",
+              "_title": "/SmartDashboard/Competition/Dist To Reef",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Competition/Outtake Extra Move",
+              "_title": "/SmartDashboard/Competition/Outtake Extra Move",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/photonvisionright_Port_1181_Input_MJPEG_Server",
+              "_title": "/CameraPublisher/photonvisionright_Port_1181_Input_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }

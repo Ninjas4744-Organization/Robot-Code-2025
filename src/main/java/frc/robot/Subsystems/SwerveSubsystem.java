@@ -94,12 +94,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
             if(atPidingZone() && !startedPiding){
                 System.out.println("Reseting PID to X" + RobotState.getInstance().getRobotPose().getX() + " Y" + RobotState.getInstance().getRobotPose().getY() + " a" + RobotState.getInstance().getRobotPose().getRotation().getDegrees() + " vx" + SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond + " vy" + SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond + " omega" + SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond);
-//                _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
-//                _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
-//                _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
-                _xPID.reset(RobotState.getInstance().getRobotPose().getX());
-                _yPID.reset(RobotState.getInstance().getRobotPose().getY());
-                _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees());
+//                if(SmartDashboard.getBoolean("Competition/Enable Profile Init Velocity", false)){
+                _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
+                _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
+                _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
+//                }else{
+//                    _xPID.reset(RobotState.getInstance().getRobotPose().getX());
+//                    _yPID.reset(RobotState.getInstance().getRobotPose().getY());
+//                    _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees());
+//                }
                 isRight = RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF;
                 startedPiding = true;
             }
@@ -152,7 +155,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
     private boolean atGoalX(){
         if(!_paused){
-            double thresh = FieldConstants.kXOuttakeDistThreshold + SmartDashboard.getNumber("Outtake Extra Threshold", 0) / 100;
+            double thresh = FieldConstants.kXOuttakeDistThreshold + SmartDashboard.getNumber("Competition/Outtake Extra Threshold", 0) / 100;
             Logger.recordOutput("x dist", Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()));
             return Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()) < thresh;
         }
