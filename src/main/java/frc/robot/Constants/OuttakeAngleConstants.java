@@ -20,7 +20,7 @@ public class OuttakeAngleConstants {
         kControllerConstants.encoderHomePosition = 135 / 360.0;
         kControllerConstants.isMinSoftLimit = false;
         kControllerConstants.minSoftLimit = 15;
-
+        kControllerConstants.limitSwitchID=3;
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
@@ -28,6 +28,5 @@ public class OuttakeAngleConstants {
     public static final double kCoralState = 135 / 360.0;
     public static final double kAlgaeState = 35 / 360.0;
     public static final double kL1State = 0;//135 / 360.0;//0;
-    public static final int kLimitSwitchID = 3;
     public static final double kResetSpeed = 0.1;
 }

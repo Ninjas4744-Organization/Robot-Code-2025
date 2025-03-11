@@ -26,56 +26,25 @@ public class StateMachine extends StateMachineIO<RobotStates> {
             case RESET, CLOSE -> wantedState == RobotStates.IDLE
             || wantedState == RobotStates.RESET;
 
-            case IDLE -> wantedState == RobotStates.CORAL_SEARCH
-                    || wantedState == RobotStates.CORAL_READY;
-
-            case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
+            case IDLE -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
                     || wantedState == RobotStates.RESET;
 
-            case INTAKE -> wantedState == RobotStates.INDEX_BACK
+            case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
 
-            case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
-                    || wantedState == RobotStates.GO_RIGHT_REEF
+            case CORAL_READY -> wantedState == RobotStates.GO_REEF
                     || wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE
                     || wantedState == RobotStates.INTAKE;
+            case OUTTAKE, REMOVE_ALGAE, AT_REEF -> wantedState == RobotStates.RESET
+                    || wantedState == RobotStates.CLOSE;
 
-            case INDEX_BACK -> wantedState == RobotStates.INDEX
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.RESET;
-
-            case INDEX -> wantedState == RobotStates.CORAL_READY
-                    || wantedState == RobotStates.IDLE
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.RESET;
-
-            case GO_ALGAE -> wantedState == RobotStates.REMOVE_ALGAE
+            case GO_REEF -> wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.RESET
                     || wantedState == RobotStates.CLOSE;
-
-            case OUTTAKE, GO_ALGAE_BACK -> wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case REMOVE_ALGAE -> wantedState == RobotStates.GO_ALGAE_BACK
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case GO_RIGHT_REEF, GO_LEFT_REEF -> wantedState == RobotStates.AT_REEF
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case AT_REEF -> wantedState == RobotStates.OUTTAKE_READY
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case OUTTAKE_READY -> wantedState == RobotStates.OUTTAKE
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
             case TEST -> false;
         };
     }
@@ -155,6 +124,9 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 }).until(() -> Elevator.getInstance().isResetted() &&
                         OuttakeAngle.getInstance().isResetted())
                 .andThen(CommandBuilder.changeRobotState(RobotStates.IDLE)));
+        addCommand(RobotStates.CLIMB,Commands.runOnce(()->{
+            Climber.getInstance().setPosition(ClimberConstans.kOpenState);
+        }));
     }
 
     @Override

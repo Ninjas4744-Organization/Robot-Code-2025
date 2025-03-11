@@ -46,33 +46,33 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> {
-            switch (RobotState.getInstance().getReefLevel()){
-                case 1:
-                    controller().setVelocity(OuttakeConstants.kL1OuttakeState);
-                    break;
-
-                case 4:
-                    controller().setVelocity(OuttakeConstants.kL4OuttakeState);
-                    break;
-
-                default:
-                    controller().setVelocity(OuttakeConstants.kOuttakeState);
-                    break;
-            }
-        }, RobotStates.OUTTAKE);
-
-        addFunctionToPeriodicMap(() -> {
-            if(controller().getCurrent() < 55)
-                controller().setVelocity(OuttakeConstants.kIntakeState);
-            else
-                controller().setVelocity(OuttakeConstants.kIndexBackState);
-        }, RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexBackState), RobotStates.INDEX_BACK);
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexState), RobotStates.INDEX);
-
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
-        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
+//        addFunctionToOnChangeMap(() -> {
+//            switch (RobotState.getInstance().getReefLevel()){
+//                case 1:
+//                    controller().setVelocity(OuttakeConstants.kL1OuttakeState);
+//                    break;
+//
+//                case 4:
+//                    controller().setVelocity(OuttakeConstants.kL4OuttakeState);
+//                    break;
+//
+//                default:
+//                    controller().setVelocity(OuttakeConstants.kOuttakeState);
+//                    break;
+//            }
+//        }, RobotStates.OUTTAKE);
+//
+//        addFunctionToPeriodicMap(() -> {
+//            if(controller().getCurrent() < 55)
+//                controller().setVelocity(OuttakeConstants.kIntakeState);
+//            else
+//                controller().setVelocity(OuttakeConstants.kIndexBackState);
+//        }, RobotStates.INTAKE);
+//        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexBackState), RobotStates.INDEX_BACK);
+//        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexState), RobotStates.INDEX);
+//
+//        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
+//        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
     }
 
     public Command setVelocity(double velocity){
