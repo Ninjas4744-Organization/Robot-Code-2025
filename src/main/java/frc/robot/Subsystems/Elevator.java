@@ -25,13 +25,8 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         _instance = new Elevator(paused);
     }
 
-    private DigitalInput _limit;
-
     private Elevator(boolean paused){
         super(paused);
-
-        if(!_paused)
-            _limit = new DigitalInput(ElevatorConstants.kLimitSwitchID);
     }
 
     @Override
@@ -43,44 +38,39 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setSimulationController() {
         _simulatedController = new NinjasSimulatedController(ElevatorConstants.kSimulatedControllerConstants);
     }
-
-    private boolean getLimit(){
-        return !_limit.get();
-    }
-
     @Override
     protected void resetSubsystemO() {
-        runMotor(ElevatorConstants.kResetSpeed).until(this::getLimit).schedule();
+        runMotor(ElevatorConstants.kResetSpeed).until(_controller::getLimit).schedule();
     }
 
     @Override
     protected boolean isResettedO() {
-        return !_limit.get();
+        return _controller.getLimit();
     }
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToPeriodicMap(() ->
-        {
-            if(SwerveSubsystem.getInstance().atPidingZone())
-                controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
-        }, RobotStates.AT_REEF);
-
-        addFunctionToPeriodicMap(() ->
-        {
-            if(SwerveSubsystem.getInstance().atPidingZone()){
-                if(RobotState.isAutonomous())
-                    controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
-                else
-                    controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() == 2 ? 1 : 2]);
-            }
-        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
-
-        addFunctionToPeriodicMap(() -> controller().setPosition(FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
-
-        addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
-        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
-        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().getPosition() < 0.15).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
+//        addFunctionToPeriodicMap(() ->
+//        {
+//            if(SwerveSubsystem.getInstance().atPidingZone())
+//                controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
+//        }, RobotStates.AT_REEF);
+//
+//        addFunctionToPeriodicMap(() ->
+//        {
+//            if(SwerveSubsystem.getInstance().atPidingZone()){
+//                if(RobotState.isAutonomous())
+//                    controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
+//                else
+//                    controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() == 2 ? 1 : 2]);
+//            }
+//        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
+//
+//        addFunctionToPeriodicMap(() -> controller().setPosition(FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2), RobotStates.REMOVE_ALGAE);
+//
+//        addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
+//        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
+//        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().getPosition() < 0.15).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
     }
 
     public Command setPosition(double position){
@@ -94,14 +84,14 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        Logger.recordOutput("Elevator Limit", getLimit());
+        Logger.recordOutput("Elevator Limit", _controller.getLimit());
 
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
         Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
         Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
 
-        if (!RobotState.isSimulated() && getLimit()){
+        if (!RobotState.isSimulated() && _controller.getLimit()){
             controller().resetEncoder();
 //            if (controller().getOutput() < 0)
 //                controller().stop();
