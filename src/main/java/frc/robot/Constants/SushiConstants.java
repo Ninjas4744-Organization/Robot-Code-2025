@@ -1,6 +1,5 @@
 package frc.robot.Constants;
 
-import com.ninjas4744.NinjasLib.DataClasses.ControlConstants;
 import com.ninjas4744.NinjasLib.DataClasses.MainControllerConstants;
 import com.ninjas4744.NinjasLib.DataClasses.SimulatedControllerConstants;
 
@@ -15,5 +14,5 @@ public class SushiConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kPercent = 0.3;
+    public static final double kIntake = 0.3;
 }

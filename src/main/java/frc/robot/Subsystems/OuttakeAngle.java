@@ -3,15 +3,10 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OuttakeAngleConstants;
-import frc.robot.Constants.OuttakeConstants;
-import frc.robot.RobotContainer;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
@@ -60,13 +55,17 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
         addFunctionToOnChangeMap(() ->
             controller().setPosition(RobotState.getInstance().getReefLevel() != 1
             ? OuttakeAngleConstants.kCoralState
-            : OuttakeAngleConstants.kL1State), RobotStates.AT_SIDE_REEF);
+            : OuttakeAngleConstants.kL1State), RobotStates.AT_REEF);
 
         addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.INTAKE);
 
         addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(OuttakeAngleConstants.kCoralState)).until(() -> controller().atGoal()).andThen(runMotor(OuttakeAngleConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
         addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kAlgaeState), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
+    }
+
+    public Command setPosition(double position){
+        return Commands.runOnce(() -> controller().setPosition(position), this);
     }
 
     @Override

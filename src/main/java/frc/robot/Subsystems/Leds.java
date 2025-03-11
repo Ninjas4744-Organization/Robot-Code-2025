@@ -1,7 +1,6 @@
 package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
-import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -104,7 +103,7 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_SIDE_REEF);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_REEF);
         addFunctionToPeriodicMap(this::rainbow, RobotStates.REMOVE_ALGAE);
     }
 

@@ -3,6 +3,8 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OuttakeConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
@@ -71,6 +73,28 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
         addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
+    }
+
+    public Command setVelocity(double velocity){
+        return Commands.runOnce(() -> controller().setVelocity(velocity), this);
+    }
+
+    public Command outtake(){
+        return Commands.runOnce(() -> {
+            switch (RobotState.getInstance().getReefLevel()){
+                case 1:
+                    controller().setVelocity(OuttakeConstants.kL1OuttakeState);
+                    break;
+
+                case 4:
+                    controller().setVelocity(OuttakeConstants.kL4OuttakeState);
+                    break;
+
+                default:
+                    controller().setVelocity(OuttakeConstants.kOuttakeState);
+                    break;
+            }
+        }, this);
     }
 
     public double getCurrent(){

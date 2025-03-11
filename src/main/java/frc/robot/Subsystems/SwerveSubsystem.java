@@ -12,6 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -115,10 +116,16 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
             SwerveController.getInstance().setState("Reef PID");
 
+            double xVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getX());
+            double yVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getY());
+            double aVel = Units.degreesToRadians(Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getRotation().getDegrees()));
             ChassisSpeeds pid = new ChassisSpeeds(
-                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
-                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
-                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
+//                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
+//                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
+//                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
+                    xVel,
+                    yVel,
+                    aVel
             );
             SwerveController.getInstance().setControl(pid, true, "Reef PID");
 
@@ -138,7 +145,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //            );
 
 //            Translation2d pidTrans = SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation());
-        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF, RobotStates.AT_SIDE_REEF, RobotStates.OUTTAKE_READY);
+        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF, RobotStates.AT_REEF, RobotStates.OUTTAKE_READY);
 
         addFunctionToOnChangeMap(() -> {
             SwerveController.getInstance().setState("Stop");
@@ -147,6 +154,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             startedPiding = false;
         },
         RobotStates.OUTTAKE);
+    }
+
+    public Command goToReef(){
+        return Commands.none();
     }
 
     public boolean atPidingZone(){

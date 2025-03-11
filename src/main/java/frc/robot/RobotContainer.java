@@ -6,13 +6,11 @@ import com.ninjas4744.NinjasLib.StateMachineIO;
 import com.ninjas4744.NinjasLib.Swerve.Swerve;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -85,6 +83,7 @@ public class RobotContainer {
 
         _driverJoystick.L2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_LEFT_REEF)));
         _driverJoystick.R2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.GO_RIGHT_REEF)));
+
     }
 
     private void configureOperatorBindings() {
@@ -119,9 +118,9 @@ public class RobotContainer {
         _operatorJoystick.cross().onTrue(CommandBuilder.changeRobotState(RobotStates.INTAKE));
         _operatorJoystick.circle().onTrue(CommandBuilder.changeRobotState(RobotStates.CLOSE));
         _operatorJoystick.triangle().onTrue(Commands.either(
-                CommandBuilder.changeRobotState(RobotStates.AT_SIDE_REEF),
+                CommandBuilder.changeRobotState(RobotStates.AT_REEF),
                 Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.OUTTAKE_READY)),
-                () -> RobotState.getInstance().getRobotState() != RobotStates.AT_SIDE_REEF
+                () -> RobotState.getInstance().getRobotState() != RobotStates.AT_REEF
         ));
         _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
     }

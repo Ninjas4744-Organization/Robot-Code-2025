@@ -6,6 +6,7 @@ import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -63,7 +64,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         {
             if(SwerveSubsystem.getInstance().atPidingZone())
                 controller().setPosition(ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]);
-        }, RobotStates.AT_SIDE_REEF);
+        }, RobotStates.AT_REEF);
 
         addFunctionToPeriodicMap(() ->
         {
@@ -80,6 +81,10 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         addFunctionToOnChangeMap(this::resetSubsystemO, RobotStates.RESET);
         addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CORAL_SEARCH, RobotStates.CORAL_READY);
         addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().getPosition() < 0.15).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
+    }
+
+    public Command setPosition(double position){
+        return Commands.runOnce(() -> controller().setPosition(position), this);
     }
 
     @Override

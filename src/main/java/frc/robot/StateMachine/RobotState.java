@@ -8,10 +8,12 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
     private final DigitalInput _beamBreaker = new DigitalInput(Constants.kBeamBreakerID);
     private static int _reefLevel;
+    private static boolean _isReefRight;
 
     public RobotState(){
         _robotState = RobotStates.IDLE;
         setReefLevel(3);
+        setReefRight(false);
     }
 
     public boolean isCoralInRobot(){
@@ -27,6 +29,15 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
 
     public int getReefLevel() {
         return _reefLevel;
+    }
+
+    public void setReefRight(boolean reefRight){
+        _isReefRight = reefRight;
+        Logger.recordOutput("Is Reef Right", reefRight);
+    }
+
+    public boolean isReefRight(){
+        return _isReefRight;
     }
 
     public static RobotState getInstance() {
