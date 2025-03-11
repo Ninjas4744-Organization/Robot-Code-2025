@@ -82,16 +82,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
           RobotStates.RESET);
 
         addFunctionToPeriodicMap(() -> {
-            if(RobotState.getInstance().getReefLevel() == 1)
-                return;
 
-            _currentReefTarget = FieldConstants.getClosestReefTarget(
-                    isRight,
-                    RobotState.getInstance().getReefLevel() == 4,
-                    _outtakeExtraMove);
-            _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
-            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(stage == 2 ? 0.03 : 0, 0, Rotation2d.kZero));
-            Logger.recordOutput("Reef Target", _currentReefTarget);
+
 
             if(atPidingZone() && !startedPiding){
                 System.out.println("Reseting PID to X" + RobotState.getInstance().getRobotPose().getX() + " Y" + RobotState.getInstance().getRobotPose().getY() + " a" + RobotState.getInstance().getRobotPose().getRotation().getDegrees() + " vx" + SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond + " vy" + SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond + " omega" + SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond);
@@ -114,20 +106,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             if(!atPidingZone())
                 return;
 
-            SwerveController.getInstance().setState("Reef PID");
 
-            double xVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getX());
-            double yVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getY());
-            double aVel = Units.degreesToRadians(Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getRotation().getDegrees()));
-            ChassisSpeeds pid = new ChassisSpeeds(
-//                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
-//                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
-//                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
-                    xVel,
-                    yVel,
-                    aVel
-            );
-            SwerveController.getInstance().setControl(pid, true, "Reef PID");
+
 
 //            double anglePid = _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees());
 //            double forwardDrive = atGoalX() ? SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation()).getNorm() : 0;//atGoalX() ? 1 : 0;
@@ -157,7 +137,42 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     public Command goToReef(){
-        return Commands.none();
+        return Commands.either(
+                Commands.none(),
+                Commands.sequence(
+                        Commands.run(() -> {
+                            _currentReefTarget = FieldConstants.getClosestReefTarget(
+                                    isRight,
+                                    RobotState.getInstance().getReefLevel() == 4,
+                                    _outtakeExtraMove);
+                            _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
+//                            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(stage == 2 ? 0.03 : 0, 0, Rotation2d.kZero));
+                            Logger.recordOutput("Reef Target", _currentReefTarget);
+                        }, this).until(this::atPidingZone),
+                        Commands.runOnce(() -> {
+                            System.out.println("Reseting PID to X" + RobotState.getInstance().getRobotPose().getX() + " Y" + RobotState.getInstance().getRobotPose().getY() + " a" + RobotState.getInstance().getRobotPose().getRotation().getDegrees() + " vx" + SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond + " vy" + SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond + " omega" + SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond);
+                            _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
+                            _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
+                            _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
+                            SwerveController.getInstance().setState("Reef PID");
+                        }, this),
+                        Commands.run(() -> {
+                            double xVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getX());
+                            double yVel = Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getY());
+                            double aVel = Units.degreesToRadians(Math.sqrt(4 * RobotState.getInstance().getTransform(_currentReefTarget).getRotation().getDegrees()));
+                            ChassisSpeeds pid = new ChassisSpeeds(
+            //                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
+            //                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
+            //                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
+                                    xVel,
+                                    yVel,
+                                    aVel
+                            );
+                            SwerveController.getInstance().setControl(pid, true, "Reef PID");
+                        }, this)
+                ),
+                () -> RobotState.getInstance().getReefLevel() == 1
+        );
     }
 
     public boolean atPidingZone(){
