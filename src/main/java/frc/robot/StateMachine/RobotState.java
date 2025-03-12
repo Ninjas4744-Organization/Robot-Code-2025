@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotState extends RobotStateWithSwerve<RobotStates> {
     private final DigitalInput _beamBreaker = new DigitalInput(Constants.kBeamBreakerID);
     private static int _reefLevel;
+    private static boolean _removeAlgae;
     private static boolean _isReefRight;
 
     public RobotState(){
@@ -27,6 +28,18 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
         Logger.recordOutput("Reef Level", level);
     }
 
+    public boolean resetAlgae() {
+        _removeAlgae = false;
+        Logger.recordOutput("setAlgae", _removeAlgae);
+        return true;
+    }
+
+    public void setAlgae(boolean change) {
+        _removeAlgae = change;
+        Logger.recordOutput("setAlgae", _removeAlgae);
+    }
+
+
     public int getReefLevel() {
         return _reefLevel;
     }
@@ -39,6 +52,12 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
     public boolean isReefRight(){
         return _isReefRight;
     }
+
+    public boolean getAlgae() {
+        Logger.recordOutput("setAlgae", _removeAlgae);
+        return _removeAlgae;
+    }
+
 
     public static RobotState getInstance() {
         return (RobotState)RobotStateWithSwerve.getInstance();

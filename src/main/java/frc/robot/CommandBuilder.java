@@ -165,7 +165,8 @@ public class CommandBuilder {
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
-                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_RIGHT_REEF))
+                    Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
+                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
             );
         }
 
@@ -174,7 +175,8 @@ public class CommandBuilder {
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
-                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_LEFT_REEF))
+                    Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
+                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
             );
         }
     }

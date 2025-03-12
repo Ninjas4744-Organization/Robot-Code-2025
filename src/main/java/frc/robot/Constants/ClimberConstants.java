@@ -18,7 +18,8 @@ public class ClimberConstants {
         kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;
         kControllerConstants.maxSoftLimit = 1.12;
-        kControllerConstants.limitSwitchID=3;
+        kControllerConstants.isLimitSwitch = true;
+        kControllerConstants.limitSwitchID = 4;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
