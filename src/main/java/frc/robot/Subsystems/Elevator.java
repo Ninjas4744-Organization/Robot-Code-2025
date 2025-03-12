@@ -14,6 +14,8 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.DoubleSupplier;
+
 public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
     private static Elevator _instance;
 
@@ -73,8 +75,14 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 //        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(0)).until(() -> controller().getPosition() < 0.15).andThen(runMotor(ElevatorConstants.kResetSpeed)).until(this::getLimit).schedule(), RobotStates.CLOSE);
     }
 
-    public Command setPosition(double position){
-        return Commands.runOnce(() -> controller().setPosition(position), this);
+    public Command setPosition(DoubleSupplier position){
+        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()), this);
+    }
+
+    public Command close(){
+        return Commands.run(() -> controller().setPosition(0))
+                .until(() -> controller().getPosition() < 0.15)
+                .andThen(runMotor(ElevatorConstants.kResetSpeed)).until(controller()::getLimit);
     }
 
     @Override
@@ -84,17 +92,9 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
         if(_paused)
             return;
 
-        Logger.recordOutput("Elevator Limit", _controller.getLimit());
-
         double stage2Height = controller().getPosition();
         double stage1Height = stage2Height >= 0.75 ? (stage2Height - 0.75) : 0;
         Logger.recordOutput("Robot Pose Elevator 1", new Pose3d(0, 0, stage1Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
         Logger.recordOutput("Robot Pose Elevator 2", new Pose3d(0, 0, stage2Height, new Rotation3d(Math.PI / 2, 0, Math.PI * 1.5)));
-
-        if (!RobotState.isSimulated() && _controller.getLimit()){
-            controller().resetEncoder();
-//            if (controller().getOutput() < 0)
-//                controller().stop();
-        }
     }
 }

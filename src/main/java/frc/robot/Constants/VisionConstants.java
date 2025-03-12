@@ -41,13 +41,11 @@ public class VisionConstants {
 
     static InterpolatingDoubleTreeMap distFOMMap = new InterpolatingDoubleTreeMap();
     static{
-        distFOMMap.put(0.0, 0.5);
-        distFOMMap.put(0.5, 1.0);
-        distFOMMap.put(1.0, 2.0);
-        distFOMMap.put(3.0, 4.0);
-        distFOMMap.put(6.0, 20.0);
-        distFOMMap.put(7.0, 80.0);
-        distFOMMap.put(8.0, 160.0);
+        distFOMMap.put(0.0, 0.2);
+        distFOMMap.put(0.5, 0.5);
+        distFOMMap.put(1.0, 1.0);
+        distFOMMap.put(2.0, 40.0);
+        distFOMMap.put(5.0, 160.0);
     }
     public static double[] calculateFOM(VisionOutput estimation) {
 //        double a = 1.33, b = 0.153, c = 4.839, d = 0.29;

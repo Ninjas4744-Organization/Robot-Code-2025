@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
+import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.SwerveSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -64,12 +65,9 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		SwerveController.getInstance().setState("Auto");
-		RobotState.getInstance().setRobotState(RobotStates.RESET);
-//		RobotState.getInstance().resetGyro(Rotation2d.k180deg);
+		StateMachine.getInstance().changeRobotState(RobotStates.RESET);
 		CommandBuilder.resetGyro(false).schedule();
 		_autoCommand = _autoChooser.get();
-		SwerveSubsystem.getInstance().setPidsToAuto();
 
 		if (_autoCommand != null)
 			_autoCommand.schedule();
@@ -86,7 +84,6 @@ public class Robot extends LoggedRobot {
 		if (_autoCommand != null)
 			_autoCommand.cancel();
 
-		SwerveSubsystem.getInstance().setPidsToTeleop();
 		_robotContainer.resetSubsystems();
 	}
 
@@ -102,7 +99,7 @@ public class Robot extends LoggedRobot {
 			_autoCommand.cancel();
 
 		CommandScheduler.getInstance().cancelAll();
-		RobotState.getInstance().setRobotState(RobotStates.TEST);
+		StateMachine.getInstance().changeRobotState(RobotStates.TEST);
 	}
 
 	@Override

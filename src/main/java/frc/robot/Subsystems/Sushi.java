@@ -45,8 +45,8 @@ public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> controller().setPercent(SushiConstants.kIntake), RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.RESET, RobotStates.CLOSE, RobotStates.CORAL_READY);
+//        addFunctionToOnChangeMap(() -> controller().setPercent(SushiConstants.kIntake), RobotStates.INTAKE);
+//        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.RESET, RobotStates.CLOSE, RobotStates.CORAL_READY);
     }
 
     public Command setPercent(double percent){

@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.StateMachine.RobotStates;
 
+import java.util.function.DoubleSupplier;
+
 public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
     private static Climber _instance;
     public static Climber getInstance(){
@@ -42,7 +44,7 @@ public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
     protected void setFunctionMaps() {
 
     }
-    public Command setPosition(double position){
-        return Commands.runOnce(() -> controller().setPosition(position), this);
+    public Command setPosition(DoubleSupplier position){
+        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()), this);
     }
 }

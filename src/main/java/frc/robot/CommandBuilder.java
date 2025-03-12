@@ -46,9 +46,14 @@ public class CommandBuilder {
 
     public static Command setReefLevel(int level){
         return Commands.runOnce(() -> {
-            if(RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE_READY
-                    && RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE)
+            if(RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE)
                 RobotState.getInstance().setReefLevel(level);
+        });
+    }
+
+    public static Command switchAlgaeState(){
+        return Commands.runOnce(() -> {
+           RobotState.getInstance().setAlgae(!RobotState.getInstance().getAlgae());
         });
     }
 
@@ -124,9 +129,9 @@ public class CommandBuilder {
                 SwerveConstants.kAutonomyConfig, //Autonomy config
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
 
-                () -> false, // Boolean supplier that mirrors path if red alliance
+                () -> false // Boolean supplier that mirrors path if red alliance
 
-                SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
+                 //SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
             );
 
             registerCommands();
@@ -141,6 +146,7 @@ public class CommandBuilder {
             NamedCommands.registerCommand("Left 4", Left(4));
             NamedCommands.registerCommand("Right 3", Right(3));
             NamedCommands.registerCommand("Left 3", Left(3));
+            NamedCommands.registerCommand("Print 1", Commands.print("1111111111111"));
         }
 
         private static Command waitReset(){
@@ -152,7 +158,6 @@ public class CommandBuilder {
                     CommandBuilder.changeRobotState(RobotStates.INTAKE),
                     Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto"))
                             .until(() -> RobotState.getInstance().isCoralInRobot())
-//                    Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()/*RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY*/)
             );
         }
 

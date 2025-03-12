@@ -97,6 +97,15 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
         }, this);
     }
 
+    public Command intake(){
+        return Commands.run(() -> {
+            if(Outtake.getInstance().getCurrent() > 55)
+                controller().setVelocity(OuttakeConstants.kIndexBackState);
+            else
+               controller().setVelocity(OuttakeConstants.kIntakeState);
+        }, this);
+    }
+
     public double getCurrent(){
         return controller().getCurrent();
     }

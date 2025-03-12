@@ -19,7 +19,7 @@ public class FieldConstants {
     public static final double kIntakeThreshold = 1.5;
     public static final double kXOuttakeDistThreshold = 0.03;
     public static final double kYOuttakeDistThreshold = 0.025;
-    public static final double kOuttakeAngleThreshold = 2.7;
+    public static final double kOuttakeAngleThreshold = 2;
     public static final double kStartPIDThreshold = 1.5;
 
     public static AprilTagFieldLayout kBlueFieldLayout;
@@ -94,7 +94,7 @@ public class FieldConstants {
     }
 
     public static Pose2d getClosestReefTarget(boolean isRight, boolean isL4, double extraChange){
-        return getClosestReefTag().transformBy(new Transform2d(0.45, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + 0.02 + 0.015 - 0.01 + 0.01 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + 0.04 + extraChange) : (isRight ? 0.14 + 0.01 + extraChange : -0.18 - 0.015 - 0.006 + 0.01 + 0.04 + extraChange), new Rotation2d()));
+        return getClosestReefTag().transformBy(new Transform2d(0.45/* + (!isL4 ? 0.12 : 0)*/, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + 0.02 + 0.015 - 0.01 + 0.01 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + 0.04 + extraChange) : (isRight ? 0.14 + 0.01 + extraChange : -0.18 - 0.015 - 0.006 + 0.01 + 0.04 + extraChange), new Rotation2d()));
     }
 
     public static boolean nearCoralStation(){

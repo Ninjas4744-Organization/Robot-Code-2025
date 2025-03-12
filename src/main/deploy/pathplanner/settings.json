@@ -16,8 +16,8 @@
     "start center",
     "start right"
   ],
-  "defaultMaxVel": 4.0,
-  "defaultMaxAccel": 3.25,
+  "defaultMaxVel": 4.5,
+  "defaultMaxAccel": 10.0,
   "defaultMaxAngVel": 400.0,
   "defaultMaxAngAccel": 400.0,
   "defaultNominalVoltage": 12.0,
