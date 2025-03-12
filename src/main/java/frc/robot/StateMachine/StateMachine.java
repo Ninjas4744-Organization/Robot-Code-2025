@@ -124,9 +124,17 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 }).until(() -> Elevator.getInstance().isResetted() &&
                         OuttakeAngle.getInstance().isResetted())
                 .andThen(CommandBuilder.changeRobotState(RobotStates.IDLE)));
-        addCommand(RobotStates.CLIMB,Commands.runOnce(()->{
-            Climber.getInstance().setPosition(ClimberConstans.kOpenState);
-        }));
+        addCommand(RobotStates.CLIMB,Commands.sequence(
+                HopperAngle.getInstance().setPosition(HopperAngleConstants.kOpenState),
+                Commands.waitUntil(() -> HopperAngle.getInstance().atGoal()),
+                Commands.waitSeconds(0.2),
+                Climber.getInstance().setPosition(ClimberConstants.kOpenState),
+                Commands.waitUntil(() -> Climber.getInstance().atGoal()),
+                Commands.waitSeconds(0.2),
+                CommandBuilder.changeRobotState(RobotStates.CLIMBD)
+
+
+                ));
     }
 
     @Override
