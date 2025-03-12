@@ -122,7 +122,7 @@ public class RobotContainer {
                 Commands.runOnce(() -> RobotState.getInstance().setRobotState(RobotStates.OUTTAKE_READY)),
                 () -> RobotState.getInstance().getRobotState() != RobotStates.AT_REEF
         ));
-        _operatorJoystick.square().onTrue(CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE));
+        _operatorJoystick.square().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> RobotState.getInstance().setAlgae(true))));
     }
 
     private void configureTestBindings() {

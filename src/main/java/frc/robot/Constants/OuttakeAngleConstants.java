@@ -20,7 +20,8 @@ public class OuttakeAngleConstants {
         kControllerConstants.encoderHomePosition = 135 / 360.0;
         kControllerConstants.isMinSoftLimit = false;
         kControllerConstants.minSoftLimit = 15;
-        kControllerConstants.limitSwitchID=3;
+        kControllerConstants.isLimitSwitch = true;
+        kControllerConstants.limitSwitchID = 3;
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }

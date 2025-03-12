@@ -25,8 +25,9 @@ public class ElevatorConstants {
         kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;
         kControllerConstants.maxSoftLimit = 1.12;
-        kControllerConstants.limitSwitchID=2;
-
+        kControllerConstants.isLimitSwitch = true;
+        kControllerConstants.limitSwitchID = 2;
+        kControllerConstants.limitSwitchInverted = true;
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
