@@ -107,7 +107,10 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         ));
 
         addCommand(RobotStates.GO_REEF, Commands.sequence(
-                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 2]),
+                Commands.either(Elevator.getInstance().setPosition(() -> ElevatorConstants.kCloseState),
+                        Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 2]),
+                        ()->RobotState.getInstance().getReefLevel()==1),
+//                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 2]),
                 OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
                 SwerveSubsystem.getInstance().goToReef(),
                 Commands.runOnce(() -> SwerveSubsystem.getInstance().resetSubsystem(), SwerveSubsystem.getInstance()),
@@ -115,8 +118,14 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         ));
 
         addCommand(RobotStates.AT_REEF, Commands.sequence(
-                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
-                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
+                Commands.either(OuttakeAngle.getInstance().setPosition(()->OuttakeAngleConstants.kL1State),
+                        Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
+                        ()->RobotState.getInstance().getReefLevel()==1),
+//                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
+//                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
+                Commands.either(OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kL1State),
+                        OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
+                        ()->RobotState.getInstance().getReefLevel()==1),
                 Commands.waitUntil(() -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal()),
                 CommandBuilder.changeRobotState(RobotStates.OUTTAKE)
         ));
