@@ -9,7 +9,9 @@ public enum RobotStates {
     GO_REEF,
     AT_REEF,
     OUTTAKE,
-    CLIMB,
+    CLIMB1,
+    CLIMBED1,
+    CLIMB2,
     CLIMBED,
     CLOSE,
     TEST

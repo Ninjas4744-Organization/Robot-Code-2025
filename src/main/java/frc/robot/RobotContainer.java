@@ -41,7 +41,7 @@ public class RobotContainer {
         Outtake.createInstance(false);
         OuttakeAngle.createInstance(false);
         Sushi.createInstance(false);
-        Climber.createInstance(true);
+        Climber.createInstance(false);
         HopperAngle.createInstance(true);
 
         StateMachineIO.setInstance(new StateMachine(false));
@@ -107,6 +107,11 @@ public class RobotContainer {
         _operatorJoystick.circle().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.CLOSE)));
         _operatorJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.AT_REEF)));
         _operatorJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.switchAlgaeState()));
+
+        _operatorJoystick.povUp().onTrue(Commands.runOnce(() -> {
+            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
+            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB1);
+        }));
     }
 
     private void configureTestBindings() {
