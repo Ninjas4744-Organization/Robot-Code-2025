@@ -88,15 +88,15 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 Sushi.getInstance().setPercent(SushiConstants.kIntake),
                 Outtake.getInstance().intake().until(() -> RobotState.getInstance().isCoralInRobot()),
 
-                Commands.sequence(
-                        Outtake.getInstance().setVelocity(OuttakeConstants.kIndexBackState),
-                        Sushi.getInstance().setPercent(0),
-                        Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
-                        Commands.waitSeconds(0.05),
-                        Outtake.getInstance().setVelocity(OuttakeConstants.kIndexState),
-                        Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()),
-                        Commands.runOnce(() -> intakeCount++)
-                ).repeatedly().until(() -> intakeCount == 2).finallyDo(() -> intakeCount = 0),
+//                Commands.sequence(
+//                        Outtake.getInstance().setVelocity(OuttakeConstants.kIndexBackState),
+//                        Sushi.getInstance().setPercent(0),
+//                        Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
+//                        Commands.waitSeconds(0.05),
+//                        Outtake.getInstance().setVelocity(OuttakeConstants.kIndexState),
+//                        Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()),
+//                        Commands.runOnce(() -> intakeCount++)
+//                ).repeatedly().until(() -> intakeCount == 2).finallyDo(() -> intakeCount = 0),
 
                 CommandBuilder.changeRobotState(RobotStates.CLOSE)
         ));
