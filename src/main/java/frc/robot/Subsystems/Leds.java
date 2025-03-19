@@ -101,7 +101,7 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kRed).blink(Seconds.of(0.125))), RobotStates.CLOSE);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.25))), RobotStates.INTAKE);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kDarkOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_REEF);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_REEF);
         addFunctionToPeriodicMap(this::rainbow, RobotStates.REMOVE_ALGAE);

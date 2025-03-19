@@ -113,10 +113,11 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         ));
 
         addCommand(RobotStates.GO_REEF, Commands.sequence(
-                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 2]),
+                Commands.runOnce(() -> SwerveSubsystem.getInstance().goToReef().schedule()),
+                Commands.waitUntil(() -> SwerveSubsystem.getInstance().atPidingZone()),
+                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() == 4 ? 2 : RobotState.getInstance().getReefLevel() - 1]),
                 OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
-                SwerveSubsystem.getInstance().goToReef(),
-                Commands.runOnce(() -> SwerveSubsystem.getInstance().resetSubsystem(), SwerveSubsystem.getInstance()),
+                Commands.waitUntil(() -> SwerveSubsystem.getInstance().atGoal()),
                 CommandBuilder.changeRobotState(RobotStates.AT_REEF)
         ));
 
@@ -124,10 +125,12 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
                 OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
                 Commands.waitUntil(() -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal()),
+                Commands.waitSeconds(RobotState.getInstance().getReefLevel() == 4 ? 0.125 : 0.09),
                 CommandBuilder.changeRobotState(RobotStates.OUTTAKE)
         ));
 
         addCommand(RobotStates.OUTTAKE, Commands.sequence(
+                Commands.runOnce(() -> SwerveSubsystem.getInstance().resetSubsystem()),
                 Outtake.getInstance().outtake(),
                 Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
                 Commands.waitSeconds(0.125),
@@ -154,15 +157,16 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         ));
 
         addCommand(RobotStates.CLIMB1, Commands.sequence(
-                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
+                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kClimbState),
                 Elevator.getInstance().close(),
                 Commands.waitUntil(() -> OuttakeAngle.getInstance().atGoal()),
+                OuttakeAngle.getInstance().stop(),
 
-                HopperAngle.getInstance().setPosition(HopperAngleConstants.kOpenState),
-                Commands.waitUntil(() -> HopperAngle.getInstance().atGoal()),
-
-                Climber.getInstance().stage1(),
-                Commands.waitUntil(() -> Climber.getInstance().atGoal()),
+                Commands.parallel(
+                    HopperAngle.getInstance().setPosition(HopperAngleConstants.kOpenState),
+                    Climber.getInstance().stage1()
+                ),
+                Commands.waitUntil(() -> Climber.getInstance().atGoal() && HopperAngle.getInstance().atGoal()),
                 CommandBuilder.changeRobotState(RobotStates.CLIMBED1)
         ));
 

@@ -68,7 +68,7 @@ public class CommandBuilder {
                 Supplier<Translation2d> rotation,
                 BooleanSupplier isLookAt,
                 BooleanSupplier isBayblade) {
-            return Commands.runOnce(
+            return Commands.run(
                     () -> {
                         double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
                         double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
@@ -92,7 +92,7 @@ public class CommandBuilder {
                                 finalRotation)),
                             SwerveConstants.kDriverFieldRelative, "Driver"
                         );
-                    }, SwerveSubsystem.getInstance());
+                    });
         }
 
         public static Command runIfTestMode(Command command) {

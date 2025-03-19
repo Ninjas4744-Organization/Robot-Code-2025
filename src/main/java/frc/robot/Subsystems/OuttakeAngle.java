@@ -65,4 +65,8 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
     public Command setPosition(DoubleSupplier position){
         return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()), this);
     }
+
+    public Command stop(){
+        return Commands.runOnce(() -> controller().stop(), this);
+    }
 }

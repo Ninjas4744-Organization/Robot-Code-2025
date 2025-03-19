@@ -20,8 +20,8 @@ public class VisionConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.VisionConstants kVisionConstants = new com.ninjas4744.NinjasLib.DataClasses.VisionConstants();
     static{
         kVisionConstants.cameras = Map.of(
-                "FrontRight", Pair.of(new Transform3d(0.0815+0.1054, -0.0745, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(-7.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision),
-                "FrontLeft", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(7.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision)
+                "FrontRight", Pair.of(new Transform3d(0.0815+0.1054, -0.0745, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(-7.5-1.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision),
+                "FrontLeft", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(7.5-1.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision)
 //                "Back", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(180))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.Limelight)
         );
 
@@ -46,8 +46,8 @@ public class VisionConstants {
         distFOMMap.put(0.0, 0.2);
         distFOMMap.put(0.5, 0.5);
         distFOMMap.put(1.0, 1.0);
-        distFOMMap.put(2.0, 4.0);
-        distFOMMap.put(5.0, 160.0);
+        distFOMMap.put(3.0, 4.0);
+        distFOMMap.put(5.0, 80.0);
     }
     public static double[] calculateFOM(VisionOutput estimation) {
 //        double a = 1.33, b = 0.153, c = 4.839, d = 0.29;

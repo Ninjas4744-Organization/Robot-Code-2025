@@ -4,9 +4,16 @@ import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
 import com.ninjas4744.NinjasLib.RobotStateWithSwerve;
 import com.ninjas4744.NinjasLib.StateMachineIO;
 import com.ninjas4744.NinjasLib.Swerve.Swerve;
+import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,6 +27,9 @@ import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.*;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class RobotContainer {
     private final CommandPS5Controller _driverJoystick;
@@ -71,12 +81,11 @@ public class RobotContainer {
     }
 
     private void configureDriverBindings() {
-        SwerveSubsystem.getInstance()
-          .setDefaultCommand(CommandBuilder.Teleop.swerveDrive(
-            () -> new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
-            () -> new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
-            () -> isSwerveLookAt,
-            () -> false));
+//        CommandBuilder.Teleop.swerveDrive(
+//            () -> new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
+//            () -> new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
+//            () -> isSwerveLookAt,
+//            () -> false);
 
         _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt)));
 
@@ -87,6 +96,7 @@ public class RobotContainer {
                 Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
                 CommandBuilder.changeRobotState(RobotStates.GO_REEF)))
         );
+
         _driverJoystick.R2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.sequence(
                 Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
                 CommandBuilder.changeRobotState(RobotStates.GO_REEF)))
@@ -108,6 +118,8 @@ public class RobotContainer {
         _operatorJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.AT_REEF)));
         _operatorJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.switchAlgaeState()));
 
+        _operatorJoystick.povRight().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.OUTTAKE)));
+
         _operatorJoystick.povUp().onTrue(Commands.runOnce(() -> {
             StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
             StateMachine.getInstance().changeRobotState(RobotStates.CLIMB1);
@@ -115,15 +127,56 @@ public class RobotContainer {
     }
 
     private void configureTestBindings() {
-        _driverJoystick.square().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(0.5)));
-        _driverJoystick.circle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Outtake.getInstance().runMotor(-0.5)));
-        _driverJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.15)));
-        _driverJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.15)));
-        _driverJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(0.05)));
-        _driverJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(OuttakeAngle.getInstance().runMotor(-0.05)));
+        _operatorJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.15)));
+        _operatorJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.15)));
+        _operatorJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfTestMode(Climber.getInstance().runMotor(-1)));
+        _operatorJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(Climber.getInstance().runMotor(1)));
+        _operatorJoystick.povRight().whileTrue(CommandBuilder.Teleop.runIfTestMode(HopperAngle.getInstance().runMotor(0.1)));
+        _operatorJoystick.povLeft().whileTrue(CommandBuilder.Teleop.runIfTestMode(HopperAngle.getInstance().runMotor(-0.1)));
+    }
+
+
+    private static PIDController _lookAtCenterReefPID = new PIDController(0.01, 0, 0);
+    static {
+        _lookAtCenterReefPID.enableContinuousInput(-180, 180);
+    }
+
+    private void swerveDrive(
+            Translation2d translation,
+            Translation2d rotation,
+            boolean isLookAt,
+            boolean isBayblade){
+        double lx = -MathUtil.applyDeadband(translation.getX(), SwerveConstants.kJoystickDeadband);
+        double ly = -MathUtil.applyDeadband(translation.getY(), SwerveConstants.kJoystickDeadband);
+        double rx = -MathUtil.applyDeadband(rotation.getX(), SwerveConstants.kJoystickDeadband);
+        double ry = -MathUtil.applyDeadband(rotation.getY(), SwerveConstants.kJoystickDeadband);
+
+        double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
+
+        if (isLookAt)
+            finalRotation = _lookAtCenterReefPID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), RobotState.getInstance().getTransform(new Pose2d(4.49, 4.03, Rotation2d.kZero)).getTranslation().getAngle().getDegrees());
+//                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
+//                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
+
+        if (isBayblade)
+            finalRotation = 1;
+
+        SwerveController.getInstance().setControl(
+                SwerveController.getInstance().fromPercent(new ChassisSpeeds(
+                        ly * SwerveConstants.kDriverSpeedFactor,
+                        lx * SwerveConstants.kDriverSpeedFactor,
+                        finalRotation)),
+                SwerveConstants.kDriverFieldRelative, "Driver"
+        );
     }
 
     public void periodic() {
+        swerveDrive(
+                new Translation2d(_driverJoystick.getLeftX(), _driverJoystick.getLeftY()),
+                new Translation2d(_driverJoystick.getRightX(), _driverJoystick.getRightY()),
+                isSwerveLookAt,
+                false);
+
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
                 RobotState.getInstance().updateRobotPose(estimation);
 //        RobotState.getInstance().updateRobotPose(LimelightVision.getVisionEstimation());

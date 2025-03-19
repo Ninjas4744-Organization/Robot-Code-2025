@@ -56,6 +56,6 @@ public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     public Command stage2(){
-        return runMotor(0.5).until(controller()::getLimit);
+        return runMotor(1).until(controller()::getLimit);
     }
 }

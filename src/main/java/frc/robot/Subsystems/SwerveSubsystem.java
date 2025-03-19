@@ -63,6 +63,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             SwerveController.getInstance().setState("Auto");
             SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto");
         }
+
+        if(getCurrentCommand() != null)
+            getCurrentCommand().cancel();
     }
 
     @Override
@@ -91,10 +94,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             return new ChassisSpeeds(
 //                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
 //                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
-//                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
                     xVel,
                     yVel,
-                    aVel
+                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
+//                    aVel
             );
         };
 
@@ -116,19 +119,19 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
                             _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
                             SwerveController.getInstance().setState("Reef PID");
                         }, this),
-                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this).until(this::atGoal),
-                        Commands.runOnce(() -> {
-                            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(0.03, 0, Rotation2d.kZero));
-                            Logger.recordOutput("Reef Target", _currentReefTarget);
-                        }, this),
-                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this).until(this::atGoal),
-                        Commands.runOnce(() -> _atGoalTimer.restart()),
                         Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this)
-                        .until(() -> {
-                            if(!atGoal())
-                                _atGoalTimer.restart();
-                            return _atGoalTimer.get() > 0.25;
-                        })
+//                        Commands.runOnce(() -> {
+//                            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(0/*0.03*/, 0, Rotation2d.kZero));
+//                            Logger.recordOutput("Reef Target", _currentReefTarget);
+//                        }, this),
+//                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this).until(this::atGoal),
+//                        Commands.runOnce(() -> _atGoalTimer.restart()),
+//                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this)
+//                        .until(() -> {
+//                            if(!atGoal())
+//                                _atGoalTimer.restart();
+//                            return _atGoalTimer.get() > 0.25;
+//                        })
                 ),
                 () -> RobotState.getInstance().getReefLevel() == 1
         );
@@ -165,7 +168,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         return true;
     }
 
-    private boolean atGoal(){
+    public boolean atGoal(){
         if(!_paused)
             return atGoalX() && atGoalY() && atGoal0();
         return true;

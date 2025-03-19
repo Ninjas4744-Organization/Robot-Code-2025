@@ -31,5 +31,6 @@ public class OuttakeAngleConstants {
     public static final double kCoralState = 135 / 360.0;
     public static final double kAlgaeState = 35 / 360.0;
     public static final double kL1State = 30/ 360.0;//125 / 360.0;//0;
+    public static final double kClimbState = -5 / 360.0;//125 / 360.0;//0;
     public static final double kResetSpeed = 0.1;
 }
