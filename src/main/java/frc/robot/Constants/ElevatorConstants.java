@@ -40,6 +40,6 @@ public class ElevatorConstants {
     public static final double kCloseState = 0;
     public static final double kRemoveAlgae = 0.4-0.03-0.03-0.01;
     public static final double kRemoveAlgae2 = 0.7;
-    public static final double kResetSpeed = -0.25;
+    public static final double kResetSpeed = -0.2;
     public static final double kL1ResetSpeed = -0.25;
 }

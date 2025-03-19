@@ -39,7 +39,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
             case IDLE -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
                     || wantedState == RobotStates.CORAL_READY
-                    || wantedState == RobotStates.GO_REEF;
+                    || wantedState == RobotStates.GO_REEF
+                    || wantedState == RobotStates.CLIMB1;
 
             case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.CLOSE;
@@ -76,6 +77,8 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                     Outtake.getInstance().resetSubsystem();
                     Sushi.getInstance().resetSubsystem();
                     SwerveSubsystem.getInstance().resetSubsystem();
+                    HopperAngle.getInstance().resetSubsystem();
+                    Climber.getInstance().resetSubsystem();
                 }),
                 Commands.waitUntil(() -> Elevator.getInstance().isResetted() && OuttakeAngle.getInstance().isResetted()),
                 CommandBuilder.changeRobotState(RobotStates.IDLE)
@@ -151,19 +154,20 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         ));
 
         addCommand(RobotStates.CLIMB1, Commands.sequence(
-//                HopperAngle.getInstance().setPosition(HopperAngleConstants.kOpenState),
-//                Commands.waitUntil(() -> HopperAngle.getInstance().atGoal()),
-                Elevator.getInstance().close(),
                 OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
-                Commands.waitUntil(() -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal()),
-                Climber.getInstance().setPosition(() -> ClimberConstants.kStage1),
+                Elevator.getInstance().close(),
+                Commands.waitUntil(() -> OuttakeAngle.getInstance().atGoal()),
+
+                HopperAngle.getInstance().setPosition(HopperAngleConstants.kOpenState),
+                Commands.waitUntil(() -> HopperAngle.getInstance().atGoal()),
+
+                Climber.getInstance().stage1(),
                 Commands.waitUntil(() -> Climber.getInstance().atGoal()),
                 CommandBuilder.changeRobotState(RobotStates.CLIMBED1)
         ));
 
         addCommand(RobotStates.CLIMB2, Commands.sequence(
-                Climber.getInstance().setPosition(() -> ClimberConstants.kStage2),
-                Commands.waitUntil(() -> Climber.getInstance().atGoal()),
+                Climber.getInstance().stage2(),
                 CommandBuilder.changeRobotState(RobotStates.CLIMBED)
         ));
     }

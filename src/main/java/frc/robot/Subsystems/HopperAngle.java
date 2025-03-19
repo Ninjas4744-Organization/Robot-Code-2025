@@ -11,6 +11,7 @@ import frc.robot.StateMachine.RobotStates;
 
 public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
     private static HopperAngle _instance;
+
     public static HopperAngle getInstance(){
         return _instance;
     }
@@ -18,6 +19,7 @@ public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
     public static void createInstance(boolean paused){
         _instance = new HopperAngle(paused);
     }
+
     public HopperAngle(boolean paused) {
         super(paused);
     }
@@ -34,18 +36,20 @@ public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-
+        controller().resetEncoder();
+        controller().stop();
     }
 
     @Override
     protected boolean isResettedO() {
-        return false;
+        return true;
     }
 
     @Override
     protected void setFunctionMaps() {
 
     }
+
     public Command setPosition(double position){
         return Commands.runOnce(() -> controller().setPosition(position), this);
     }

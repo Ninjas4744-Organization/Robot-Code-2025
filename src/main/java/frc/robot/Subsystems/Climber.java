@@ -37,12 +37,13 @@ public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        runMotor(ClimberConstants.kResetSpeed).until(_controller::getLimit).schedule();
+        controller().resetEncoder();
+        controller().stop();
     }
 
     @Override
     protected boolean isResettedO() {
-        return _controller.getLimit();
+        return true;
     }
 
     @Override
@@ -50,7 +51,11 @@ public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
 
     }
 
-    public Command setPosition(DoubleSupplier position){
-        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()), this);
+    public Command stage1(){
+        return Commands.runOnce(() -> controller().setPosition(ClimberConstants.kStage1), this);
+    }
+
+    public Command stage2(){
+        return runMotor(0.5).until(controller()::getLimit);
     }
 }

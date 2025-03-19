@@ -3,6 +3,7 @@ package frc.robot.Constants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -19,8 +20,9 @@ public class VisionConstants {
     public static final com.ninjas4744.NinjasLib.DataClasses.VisionConstants kVisionConstants = new com.ninjas4744.NinjasLib.DataClasses.VisionConstants();
     static{
         kVisionConstants.cameras = Map.of(
-                "FrontRight", new Transform3d(0.0815+0.1054, -0.0745, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(-7.5))),
-                "FrontLeft", new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(7.5)))
+                "FrontRight", Pair.of(new Transform3d(0.0815+0.1054, -0.0745, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(-7.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision),
+                "FrontLeft", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(7.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision)
+//                "Back", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(180))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.Limelight)
         );
 
         kVisionConstants.maxAmbiguity = 0.2;
@@ -44,7 +46,7 @@ public class VisionConstants {
         distFOMMap.put(0.0, 0.2);
         distFOMMap.put(0.5, 0.5);
         distFOMMap.put(1.0, 1.0);
-        distFOMMap.put(2.0, 40.0);
+        distFOMMap.put(2.0, 4.0);
         distFOMMap.put(5.0, 160.0);
     }
     public static double[] calculateFOM(VisionOutput estimation) {
@@ -56,6 +58,7 @@ public class VisionConstants {
                 SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond,
                 SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond).getNorm() / 3;
         double FOM = distFOM + speedFOM;
+        FOM /= estimation.cameraName.equals("Back") ? 2 : 1;
 
         return new double[] { FOM, FOM, FOM };
     }

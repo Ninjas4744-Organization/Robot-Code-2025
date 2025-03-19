@@ -42,7 +42,7 @@ public class RobotContainer {
         OuttakeAngle.createInstance(false);
         Sushi.createInstance(false);
         Climber.createInstance(false);
-        HopperAngle.createInstance(true);
+        HopperAngle.createInstance(false);
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
