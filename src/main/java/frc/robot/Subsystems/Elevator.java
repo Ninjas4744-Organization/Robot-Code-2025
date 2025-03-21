@@ -47,7 +47,7 @@ public class Elevator extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected boolean isResettedO() {
-        return _controller.getLimit();
+        return controller().getLimit();
     }
 
     @Override

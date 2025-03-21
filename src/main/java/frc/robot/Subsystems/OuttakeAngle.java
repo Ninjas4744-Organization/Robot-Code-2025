@@ -23,6 +23,8 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
     public static void createInstance(boolean paused){
         _instance = new OuttakeAngle(paused);
     }
+    
+    private DigitalInput _limit = new DigitalInput(3);
 
     public OuttakeAngle(boolean paused) {
         super(paused);
@@ -40,12 +42,12 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void resetSubsystemO() {
-        runMotor(OuttakeAngleConstants.kResetSpeed).until(_controller::getLimit).schedule();
+        runMotor(OuttakeAngleConstants.kResetSpeed).until(this::isResettedO).finallyDo(() -> controller().resetEncoder()).schedule();
     }
 
     @Override
     protected boolean isResettedO() {
-        return _controller.getLimit();
+        return _limit.get();
     }
 
     @Override

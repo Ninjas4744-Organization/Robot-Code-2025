@@ -20,7 +20,7 @@ public class FieldConstants {
     public static final double kXOuttakeDistThreshold = 0.03;
     public static final double kYOuttakeDistThreshold = 0.025;
     public static final double kOuttakeAngleThreshold = 2;
-    public static final double kStartPIDThreshold = 1.5;
+    public static final double kStartPIDThreshold = 2;
 
     public static AprilTagFieldLayout kBlueFieldLayout;
     public static AprilTagFieldLayout kRedFieldLayout;
@@ -93,8 +93,13 @@ public class FieldConstants {
         return RobotState.getInstance().getRobotPose().nearest(poses);
     }
 
-    public static Pose2d getClosestReefTarget(boolean isRight, boolean isL4, double extraChange){
-        return getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, !isL4 ? (isRight ? 0.14 - 0.04 + 0.01 + 0.015 + 0.02 + 0.015 - 0.01 + 0.01 + extraChange : -0.15 - 0.04 + 0.01 - 0.005 + 0.04 - 0.015 + extraChange) : (isRight ? 0.14 + 0.01 + 0.01 + extraChange : -0.18 - 0.015 - 0.006 + 0.01 + 0.04 - 0.02 + extraChange), new Rotation2d()));
+    public static Pose2d getClosestReefTarget(boolean isRight, double extraChange){
+        return switch (RobotState.getInstance().getReefLevel()){
+            case 4 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.171 + extraChange, new Rotation2d()));
+            case 3, 2 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.16 + extraChange, new Rotation2d()));
+            case 1 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.35 + extraChange : -0.35 + extraChange, new Rotation2d()));
+            default -> throw new IllegalStateException("Unexpected value: " + RobotState.getInstance().getReefLevel());
+        };
     }
 
     public static boolean nearCoralStation(){

@@ -9,6 +9,8 @@ import frc.robot.Constants.OuttakeConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 
+import java.util.function.DoubleSupplier;
+
 public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     private static Outtake _instance;
 
@@ -75,8 +77,8 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 //        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
     }
 
-    public Command setVelocity(double velocity){
-        return Commands.runOnce(() -> controller().setVelocity(velocity), this);
+    public Command setVelocity(DoubleSupplier velocity){
+        return Commands.runOnce(() -> controller().setVelocity(velocity.getAsDouble()), this);
     }
 
     public Command outtake(){

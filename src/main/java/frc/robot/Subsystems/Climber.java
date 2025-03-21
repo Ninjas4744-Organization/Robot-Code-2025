@@ -52,7 +52,7 @@ public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
     }
 
     public Command stage1(){
-        return Commands.runOnce(() -> controller().setPosition(ClimberConstants.kStage1), this);
+        return Commands.runOnce(() -> controller().setPosition(ClimberConstants.kStage1));
     }
 
     public Command stage2(){

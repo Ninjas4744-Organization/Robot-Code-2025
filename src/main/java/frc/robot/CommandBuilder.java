@@ -37,7 +37,7 @@ public class CommandBuilder {
     }
 
     public static Command changeRobotState(RobotStates state) {
-        return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
+        return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state));
     }
 
     public static Command changeReefLevel(boolean up){
@@ -141,6 +141,7 @@ public class CommandBuilder {
         private static void registerCommands() {
             NamedCommands.registerCommand("Wait Reset", waitReset());
             NamedCommands.registerCommand("Intake", intake());
+            NamedCommands.registerCommand("Wait Intake", waitIntake());
             NamedCommands.registerCommand("Wait Outtake", waitOuttake());
             NamedCommands.registerCommand("Right 4", Right(4));
             NamedCommands.registerCommand("Left 4", Left(4));
@@ -154,11 +155,11 @@ public class CommandBuilder {
         }
 
         private static Command intake() {
-            return Commands.sequence(
-                    CommandBuilder.changeRobotState(RobotStates.INTAKE),
-                    Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto"))
-                            .until(() -> RobotState.getInstance().isCoralInRobot())
-            );
+            return Commands.runOnce(() -> Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.IDLE).andThen(CommandBuilder.changeRobotState(RobotStates.INTAKE)).schedule());
+        }
+
+        private static Command waitIntake() {
+            return Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto")).until(() -> RobotState.getInstance().isCoralInRobot());
         }
 
         private static Command waitOuttake() {
@@ -166,23 +167,23 @@ public class CommandBuilder {
         }
 
         private static Command Right(int level) {
-            return Commands.sequence(
+            return Commands.runOnce(() -> Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
-            );
+            ).schedule());
         }
 
         private static Command Left(int level) {
-            return Commands.sequence(
+            return Commands.runOnce(() -> Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
-            );
+            ).schedule());
         }
     }
 }

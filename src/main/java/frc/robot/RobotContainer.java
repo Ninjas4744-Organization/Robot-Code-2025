@@ -9,11 +9,13 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -120,10 +122,16 @@ public class RobotContainer {
 
         _operatorJoystick.povRight().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.OUTTAKE)));
 
-        _operatorJoystick.povUp().onTrue(Commands.runOnce(() -> {
-            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
+        _operatorJoystick.povUp().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+//            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
             StateMachine.getInstance().changeRobotState(RobotStates.CLIMB1);
-        }));
+        })));
+
+        _operatorJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.either(
+           Climber.getInstance().runMotor(1),
+           Commands.none(),
+           () -> RobotState.getInstance().getRobotState() == RobotStates.CLIMBED1
+        )));
     }
 
     private void configureTestBindings() {
@@ -135,8 +143,7 @@ public class RobotContainer {
         _operatorJoystick.povLeft().whileTrue(CommandBuilder.Teleop.runIfTestMode(HopperAngle.getInstance().runMotor(-0.1)));
     }
 
-
-    private static PIDController _lookAtCenterReefPID = new PIDController(0.01, 0, 0);
+    private static final ProfiledPIDController _lookAtCenterReefPID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
     static {
         _lookAtCenterReefPID.enableContinuousInput(-180, 180);
     }
@@ -151,21 +158,27 @@ public class RobotContainer {
         double rx = -MathUtil.applyDeadband(rotation.getX(), SwerveConstants.kJoystickDeadband);
         double ry = -MathUtil.applyDeadband(rotation.getY(), SwerveConstants.kJoystickDeadband);
 
-        double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor;
+        double finalRotation = rx * SwerveConstants.kDriverRotationSpeedFactor * SwerveConstants.kSwerveConstants.maxAngularVelocity;
 
-        if (isLookAt)
+        if (isLookAt){
             finalRotation = _lookAtCenterReefPID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), RobotState.getInstance().getTransform(new Pose2d(4.49, 4.03, Rotation2d.kZero)).getTranslation().getAngle().getDegrees());
 //                            finalRotation = SwerveController.getInstance().lookAtTarget(new Pose2d(4.49, 4.03, Rotation2d.kZero), Rotation2d.kZero);
 //                            finalRotation = SwerveController.getInstance().lookAt(new Translation2d(ry, rx), 45);
+//            finalRotation = _lookAtCenterReefPID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), FieldConstants.getClosestReefTag().getRotation().rotateBy(Rotation2d.k180deg).getDegrees());
+        }
 
         if (isBayblade)
             finalRotation = 1;
 
-        SwerveController.getInstance().setControl(
-                SwerveController.getInstance().fromPercent(new ChassisSpeeds(
-                        ly * SwerveConstants.kDriverSpeedFactor,
-                        lx * SwerveConstants.kDriverSpeedFactor,
-                        finalRotation)),
+        ChassisSpeeds fromPercent = SwerveController.getInstance().fromPercent(new ChassisSpeeds(
+                ly * SwerveConstants.kDriverSpeedFactor,
+                lx * SwerveConstants.kDriverSpeedFactor
+                , 0));
+
+        SwerveController.getInstance().setControl(new ChassisSpeeds(
+                fromPercent.vxMetersPerSecond,
+                fromPercent.vyMetersPerSecond,
+                finalRotation),
                 SwerveConstants.kDriverFieldRelative, "Driver"
         );
     }
