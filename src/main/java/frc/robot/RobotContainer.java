@@ -7,6 +7,7 @@ import com.ninjas4744.NinjasLib.Swerve.Swerve;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -62,6 +63,8 @@ public class RobotContainer {
 
         LiveWindow.disableAllTelemetry();
         CommandLogger.initialize();
+
+        CameraServer.startAutomaticCapture();
 
         _driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
         _operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);

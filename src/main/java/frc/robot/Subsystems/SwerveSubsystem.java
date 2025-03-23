@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -137,11 +138,20 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
                 _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
                 _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
                 _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
-                t = 0.02;
+                t = 0.05;
                 p0 = RobotState.getInstance().getRobotPose();
                 p2 = _currentReefTarget;
-                p1 = _currentReefTarget.transformBy(new Transform2d(-0.75, 0.0, Rotation2d.kZero));
-                pastP1Start = afterP1();
+                Translation2d velDir = new Translation2d(
+                        SwerveIO.getInstance().getChassisSpeeds(false).vxMetersPerSecond,
+                        SwerveIO.getInstance().getChassisSpeeds(false).vyMetersPerSecond);
+                if(velDir.getNorm() < 1.5){
+                    p1 = _currentReefTarget.transformBy(new Transform2d(-0.75, 0.0, Rotation2d.kZero));
+                    pastP1Start = afterP1();
+                }else{
+                    velDir = new Translation2d(velDir.getX() * 0.4, velDir.getY() * 0.4);
+                    p1 = RobotState.getInstance().getRobotPose().transformBy(new Transform2d(velDir.getX(), velDir.getY(), Rotation2d.kZero));
+                    pastP1Start = false;
+                }
                 SwerveController.getInstance().setState("Reef PID");
             }),
             Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this)

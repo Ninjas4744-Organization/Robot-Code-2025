@@ -21,34 +21,19 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
-        if(wantedState == RobotStates.RESET || wantedState == RobotStates.TEST)
+        if(wantedState == RobotStates.RESET && currentState != RobotStates.CLIMB1 && currentState != RobotStates.CLIMBED1 && currentState != RobotStates.CLIMB2 && currentState != RobotStates.CLIMBED || wantedState == RobotStates.TEST)
             return true;
 
         return switch (currentState) {
-            case CLIMB1 -> wantedState == RobotStates.CLIMBED1 || wantedState == RobotStates.CLOSE;
-
-            case CLIMBED1 -> wantedState == RobotStates.CLIMB2 || wantedState == RobotStates.CLOSE;
-
-            case CLIMB2 -> wantedState == RobotStates.CLIMBED || wantedState == RobotStates.CLOSE;
-
-            case CLIMBED, REMOVE_ALGAE -> wantedState == RobotStates.CLOSE;
-
-            case OUTTAKE -> wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.REMOVE_ALGAE;
-
-            case AT_REEF -> wantedState == RobotStates.OUTTAKE || wantedState == RobotStates.CLOSE;
-
-            case RESET, CLOSE -> wantedState == RobotStates.IDLE;
-
             case IDLE -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
                     || wantedState == RobotStates.GO_REEF
                     || wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.CLIMB1;
+            case RESET, CLOSE -> wantedState == RobotStates.IDLE;
 
             case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.CLOSE;
-
             case CORAL_READY -> wantedState == RobotStates.GO_REEF
                     || wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.CLOSE
@@ -57,8 +42,17 @@ public class StateMachine extends StateMachineIO<RobotStates> {
 
             case GO_REEF -> wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.CLOSE;
+            case AT_REEF -> wantedState == RobotStates.OUTTAKE || wantedState == RobotStates.CLOSE;
+            case OUTTAKE -> wantedState == RobotStates.CLOSE
+                    || wantedState == RobotStates.REMOVE_ALGAE;
 
-            case TEST -> false;
+            case REMOVE_ALGAE -> wantedState == RobotStates.CLOSE;
+
+            case CLIMB1 -> wantedState == RobotStates.CLIMBED1;
+            case CLIMBED1 -> wantedState == RobotStates.CLIMB2;
+            case CLIMB2 -> wantedState == RobotStates.CLIMBED;
+            case CLIMBED, TEST -> false;
+
         };
     }
 
@@ -96,11 +90,11 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                         Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexBackState),
                         Sushi.getInstance().setPercent(() -> 0),
                         Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
-                        Commands.waitSeconds(0.05),
+//                        Commands.waitSeconds(0.05),
                         Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexState),
                         Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()),
                         Commands.runOnce(() -> intakeCount++)
-                ).repeatedly().until(() -> intakeCount == 1).finallyDo(() -> intakeCount = 0),
+                ).repeatedly().until(() -> intakeCount == 3).finallyDo(() -> intakeCount = 0),
 
                 Commands.waitSeconds(0.02),
                 CommandBuilder.changeRobotState(RobotStates.CLOSE)

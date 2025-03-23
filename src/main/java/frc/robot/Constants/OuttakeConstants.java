@@ -22,7 +22,7 @@ public class OuttakeConstants {
     public static final double kOuttakeState = 17;
     public static final double kL1OuttakeState = -10;
     public static final double kIntakeState = 15;
-    public static final double kIndexBackState = -5;
+    public static final double kIndexBackState = -7.5;
     public static final double kIndexState = 5;
     public static final double kRemoveAlgae = -100;
 }
