@@ -34,7 +34,8 @@ public class ElevatorConstants {
             0,
             0.13,
             0.555,
-            1.09//sadna//1.13//comp
+            //1.09//sadna
+            1.13//comp
     };
 
     public static final double kRemoveAlgae = 0.4-0.03-0.03-0.01;

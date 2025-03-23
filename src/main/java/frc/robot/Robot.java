@@ -1,14 +1,10 @@
 package frc.robot;
 
-import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.SwerveSubsystem;
@@ -100,6 +96,7 @@ public class Robot extends LoggedRobot {
 
         CommandScheduler.getInstance().cancelAll();
         StateMachine.getInstance().changeRobotState(RobotStates.TEST);
+        SwerveSubsystem.getInstance().resetSubsystem();
     }
 
     @Override

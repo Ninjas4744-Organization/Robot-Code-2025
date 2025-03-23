@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.LedsConstants;
 import frc.robot.StateMachine.RobotStates;
 
+import java.util.Map;
+
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.Constants.LedsConstants.kLedSpacing;
@@ -104,7 +106,8 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kDarkOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_REEF);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_REEF);
-        addFunctionToPeriodicMap(this::rainbow, RobotStates.REMOVE_ALGAE);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kBlue).blink(Seconds.of(0.25))), RobotStates.CLIMB1, RobotStates.CLIMBED1, RobotStates.CLIMB2, RobotStates.CLIMBED);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.steps(Map.of(0, Color.kTurquoise, 0.2, Color.kBlack, 0.4, Color.kTurquoise, 0.6, Color.kBlack, 0.8, Color.kTurquoise)).scrollAtAbsoluteSpeed(MetersPerSecond.of(-0.5), kLedSpacing)), RobotStates.REMOVE_ALGAE);
     }
 
     @Override

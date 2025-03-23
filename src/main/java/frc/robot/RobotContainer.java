@@ -64,7 +64,7 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         CommandLogger.initialize();
 
-        CameraServer.startAutomaticCapture();
+//        CameraServer.startAutomaticCapture();
 
         _driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
         _operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);
@@ -123,12 +123,12 @@ public class RobotContainer {
 
         _operatorJoystick.povRight().onTrue(runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.OUTTAKE)));
 
-        _operatorJoystick.povUp().onTrue(runIfNotTestMode(Commands.runOnce(() -> {
+        _operatorJoystick.options().onTrue(runIfNotTestMode(Commands.runOnce(() -> {
 //            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
             StateMachine.getInstance().changeRobotState(RobotStates.CLIMB1);
         })));
 
-        _operatorJoystick.povUp().whileTrue(runIfNotTestMode(Commands.either(
+        _operatorJoystick.options().whileTrue(runIfNotTestMode(Commands.either(
            Climber.getInstance().runMotor(1),
            Commands.none(),
            () -> RobotState.getInstance().getRobotState() == RobotStates.CLIMBED1

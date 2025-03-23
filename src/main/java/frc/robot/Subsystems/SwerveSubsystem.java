@@ -104,15 +104,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
             Transform2d transform1 = RobotState.getInstance().getTransform(_currentReefTarget);
             Transform2d transform2 = RobotState.getInstance().getTransform(target);
-            double a = 2;//1.75;
-            double b = 2;//1.75;
+            double a = 1.75;//1.75;
+            double b = 1.75;//1.75;
 
             if(pastP1Start)
                 transform2 = transform1;
 
-//            double vel = Math.pow(a * Math.abs(transform1.getTranslation().getNorm()), 1 / b);
+            double vel = Math.pow(a * Math.abs(transform1.getTranslation().getNorm()), 1 / b);
             double x = transform1.getTranslation().getNorm();
-            double vel = -0.161 * x * x * x * x + 1.22 * x * x * x + -2.3 * x * x + 3.23 * x;
+//            double vel = -1.34 * x * x * x * x + 6.55 * x * x * x + -9.99 * x * x + 6.78 * x;
             double xVel = vel * transform2.getTranslation().getAngle().getCos();
             double yVel = vel * transform2.getTranslation().getAngle().getSin();
 //            double xVel = _xp.calculate(-transform.getX());
@@ -144,7 +144,7 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
                 Translation2d velDir = new Translation2d(
                         SwerveIO.getInstance().getChassisSpeeds(false).vxMetersPerSecond,
                         SwerveIO.getInstance().getChassisSpeeds(false).vyMetersPerSecond);
-                if(velDir.getNorm() < 1.5){
+                if(velDir.getNorm() < 5){
                     p1 = _currentReefTarget.transformBy(new Transform2d(-0.75, 0.0, Rotation2d.kZero));
                     pastP1Start = afterP1();
                 }else{
@@ -213,6 +213,15 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         if(!_paused)
             return atGoalX() && atGoalY() && atGoal0();
         return true;
+    }
+
+    public double distToTarget(){
+        Logger.recordOutput("Dist", RobotState.getInstance().getDistance(FieldConstants.getClosestReefTarget(
+                RobotState.getInstance().isReefRight(),
+                _outtakeExtraMove)));
+        return RobotState.getInstance().getDistance(FieldConstants.getClosestReefTarget(
+                RobotState.getInstance().isReefRight(),
+                _outtakeExtraMove));
     }
 
     @Override

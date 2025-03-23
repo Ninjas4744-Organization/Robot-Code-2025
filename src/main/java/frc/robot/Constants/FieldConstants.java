@@ -94,7 +94,7 @@ public class FieldConstants {
     }
 
     public static Pose2d getClosestReefTarget(boolean isRight, double extraChange){
-        boolean sadna = true;
+        boolean sadna = false;
         if(sadna){
             return switch (RobotState.getInstance().getReefLevel()){
                 case 4 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + 0.03 + extraChange : -0.171 + extraChange, new Rotation2d()));
@@ -105,8 +105,8 @@ public class FieldConstants {
         }
 
         return switch (RobotState.getInstance().getReefLevel()){
-            case 4 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.171 + extraChange, new Rotation2d()));
-            case 3, 2 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.16 + extraChange, new Rotation2d()));
+            case 4 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.171 - 0.03 + extraChange, new Rotation2d()));
+            case 3, 2 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.16 + extraChange : -0.16 - 0.015 - 0.015 + extraChange, new Rotation2d()));
             case 1 -> getClosestReefTag().transformBy(new Transform2d(0.42/*0.45*/, isRight ? 0.35 + extraChange : -0.35 + extraChange, new Rotation2d()));
             default -> throw new IllegalStateException("Unexpected value: " + RobotState.getInstance().getReefLevel());
         };

@@ -40,6 +40,8 @@ public class SwerveConstants {
 
         kSwerveConstants.maxSpeed = 4.5;//4.5;
         kSwerveConstants.maxAngularVelocity = 9.2;
+//        kSwerveConstants.maxAcceleration = Double.MAX_VALUE;
+//        kSwerveConstants.maxSkidAcceleration = Double.MAX_VALUE;
         kSwerveConstants.speedLimit = 4.5;//4.5;
         kSwerveConstants.rotationSpeedLimit = 9.2;
         kSwerveConstants.accelerationLimit = Double.MAX_VALUE;//11.8;//10;

@@ -75,7 +75,7 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     public Command intake(){
         return Commands.run(() -> {
-            if(controller().getCurrent() > 55)
+            if(controller().getCurrent() > 65)
                 controller().setVelocity(OuttakeConstants.kIndexBackState);
             else
                controller().setVelocity(OuttakeConstants.kIntakeState);

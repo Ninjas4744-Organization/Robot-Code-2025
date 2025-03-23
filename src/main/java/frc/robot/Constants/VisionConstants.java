@@ -46,7 +46,7 @@ public class VisionConstants {
         distFOMMap.put(0.0, 0.2);
         distFOMMap.put(0.5, 0.5);
         distFOMMap.put(1.0, 1.0);
-        distFOMMap.put(3.0, 4.0);
+        distFOMMap.put(3.0, 5.0);
         distFOMMap.put(5.0, 80.0);
     }
     public static double[] calculateFOM(VisionOutput estimation) {
