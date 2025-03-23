@@ -167,23 +167,23 @@ public class CommandBuilder {
         }
 
         private static Command Right(int level) {
-            return Commands.runOnce(() -> Commands.sequence(
+            return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
-            ).schedule());
+            ));
         }
 
         private static Command Left(int level) {
-            return Commands.runOnce(() -> Commands.sequence(
+            return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
-            ).schedule());
+            ));
         }
     }
 }

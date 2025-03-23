@@ -15,13 +15,13 @@ public class OuttakeAngleConstants {
         kControllerConstants.subsystemName = "OuttakeAngle";
 
         kControllerConstants.encoderConversionFactor = 18 / 100.0 * Math.PI * 2;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(10, 0, 0, 0, 10, 10, 0, 0, 0, 1);
-        kControllerConstants.controlConstants.GravityType = GravityTypeValue.Arm_Cosine;
-        kControllerConstants.positionGoalTolerance = Units.degreesToRadians(3);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(10, 0, 0, 0, 10, 10, 0, 0, 0, 1, GravityTypeValue.Arm_Cosine);
+        kControllerConstants.positionGoalTolerance = Units.degreesToRadians(10);
         kControllerConstants.encoderHomePosition = Units.degreesToRadians(135);
-//        kControllerConstants.isLimitSwitch = true;
-//        kControllerConstants.limitSwitchID = 3;
-//        kControllerConstants.limitSwitchDirection = 1;
+        kControllerConstants.isLimitSwitch = true;
+        kControllerConstants.limitSwitchID = 3;
+        kControllerConstants.limitSwitchDirection = 1;
+        kControllerConstants.limitSwitchAutoStopReset = false;
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;

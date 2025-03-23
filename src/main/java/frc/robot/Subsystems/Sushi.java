@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.SushiConstants;
 import frc.robot.StateMachine.RobotStates;
 
+import java.util.function.DoubleSupplier;
+
 public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
     private static Sushi _instance;
 
@@ -45,11 +47,10 @@ public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-//        addFunctionToOnChangeMap(() -> controller().setPercent(SushiConstants.kIntake), RobotStates.INTAKE);
-//        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.RESET, RobotStates.CLOSE, RobotStates.CORAL_READY);
+
     }
 
-    public Command setPercent(double percent){
-        return Commands.runOnce(() -> controller().setPercent(percent), this);
+    public Command setPercent(DoubleSupplier percent){
+        return Commands.runOnce(() -> controller().setPercent(percent.getAsDouble()));
     }
 }

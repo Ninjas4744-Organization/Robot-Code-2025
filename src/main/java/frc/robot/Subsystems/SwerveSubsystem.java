@@ -75,13 +75,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
 //    private Timer _atGoalTimer = new Timer();
-//    double t = 0;
-//    double time = 0.75;
+    double t = 0;
+    double time = 0.75;
+    boolean pastP1Start = false;
 //    PIDController _xp = new PIDController(5, 0, 0);
 //    PIDController _yp = new PIDController(5, 0, 0);
-//    Pose2d p0;
-//    Pose2d p1;
-//    Pose2d p2;
+    Pose2d p0;
+    Pose2d p1;
+    Pose2d p2;
     public Command goToReef(){
         Supplier<ChassisSpeeds> drive = () -> {
 //            if(t == 0){
@@ -90,24 +91,29 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 //                p1 = _currentReefTarget.transformBy(new Transform2d(-0.5, 0.0, Rotation2d.kZero));
 //            }
 //
-//            Pose2d[] poses = new Pose2d[11];
-//            for (double t = 0; t <= 1; t += 0.1) {
-//                int i = (int)Math.round(t * 10);
-//                poses[i] = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
-//            }
-//            Logger.recordOutput("trajectory", poses);
-//
-//            t += 0.02 / time;
-//            Pose2d target = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
+            Pose2d[] poses = new Pose2d[11];
+            for (double t = 0; t <= 1; t += 0.1) {
+                int i = (int)Math.round(t * 10);
+                poses[i] = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
+            }
+            Logger.recordOutput("trajectory", poses);
+
+            t += 0.02 / time;
+            Pose2d target = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
 
             Transform2d transform1 = RobotState.getInstance().getTransform(_currentReefTarget);
-//            Transform2d transform2 = RobotState.getInstance().getTransform(target);
+            Transform2d transform2 = RobotState.getInstance().getTransform(target);
             double a = 2;//1.75;
             double b = 2;//1.75;
 
-            double vel = Math.pow(a * Math.abs(transform1.getTranslation().getNorm()), 1 / b);
-            double xVel = vel * transform1.getTranslation().getAngle().getCos();
-            double yVel = vel * transform1.getTranslation().getAngle().getSin();
+            if(pastP1Start)
+                transform2 = transform1;
+
+//            double vel = Math.pow(a * Math.abs(transform1.getTranslation().getNorm()), 1 / b);
+            double x = transform1.getTranslation().getNorm();
+            double vel = -0.161 * x * x * x * x + 1.22 * x * x * x + -2.3 * x * x + 3.23 * x;
+            double xVel = vel * transform2.getTranslation().getAngle().getCos();
+            double yVel = vel * transform2.getTranslation().getAngle().getSin();
 //            double xVel = _xp.calculate(-transform.getX());
 //            double yVel = _yp.calculate(-transform.getY());
 
@@ -125,15 +131,19 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
                         _outtakeExtraMove);
                 _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
                 Logger.recordOutput("Reef Target", _currentReefTarget);
-            }, this).until(this::atPidingZone),
+            }).until(this::atPidingZone),
             Commands.runOnce(() -> {
                 System.out.println("Reseting PID to X" + RobotState.getInstance().getRobotPose().getX() + " Y" + RobotState.getInstance().getRobotPose().getY() + " a" + RobotState.getInstance().getRobotPose().getRotation().getDegrees() + " vx" + SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond + " vy" + SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond + " omega" + SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond);
                 _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
                 _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
                 _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
-//                            t = 0;
+                t = 0.02;
+                p0 = RobotState.getInstance().getRobotPose();
+                p2 = _currentReefTarget;
+                p1 = _currentReefTarget.transformBy(new Transform2d(-0.75, 0.0, Rotation2d.kZero));
+                pastP1Start = afterP1();
                 SwerveController.getInstance().setState("Reef PID");
-            }, this),
+            }),
             Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this)
 //                        Commands.runOnce(() -> {
 //                            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(0.03, 0, Rotation2d.kZero));
@@ -159,6 +169,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             double thresh = FieldConstants.kXOuttakeDistThreshold + SmartDashboard.getNumber("Competition/Outtake Extra Threshold", 0) / 100;
             Logger.recordOutput("x dist", Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()));
             return Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()) < thresh;
+        }
+        return true;
+    }
+
+    private boolean afterP1(){
+        if(!_paused) {
+            Logger.recordOutput("p1 dist", p1.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX());
+            return p1.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX() > 0;
         }
         return true;
     }

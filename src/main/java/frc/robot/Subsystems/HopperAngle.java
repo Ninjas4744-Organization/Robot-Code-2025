@@ -9,6 +9,8 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.HopperAngleConstants;
 import frc.robot.StateMachine.RobotStates;
 
+import java.util.function.DoubleSupplier;
+
 public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
     private static HopperAngle _instance;
 
@@ -50,7 +52,7 @@ public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     }
 
-    public Command setPosition(double position){
-        return Commands.runOnce(() -> controller().setPosition(position), this);
+    public Command setPosition(DoubleSupplier position){
+        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()));
     }
 }

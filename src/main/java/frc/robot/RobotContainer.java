@@ -8,11 +8,9 @@ import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import com.ninjas4744.NinjasLib.Vision.VisionIO;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,10 +26,9 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.*;
-import org.littletonrobotics.junction.Logger;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
+import static frc.robot.CommandBuilder.Teleop.runIfNotTestMode;
+import static frc.robot.CommandBuilder.Teleop.runIfTestMode;
 
 public class RobotContainer {
     private final CommandPS5Controller _driverJoystick;
@@ -64,6 +61,7 @@ public class RobotContainer {
         CommandBuilder.Auto.configureAutoBuilder();
 
         LiveWindow.disableAllTelemetry();
+        CommandLogger.initialize();
 
         _driverJoystick = new CommandPS5Controller(Constants.kDriverJoystickPort);
         _operatorJoystick = new CommandPS5Controller(Constants.kOperatorJoystickPort);
@@ -89,45 +87,45 @@ public class RobotContainer {
 //            () -> isSwerveLookAt,
 //            () -> false);
 
-        _driverJoystick.cross().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt)));
+        _driverJoystick.cross().onTrue(runIfNotTestMode(Commands.runOnce(() -> isSwerveLookAt = !isSwerveLookAt)));
 
         _driverJoystick.L1().onTrue(CommandBuilder.resetGyro(false));
         _driverJoystick.R1().onTrue(CommandBuilder.resetGyro(true));
 
-        _driverJoystick.L2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.sequence(
+        _driverJoystick.L2().onTrue(runIfNotTestMode(Commands.sequence(
                 Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
                 CommandBuilder.changeRobotState(RobotStates.GO_REEF)))
         );
 
-        _driverJoystick.R2().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.sequence(
+        _driverJoystick.R2().onTrue(runIfNotTestMode(Commands.sequence(
                 Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
                 CommandBuilder.changeRobotState(RobotStates.GO_REEF)))
         );
     }
 
     private void configureOperatorBindings() {
-        _operatorJoystick.povDown().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+        _operatorJoystick.povDown().onTrue(runIfNotTestMode(Commands.runOnce(() -> {
             StateMachine.getInstance().changeRobotState(RobotStates.RESET);
             if(!RobotState.isSimulated())
                 ((Swerve)SwerveIO.getInstance()).resetModulesToAbsolute();
         })));
 
-        _operatorJoystick.L1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeReefLevel(false)));
-        _operatorJoystick.R1().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeReefLevel(true)));
+        _operatorJoystick.L1().onTrue(runIfNotTestMode(CommandBuilder.changeReefLevel(false)));
+        _operatorJoystick.R1().onTrue(runIfNotTestMode(CommandBuilder.changeReefLevel(true)));
 
-        _operatorJoystick.cross().onTrue   (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.INTAKE)));
-        _operatorJoystick.circle().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.CLOSE)));
-        _operatorJoystick.triangle().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.AT_REEF)));
-        _operatorJoystick.square().onTrue  (CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.switchAlgaeState()));
+        _operatorJoystick.cross().onTrue   (runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.INTAKE)));
+        _operatorJoystick.circle().onTrue  (runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.CLOSE)));
+        _operatorJoystick.triangle().onTrue(runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.AT_REEF)));
+        _operatorJoystick.square().onTrue  (runIfNotTestMode(CommandBuilder.switchAlgaeState()));
 
-        _operatorJoystick.povRight().onTrue(CommandBuilder.Teleop.runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.OUTTAKE)));
+        _operatorJoystick.povRight().onTrue(runIfNotTestMode(CommandBuilder.changeRobotState(RobotStates.OUTTAKE)));
 
-        _operatorJoystick.povUp().onTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.runOnce(() -> {
+        _operatorJoystick.povUp().onTrue(runIfNotTestMode(Commands.runOnce(() -> {
 //            StateMachine.getInstance().changeRobotState(RobotStates.CLIMB2);
             StateMachine.getInstance().changeRobotState(RobotStates.CLIMB1);
         })));
 
-        _operatorJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfNotTestMode(Commands.either(
+        _operatorJoystick.povUp().whileTrue(runIfNotTestMode(Commands.either(
            Climber.getInstance().runMotor(1),
            Commands.none(),
            () -> RobotState.getInstance().getRobotState() == RobotStates.CLIMBED1
@@ -135,12 +133,12 @@ public class RobotContainer {
     }
 
     private void configureTestBindings() {
-        _operatorJoystick.triangle().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(0.15)));
-        _operatorJoystick.cross().whileTrue(CommandBuilder.Teleop.runIfTestMode(Elevator.getInstance().runMotor(-0.15)));
-        _operatorJoystick.povUp().whileTrue(CommandBuilder.Teleop.runIfTestMode(Climber.getInstance().runMotor(-1)));
-        _operatorJoystick.povDown().whileTrue(CommandBuilder.Teleop.runIfTestMode(Climber.getInstance().runMotor(1)));
-        _operatorJoystick.povRight().whileTrue(CommandBuilder.Teleop.runIfTestMode(HopperAngle.getInstance().runMotor(0.1)));
-        _operatorJoystick.povLeft().whileTrue(CommandBuilder.Teleop.runIfTestMode(HopperAngle.getInstance().runMotor(-0.1)));
+        _operatorJoystick.triangle().whileTrue(runIfTestMode(Elevator.getInstance().runMotor(0.15)));
+        _operatorJoystick.cross().whileTrue(runIfTestMode(Elevator.getInstance().runMotor(-0.15)));
+        _operatorJoystick.povUp().whileTrue(runIfTestMode(Climber.getInstance().runMotor(-1)));
+        _operatorJoystick.povDown().whileTrue(runIfTestMode(Climber.getInstance().runMotor(1)));
+        _operatorJoystick.povRight().whileTrue(runIfTestMode(HopperAngle.getInstance().runMotor(0.1)));
+        _operatorJoystick.povLeft().whileTrue(runIfTestMode(HopperAngle.getInstance().runMotor(-0.1)));
     }
 
     private static final ProfiledPIDController _lookAtCenterReefPID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));

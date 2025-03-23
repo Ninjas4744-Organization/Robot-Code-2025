@@ -23,8 +23,6 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
     public static void createInstance(boolean paused){
         _instance = new OuttakeAngle(paused);
     }
-    
-    private DigitalInput _limit = new DigitalInput(3);
 
     public OuttakeAngle(boolean paused) {
         super(paused);
@@ -47,28 +45,19 @@ public class OuttakeAngle extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected boolean isResettedO() {
-        return _limit.get();
+        return controller().getLimit();
     }
 
     @Override
     protected void setFunctionMaps() {
-//        addFunctionToOnChangeMap(() ->
-//            controller().setPosition(RobotState.getInstance().getReefLevel() != 1
-//            ? OuttakeAngleConstants.kCoralState
-//            : OuttakeAngleConstants.kL1State), RobotStates.AT_REEF);
-//
-//        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kCoralState), RobotStates.INTAKE);
-//
-//        addFunctionToOnChangeMap(() -> Commands.run(() -> controller().setPosition(OuttakeAngleConstants.kCoralState)).until(() -> controller().atGoal()).andThen(runMotor(OuttakeAngleConstants.kResetSpeed)).until(_limit::get).schedule(), RobotStates.CLOSE);
-//        addFunctionToOnChangeMap(() -> controller().setPosition(OuttakeAngleConstants.kAlgaeState), RobotStates.REMOVE_ALGAE);
-//        addFunctionToOnChangeMap(this::resetSubsystem, RobotStates.RESET);
+
     }
 
     public Command setPosition(DoubleSupplier position){
-        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()), this);
+        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()));
     }
 
     public Command stop(){
-        return Commands.runOnce(() -> controller().stop(), this);
+        return Commands.runOnce(() -> controller().stop());
     }
 }

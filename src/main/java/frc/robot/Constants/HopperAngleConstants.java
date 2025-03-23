@@ -15,8 +15,7 @@ public class HopperAngleConstants {
         kControllerConstants.subsystemName = "HopperAngle";
 
         kControllerConstants.encoderConversionFactor = 18 / 100.0 / 16 * Math.PI * 2;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(10, 0, 0, 0, 2, 2, 0, 0, 0, 0);
-        kControllerConstants.controlConstants.GravityType = GravityTypeValue.Arm_Cosine;
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(10, 0, 0, 0, 2, 2, 0, 0, 0, 0, GravityTypeValue.Arm_Cosine);
         kControllerConstants.positionGoalTolerance = Units.degreesToRadians(2);
         kControllerConstants.encoderHomePosition = 0;
 
