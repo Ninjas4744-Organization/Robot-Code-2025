@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Wait Reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Left 4"
           }
         },
@@ -23,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "back - source left"
@@ -31,32 +43,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Wait Intake"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Left 4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source left - front left"
-                }
-              }
-            ]
+            "name": "Left 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
@@ -68,32 +79,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Wait Intake"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Right 4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source left - front left"
-                }
-              }
-            ]
+            "name": "Right 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source left - front left"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Wait Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
@@ -105,7 +115,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Wait Intake"
           }
         }
       ]

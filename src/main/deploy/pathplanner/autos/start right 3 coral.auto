@@ -111,6 +111,12 @@
           "data": {
             "pathName": "front right - source right"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait Intake"
+          }
         }
       ]
     }

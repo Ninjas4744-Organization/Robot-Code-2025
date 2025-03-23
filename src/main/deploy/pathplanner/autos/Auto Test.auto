@@ -13,13 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Left 4"
+            "name": "Print 1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Print 1"
+            "name": "Left 4"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Print 1"
+            "name": "Intake"
           }
         },
         {
@@ -43,88 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Right 4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source right - front"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "front - source right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Left 4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source right - front right"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "front right - source right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Right 4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source right - front right"
-                }
-              }
-            ]
+            "name": "Wait Intake"
           }
         }
       ]

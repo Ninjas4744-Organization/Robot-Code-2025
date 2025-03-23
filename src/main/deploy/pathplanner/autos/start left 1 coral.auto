@@ -29,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "back left - source left"
@@ -37,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Wait Intake"
           }
         }
       ]
