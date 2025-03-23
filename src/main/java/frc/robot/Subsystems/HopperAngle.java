@@ -5,44 +5,46 @@ import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.SushiConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.HopperAngleConstants;
 import frc.robot.StateMachine.RobotStates;
 
 import java.util.function.DoubleSupplier;
 
-public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
-    private static Sushi _instance;
+public class HopperAngle extends StateMachineMotoredSubsystem<RobotStates> {
+    private static HopperAngle _instance;
 
-    public static Sushi getInstance(){
+    public static HopperAngle getInstance(){
         return _instance;
     }
 
     public static void createInstance(boolean paused){
-        _instance = new Sushi(paused);
+        _instance = new HopperAngle(paused);
     }
 
-    public Sushi(boolean paused) {
+    public HopperAngle(boolean paused) {
         super(paused);
     }
 
     @Override
     protected void setController() {
-        _controller = new NinjasTalonFXController(SushiConstants.kControllerConstants);
+        _controller = new NinjasTalonFXController(HopperAngleConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        _simulatedController = new NinjasSimulatedController(SushiConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(HopperAngleConstants.kSimulatedControllerConstants);
     }
 
     @Override
     protected void resetSubsystemO() {
+        controller().resetEncoder();
         controller().stop();
     }
 
     @Override
     protected boolean isResettedO() {
-        return controller().getOutput() == 0;
+        return true;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
 
     }
 
-    public Command setPercent(DoubleSupplier percent){
-        return Commands.runOnce(() -> controller().setPercent(percent.getAsDouble()));
+    public Command setPosition(DoubleSupplier position){
+        return Commands.runOnce(() -> controller().setPosition(position.getAsDouble()));
     }
 }

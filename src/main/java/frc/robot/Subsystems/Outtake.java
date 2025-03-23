@@ -3,9 +3,13 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Controllers.NinjasSimulatedController;
 import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OuttakeConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
+
+import java.util.function.DoubleSupplier;
 
 public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
     private static Outtake _instance;
@@ -44,7 +48,15 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(() -> {
+
+    }
+
+    public Command setVelocity(DoubleSupplier velocity){
+        return Commands.runOnce(() -> controller().setVelocity(velocity.getAsDouble()));
+    }
+
+    public Command outtake(){
+        return Commands.runOnce(() -> {
             switch (RobotState.getInstance().getReefLevel()){
                 case 1:
                     controller().setVelocity(OuttakeConstants.kL1OuttakeState);
@@ -58,22 +70,15 @@ public class Outtake extends StateMachineMotoredSubsystem<RobotStates> {
                     controller().setVelocity(OuttakeConstants.kOuttakeState);
                     break;
             }
-        }, RobotStates.OUTTAKE);
-
-        addFunctionToPeriodicMap(() -> {
-            if(controller().getCurrent() < 55)
-                controller().setVelocity(OuttakeConstants.kIntakeState);
-            else
-                controller().setVelocity(OuttakeConstants.kIndexBackState);
-        }, RobotStates.INTAKE);
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexBackState), RobotStates.INDEX_BACK);
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kIndexState), RobotStates.INDEX);
-
-        addFunctionToOnChangeMap(() -> controller().setVelocity(OuttakeConstants.kRemoveAlgae), RobotStates.REMOVE_ALGAE);
-        addFunctionToOnChangeMap(() -> controller().stop(), RobotStates.CLOSE, RobotStates.RESET, RobotStates.CORAL_READY);
+        });
     }
 
-    public double getCurrent(){
-        return controller().getCurrent();
+    public Command intake(){
+        return Commands.run(() -> {
+            if(controller().getCurrent() > 55)
+                controller().setVelocity(OuttakeConstants.kIndexBackState);
+            else
+               controller().setVelocity(OuttakeConstants.kIntakeState);
+        });
     }
 }

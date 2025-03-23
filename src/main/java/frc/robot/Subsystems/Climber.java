@@ -5,44 +5,45 @@ import com.ninjas4744.NinjasLib.Controllers.NinjasTalonFXController;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineMotoredSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.SushiConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.StateMachine.RobotStates;
 
 import java.util.function.DoubleSupplier;
 
-public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
-    private static Sushi _instance;
+public class Climber extends StateMachineMotoredSubsystem<RobotStates> {
+    private static Climber _instance;
 
-    public static Sushi getInstance(){
+    public static Climber getInstance(){
         return _instance;
     }
 
     public static void createInstance(boolean paused){
-        _instance = new Sushi(paused);
+        _instance = new Climber(paused);
     }
 
-    public Sushi(boolean paused) {
+    public Climber(boolean paused) {
         super(paused);
     }
 
     @Override
     protected void setController() {
-        _controller = new NinjasTalonFXController(SushiConstants.kControllerConstants);
+        _controller = new NinjasTalonFXController(ClimberConstants.kControllerConstants);
     }
 
     @Override
     protected void setSimulationController() {
-        _simulatedController = new NinjasSimulatedController(SushiConstants.kSimulatedControllerConstants);
+        _simulatedController = new NinjasSimulatedController(ClimberConstants.kSimulatedControllerConstants);
     }
 
     @Override
     protected void resetSubsystemO() {
+        controller().resetEncoder();
         controller().stop();
     }
 
     @Override
     protected boolean isResettedO() {
-        return controller().getOutput() == 0;
+        return true;
     }
 
     @Override
@@ -50,7 +51,11 @@ public class Sushi extends StateMachineMotoredSubsystem<RobotStates> {
 
     }
 
-    public Command setPercent(DoubleSupplier percent){
-        return Commands.runOnce(() -> controller().setPercent(percent.getAsDouble()));
+    public Command stage1(){
+        return Commands.runOnce(() -> controller().setPosition(ClimberConstants.kStage1));
+    }
+
+    public Command stage2(){
+        return runMotor(1).until(controller()::getLimit);
     }
 }

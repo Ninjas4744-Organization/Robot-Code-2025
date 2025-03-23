@@ -1,7 +1,6 @@
 package frc.robot.Subsystems;
 
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
-import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -97,14 +96,14 @@ public class Leds extends StateMachineSubsystem<RobotStates> {
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.CORAL_SEARCH);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kWhite)), RobotStates.IDLE);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kDarkRed).blink(Seconds.of(0.125))), RobotStates.RESET);
         addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kRed).blink(Seconds.of(0.125))), RobotStates.CLOSE);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.25))), RobotStates.INTAKE, RobotStates.INDEX_BACK, RobotStates.INDEX);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY, RobotStates.OUTTAKE_READY);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF);
-        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_SIDE_REEF);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.25))), RobotStates.INTAKE);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kGreen)), RobotStates.CORAL_READY);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kDarkOrange).blink(Seconds.of(0.25))), RobotStates.TEST);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.25))), RobotStates.GO_REEF);
+        addFunctionToPeriodicMap(() -> setPattern(LEDPattern.solid(Color.kPurple)), RobotStates.AT_REEF);
         addFunctionToPeriodicMap(this::rainbow, RobotStates.REMOVE_ALGAE);
     }
 

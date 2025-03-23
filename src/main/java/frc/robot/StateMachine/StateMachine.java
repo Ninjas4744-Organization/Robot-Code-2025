@@ -1,9 +1,14 @@
 package frc.robot.StateMachine;
 
-import com.ninjas4744.NinjasLib.DataClasses.StateEndCondition;
 import com.ninjas4744.NinjasLib.StateMachineIO;
+import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.CommandBuilder;
+import frc.robot.Constants.*;
+import frc.robot.RunInParallelCommand;
 import frc.robot.Subsystems.*;
-import edu.wpi.first.wpilibj.Timer;
+import org.littletonrobotics.junction.Logger;
 
 public class StateMachine extends StateMachineIO<RobotStates> {
     public StateMachine(boolean paused) {
@@ -14,131 +19,179 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         return (StateMachine) StateMachineIO.getInstance();
     }
 
-    private Timer _outtakeTimer;
-    private Timer _preOuttakeTimer;
-
     @Override
     public boolean canChangeRobotState(RobotStates currentState, RobotStates wantedState) {
+        if(wantedState == RobotStates.RESET || wantedState == RobotStates.TEST)
+            return true;
+
         return switch (currentState) {
-            case RESET, CLOSE -> wantedState == RobotStates.IDLE
-            || wantedState == RobotStates.RESET;
+            case CLIMB1 -> wantedState == RobotStates.CLIMBED1 || wantedState == RobotStates.CLOSE;
 
-            case IDLE -> wantedState == RobotStates.CORAL_SEARCH
-                    || wantedState == RobotStates.CORAL_READY;
+            case CLIMBED1 -> wantedState == RobotStates.CLIMB2 || wantedState == RobotStates.CLOSE;
 
-            case CORAL_SEARCH -> wantedState == RobotStates.INTAKE
+            case CLIMB2 -> wantedState == RobotStates.CLIMBED || wantedState == RobotStates.CLOSE;
+
+            case CLIMBED, REMOVE_ALGAE -> wantedState == RobotStates.CLOSE;
+
+            case OUTTAKE -> wantedState == RobotStates.CLOSE
+                    || wantedState == RobotStates.REMOVE_ALGAE;
+
+            case AT_REEF -> wantedState == RobotStates.OUTTAKE || wantedState == RobotStates.CLOSE;
+
+            case RESET, CLOSE -> wantedState == RobotStates.IDLE;
+
+            case IDLE -> wantedState == RobotStates.INTAKE
                     || wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET;
+                    || wantedState == RobotStates.GO_REEF
+                    || wantedState == RobotStates.CORAL_READY
+                    || wantedState == RobotStates.CLIMB1;
 
-            case INTAKE -> wantedState == RobotStates.INDEX_BACK
-                    || wantedState == RobotStates.RESET
+            case INTAKE -> wantedState == RobotStates.CORAL_READY
                     || wantedState == RobotStates.CLOSE;
 
-            case CORAL_READY -> wantedState == RobotStates.GO_LEFT_REEF
-                    || wantedState == RobotStates.GO_RIGHT_REEF
-                    || wantedState == RobotStates.AT_SIDE_REEF
-                    || wantedState == RobotStates.RESET
+            case CORAL_READY -> wantedState == RobotStates.GO_REEF
+                    || wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.INTAKE;
+                    || wantedState == RobotStates.INTAKE
+                    || wantedState == RobotStates.IDLE;
 
-            case INDEX_BACK -> wantedState == RobotStates.INDEX
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.RESET;
-
-            case INDEX -> wantedState == RobotStates.CORAL_READY
-                    || wantedState == RobotStates.IDLE
-                    || wantedState == RobotStates.CLOSE
-                    || wantedState == RobotStates.RESET;
-
-            case GO_ALGAE -> wantedState == RobotStates.REMOVE_ALGAE
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case OUTTAKE, GO_ALGAE_BACK -> wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case REMOVE_ALGAE -> wantedState == RobotStates.GO_ALGAE_BACK
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case GO_RIGHT_REEF, GO_LEFT_REEF -> wantedState == RobotStates.AT_SIDE_REEF
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case AT_SIDE_REEF -> wantedState == RobotStates.OUTTAKE_READY
-                    || wantedState == RobotStates.RESET
-                    || wantedState == RobotStates.CLOSE;
-
-            case OUTTAKE_READY -> wantedState == RobotStates.OUTTAKE
-                    || wantedState == RobotStates.RESET
+            case GO_REEF -> wantedState == RobotStates.AT_REEF
                     || wantedState == RobotStates.CLOSE;
 
             case TEST -> false;
         };
     }
 
+    private int intakeCount = 0;
     @Override
-    protected void setEndConditionMap() {
-        addEndCondition(RobotStates.INTAKE, new StateEndCondition<>(
-                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.INDEX_BACK));
+    protected void setCommandMap() {
+        addCommand(RobotStates.IDLE, Commands.run(() -> {
+            if(RobotState.getInstance().isCoralInRobot())
+                changeRobotState(RobotStates.CORAL_READY);
 
-        addEndCondition(RobotStates.INDEX_BACK, new StateEndCondition<>(
-                () -> !RobotState.getInstance().isCoralInRobot(), RobotStates.INDEX));
+            if(RobotState.getInstance().getAlgae())
+                changeRobotState(RobotStates.REMOVE_ALGAE);
+        }).repeatedly());
 
-        addEndCondition(RobotStates.INDEX, new StateEndCondition<>(
-                () -> RobotState.getInstance().isCoralInRobot(), RobotStates.CORAL_READY));
+        addCommand(RobotStates.RESET, Commands.sequence(
+                Commands.runOnce(() -> {
+                    RobotState.getInstance().setAlgae(false);
+                    Elevator.getInstance().resetSubsystem();
+                    OuttakeAngle.getInstance().resetSubsystem();
+                    Outtake.getInstance().resetSubsystem();
+                    Sushi.getInstance().resetSubsystem();
+                    SwerveSubsystem.getInstance().resetSubsystem();
+                    HopperAngle.getInstance().resetSubsystem();
+                    Climber.getInstance().resetSubsystem();
+                }),
+                Commands.waitUntil(() -> Elevator.getInstance().isResetted() && OuttakeAngle.getInstance().isResetted()),
+                CommandBuilder.changeRobotState(RobotStates.IDLE)
+        ));
 
-        addEndCondition(RobotStates.GO_RIGHT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReef(), RobotStates.AT_SIDE_REEF));
+        addCommand(RobotStates.INTAKE, Commands.sequence(
+                Sushi.getInstance().setPercent(() -> SushiConstants.kIntake),
+                Outtake.getInstance().intake().until(() -> RobotState.getInstance().isCoralInRobot()),
 
-        addEndCondition(RobotStates.GO_LEFT_REEF, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReef(), RobotStates.AT_SIDE_REEF));
+                Commands.sequence(
+                        Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexBackState),
+                        Sushi.getInstance().setPercent(() -> 0),
+                        Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
+                        Commands.waitSeconds(0.05),
+                        Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexState),
+                        Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()),
+                        Commands.runOnce(() -> intakeCount++)
+                ).repeatedly().until(() -> intakeCount == 1).finallyDo(() -> intakeCount = 0),
 
-        addEndCondition(RobotStates.AT_SIDE_REEF, new StateEndCondition<>(
-                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal() && (SwerveSubsystem.getInstance().atReef() || RobotState.getInstance().getReefLevel() == 1), RobotStates.OUTTAKE_READY));
+                Commands.waitSeconds(0.02),
+                CommandBuilder.changeRobotState(RobotStates.CLOSE)
+        ));
 
-        addEndCondition(RobotStates.OUTTAKE_READY, new StateEndCondition<>(
-                () -> RobotState.getInstance().getReefLevel() != 4 || _preOuttakeTimer.get() > 0.125, RobotStates.OUTTAKE));
+        addCommand(RobotStates.CORAL_READY, Commands.run(() -> {
+            if(!RobotState.getInstance().isCoralInRobot())
+                changeRobotState(RobotStates.IDLE);
+        }).repeatedly());
 
-        addEndCondition(RobotStates.OUTTAKE, new StateEndCondition<>(
-                () -> !RobotState.getInstance().isCoralInRobot() && _outtakeTimer.get() > 0.2, RobotStates.CLOSE));
+        addCommand(RobotStates.REMOVE_ALGAE, Commands.parallel(
+                Outtake.getInstance().setVelocity(() -> OuttakeConstants.kRemoveAlgae),
+                Elevator.getInstance().setPosition(() -> FieldConstants.getAlgaeLevel() == 1 ? ElevatorConstants.kRemoveAlgae : ElevatorConstants.kRemoveAlgae2),
+                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kAlgaeState)
+        ));
 
-        addEndCondition(RobotStates.GO_ALGAE, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReef(), RobotStates.REMOVE_ALGAE));
+        addCommand(RobotStates.GO_REEF, Commands.sequence(
+                new RunInParallelCommand(SwerveSubsystem.getInstance().goToReef()),
+                Commands.waitUntil(() -> SwerveSubsystem.getInstance().atPidingZone()),
+                OuttakeAngle.getInstance().setPosition(() -> RobotState.getInstance().getReefLevel() != 1 ? OuttakeAngleConstants.kCoralState : OuttakeAngleConstants.kL1State),
+                new RunInParallelCommand(Elevator.getInstance().setPosition(() -> {
+                    if(!RobotState.isAutonomous())
+                        return ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() == 4 ? 2 : RobotState.getInstance().getReefLevel() - 1];
+                    else
+                        return ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1];
+                })),
+                Commands.waitUntil(() -> SwerveSubsystem.getInstance().atGoal()),
+                CommandBuilder.changeRobotState(RobotStates.AT_REEF)
+        ));
 
-//        addEndCondition(RobotStates.REMOVE_ALGAE, new StateEndCondition<>(
-//                () -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal() && Outtake.getInstance().getCurrent() > 55, RobotStates.GO_ALGAE_BACK));
+        addCommand(RobotStates.AT_REEF, Commands.sequence(
+                Elevator.getInstance().setPosition(() -> ElevatorConstants.kLStates[RobotState.getInstance().getReefLevel() - 1]),
+                OuttakeAngle.getInstance().setPosition(() -> RobotState.getInstance().getReefLevel() != 1 ? OuttakeAngleConstants.kCoralState : OuttakeAngleConstants.kL1State),
+                Commands.waitUntil(() -> Elevator.getInstance().atGoal() && OuttakeAngle.getInstance().atGoal()),
+                Commands.waitSeconds(RobotState.getInstance().getReefLevel() == 4 ? 0.125 : 0),
+                CommandBuilder.changeRobotState(RobotStates.OUTTAKE)
+        ));
 
-        addEndCondition(RobotStates.GO_ALGAE_BACK, new StateEndCondition<>(
-                () -> SwerveSubsystem.getInstance().atReef(), RobotStates.CLOSE));
+        addCommand(RobotStates.OUTTAKE, Commands.sequence(
+                Commands.runOnce(SwerveSubsystem.getInstance()::resetSubsystem),
+                Outtake.getInstance().outtake(),
+                Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
+                Commands.either(
+                    Commands.waitSeconds(0.125),
+                    Commands.waitSeconds(0.5),
+                    () -> RobotState.getInstance().getReefLevel() != 1
+                ),
+                Commands.either(
+                        CommandBuilder.changeRobotState(RobotStates.REMOVE_ALGAE),
+                        CommandBuilder.changeRobotState(RobotStates.CLOSE),
+                        () -> RobotState.getInstance().getAlgae()
+                )
+        ));
 
-        addEndCondition(RobotStates.CLOSE, new StateEndCondition<>(
-                () -> (Elevator.getInstance().isResetted())
-                    && Sushi.getInstance().isResetted()
-                    && OuttakeAngle.getInstance().isResetted()
-                    && Outtake.getInstance().isResetted(), RobotStates.IDLE));
+        addCommand(RobotStates.CLOSE, Commands.sequence(
+                Commands.parallel(
+                    Commands.runOnce(() -> RobotState.getInstance().setAlgae(false)),
+                    Elevator.getInstance().close(),
+                    Commands.runOnce(() -> OuttakeAngle.getInstance().resetSubsystem()),
+                    Commands.runOnce(() -> {
+                        Outtake.getInstance().resetSubsystem();
+                        Sushi.getInstance().resetSubsystem();
+                        SwerveSubsystem.getInstance().resetSubsystem();
+                    })
+                ),
+                Commands.waitUntil(() -> Elevator.getInstance().isResetted() && OuttakeAngle.getInstance().isResetted()),
+                CommandBuilder.changeRobotState(RobotStates.IDLE)
+        ));
 
-        addEndCondition(RobotStates.RESET, new StateEndCondition<>(
-                () -> (Elevator.getInstance().isResetted())
-                    && Sushi.getInstance().isResetted()
-                    && OuttakeAngle.getInstance().isResetted()
-                    && Outtake.getInstance().isResetted(), RobotStates.IDLE));
+        addCommand(RobotStates.CLIMB1, Commands.sequence(
+                OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kClimbState),
+                Elevator.getInstance().close(),
+                Commands.waitUntil(() -> OuttakeAngle.getInstance().atGoal()),
+                OuttakeAngle.getInstance().stop(),
+
+                Commands.parallel(
+                    HopperAngle.getInstance().setPosition(() -> HopperAngleConstants.kOpenState),
+                    Climber.getInstance().stage1()
+                ),
+                Commands.waitUntil(() -> Climber.getInstance().atGoal() && HopperAngle.getInstance().atGoal()),
+                CommandBuilder.changeRobotState(RobotStates.CLIMBED1)
+        ));
+
+        addCommand(RobotStates.CLIMB2, Commands.sequence(
+//                Climber.getInstance().stage2(),
+//                CommandBuilder.changeRobotState(RobotStates.CLIMBED)
+        ));
     }
 
     @Override
     protected void setFunctionMaps() {
-        _outtakeTimer = new Timer();
-        _preOuttakeTimer = new Timer();
 
-        addFunctionToOnChangeMap(_outtakeTimer::restart, RobotStates.OUTTAKE);
-        addFunctionToOnChangeMap(_preOuttakeTimer::restart, RobotStates.OUTTAKE_READY);
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-
-        if(RobotState.getInstance().getRobotState() == RobotStates.IDLE)
-            changeRobotState(RobotState.getInstance().isCoralInRobot() ? RobotStates.CORAL_READY : RobotStates.CORAL_SEARCH);
     }
 }

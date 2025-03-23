@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import com.ninjas4744.NinjasLib.Subsystems.StateMachineSubsystem;
 import com.ninjas4744.NinjasLib.Swerve.SwerveController;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,12 +13,15 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Supplier;
 
 public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     private static SwerveSubsystem _instance;
@@ -31,15 +35,10 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
     }
 
     private Pose2d _currentReefTarget = new Pose2d();
-    private ProfiledPIDController _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(3, 3.5));
-    private ProfiledPIDController _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(3, 3.5));
-    private ProfiledPIDController _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
+    private final ProfiledPIDController _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(4.5, 3));
+    private final ProfiledPIDController _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(4.5, 3));
+    private final ProfiledPIDController _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
     private double _outtakeExtraMove = 0;
-    private Timer _forwardDriveTimer = new Timer();
-    private boolean _preAtGoalX = false;
-    private boolean isRight = false;
-    private int stage = 1;
-    private boolean startedPiding = false;
 
     private SwerveSubsystem(boolean paused){
         super(paused);
@@ -53,100 +52,112 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         }
     }
 
-    public void setPidsToTeleop(){
-        _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
-        _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
-        _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
-        _0PID.enableContinuousInput(-180, 180);
-    }
+    public void resetSubsystem(){
+        if(_paused)
+           return;
 
-    public void setPidsToAuto(){
-        _xPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
-        _yPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(2, 1.75));
-        _0PID = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(460, 1000));
-        _0PID.enableContinuousInput(-180, 180);
+        if(!RobotState.isAutonomous()){
+            SwerveController.getInstance().setState("Driver");
+            SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Driver");
+        }
+        else{
+            SwerveController.getInstance().setState("Auto");
+            SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto");
+        }
+
+        if(getCurrentCommand() != null)
+            getCurrentCommand().cancel();
     }
 
     @Override
     protected void setFunctionMaps() {
-        addFunctionToOnChangeMap(
-          () -> {
-              stage = 1;
-              startedPiding = false;
 
-              if(!RobotState.isAutonomous())
-                SwerveController.getInstance().setState("Driver");
-          },
-          RobotStates.CLOSE,
-          RobotStates.RESET);
+    }
 
-        addFunctionToPeriodicMap(() -> {
-            if(RobotState.getInstance().getReefLevel() == 1)
-                return;
+//    private Timer _atGoalTimer = new Timer();
+    double t = 0;
+    double time = 0.75;
+    boolean pastP1Start = false;
+//    PIDController _xp = new PIDController(5, 0, 0);
+//    PIDController _yp = new PIDController(5, 0, 0);
+    Pose2d p0;
+    Pose2d p1;
+    Pose2d p2;
+    public Command goToReef(){
+        Supplier<ChassisSpeeds> drive = () -> {
+//            if(t == 0){
+//                p0 = RobotState.getInstance().getRobotPose();
+//                p2 = _currentReefTarget;
+//                p1 = _currentReefTarget.transformBy(new Transform2d(-0.5, 0.0, Rotation2d.kZero));
+//            }
+//
+            Pose2d[] poses = new Pose2d[11];
+            for (double t = 0; t <= 1; t += 0.1) {
+                int i = (int)Math.round(t * 10);
+                poses[i] = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
+            }
+            Logger.recordOutput("trajectory", poses);
 
-            _currentReefTarget = FieldConstants.getClosestReefTarget(
-                    isRight,
-                    RobotState.getInstance().getReefLevel() == 4,
-                    _outtakeExtraMove);
-            _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
-            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(stage == 2 ? 0.03 : 0, 0, Rotation2d.kZero));
-            Logger.recordOutput("Reef Target", _currentReefTarget);
+            t += 0.02 / time;
+            Pose2d target = p0.interpolate(p1, t).interpolate(p1.interpolate(p2, t), t);
 
-            if(atPidingZone() && !startedPiding){
+            Transform2d transform1 = RobotState.getInstance().getTransform(_currentReefTarget);
+            Transform2d transform2 = RobotState.getInstance().getTransform(target);
+            double a = 2;//1.75;
+            double b = 2;//1.75;
+
+            if(pastP1Start)
+                transform2 = transform1;
+
+//            double vel = Math.pow(a * Math.abs(transform1.getTranslation().getNorm()), 1 / b);
+            double x = transform1.getTranslation().getNorm();
+            double vel = -0.161 * x * x * x * x + 1.22 * x * x * x + -2.3 * x * x + 3.23 * x;
+            double xVel = vel * transform2.getTranslation().getAngle().getCos();
+            double yVel = vel * transform2.getTranslation().getAngle().getSin();
+//            double xVel = _xp.calculate(-transform.getX());
+//            double yVel = _yp.calculate(-transform.getY());
+
+            return new ChassisSpeeds(
+                    xVel,
+                    yVel,
+                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
+            );
+        };
+
+        return Commands.sequence(
+            Commands.run(() -> {
+                _currentReefTarget = FieldConstants.getClosestReefTarget(
+                        RobotState.getInstance().isReefRight(),
+                        _outtakeExtraMove);
+                _currentReefTarget = new Pose2d(_currentReefTarget.getTranslation(), _currentReefTarget.getRotation().rotateBy(Rotation2d.k180deg));
+                Logger.recordOutput("Reef Target", _currentReefTarget);
+            }).until(this::atPidingZone),
+            Commands.runOnce(() -> {
                 System.out.println("Reseting PID to X" + RobotState.getInstance().getRobotPose().getX() + " Y" + RobotState.getInstance().getRobotPose().getY() + " a" + RobotState.getInstance().getRobotPose().getRotation().getDegrees() + " vx" + SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond + " vy" + SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond + " omega" + SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond);
-//                if(SmartDashboard.getBoolean("Competition/Enable Profile Init Velocity", false)){
                 _xPID.reset(RobotState.getInstance().getRobotPose().getX(), SwerveIO.getInstance().getChassisSpeeds(true).vxMetersPerSecond);
                 _yPID.reset(RobotState.getInstance().getRobotPose().getY(), SwerveIO.getInstance().getChassisSpeeds(true).vyMetersPerSecond);
                 _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), Units.radiansToDegrees(SwerveIO.getInstance().getChassisSpeeds(true).omegaRadiansPerSecond));
-//                }else{
-//                    _xPID.reset(RobotState.getInstance().getRobotPose().getX());
-//                    _yPID.reset(RobotState.getInstance().getRobotPose().getY());
-//                    _0PID.reset(RobotState.getInstance().getRobotPose().getRotation().getDegrees());
-//                }
-                isRight = RobotState.getInstance().getRobotState() == RobotStates.GO_RIGHT_REEF;
-                startedPiding = true;
-            }
-
-            if(atGoal() && stage == 1)
-                stage = 2;
-
-            if(!atPidingZone())
-                return;
-
-            SwerveController.getInstance().setState("Reef PID");
-
-            ChassisSpeeds pid = new ChassisSpeeds(
-                    _xPID.calculate(RobotState.getInstance().getRobotPose().getX(), _currentReefTarget.getX()),
-                    _yPID.calculate(RobotState.getInstance().getRobotPose().getY(), _currentReefTarget.getY()),
-                    _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees())
-            );
-            SwerveController.getInstance().setControl(pid, true, "Reef PID");
-
-//            double anglePid = _0PID.calculate(RobotState.getInstance().getRobotPose().getRotation().getDegrees(), _currentReefTarget.getRotation().getDegrees());
-//            double forwardDrive = atGoalX() ? SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation()).getNorm() : 0;//atGoalX() ? 1 : 0;
-//            Logger.recordOutput("atGoalX", atGoalX());
-//            Logger.recordOutput("forward timer", _forwardDriveTimer.get());
-//
-//            if(!_preAtGoalX && atGoalX())
-//                _forwardDriveTimer.restart();
-//            _preAtGoalX = atGoalX();
-
-//            SwerveController.getInstance().setControl(
-//                SwerveController.getInstance().lockAxis(_currentReefTarget.getRotation(), _currentReefTarget, new ChassisSpeeds(forwardDrive, 0, anglePid), false, false),
-//                true,
-//                "Reef PID"
-//            );
-
-//            Translation2d pidTrans = SwerveController.getInstance().pidTo(_currentReefTarget.getTranslation());
-        }, RobotStates.GO_RIGHT_REEF, RobotStates.GO_LEFT_REEF, RobotStates.AT_SIDE_REEF, RobotStates.OUTTAKE_READY);
-
-        addFunctionToOnChangeMap(() -> {
-            SwerveController.getInstance().setState("Stop");
-            SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Stop");
-            stage = 1;
-            startedPiding = false;
-        },
-        RobotStates.OUTTAKE);
+                t = 0.02;
+                p0 = RobotState.getInstance().getRobotPose();
+                p2 = _currentReefTarget;
+                p1 = _currentReefTarget.transformBy(new Transform2d(-0.75, 0.0, Rotation2d.kZero));
+                pastP1Start = afterP1();
+                SwerveController.getInstance().setState("Reef PID");
+            }),
+            Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this)
+//                        Commands.runOnce(() -> {
+//                            _currentReefTarget = _currentReefTarget.transformBy(new Transform2d(0.03, 0, Rotation2d.kZero));
+//                            Logger.recordOutput("Reef Target", _currentReefTarget);
+//                        }, this),
+//                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this).until(this::atGoal)
+//                        Commands.runOnce(() -> _atGoalTimer.restart()),
+//                        Commands.run(() -> SwerveController.getInstance().setControl(drive.get(), true, "Reef PID"), this).until(this::atGoal)
+//                        .until(() -> {
+//                            if(!atGoal())
+//                                _atGoalTimer.restart();
+//                            return _atGoalTimer.get() > 0.25;
+//                        })
+        );
     }
 
     public boolean atPidingZone(){
@@ -158,6 +169,14 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             double thresh = FieldConstants.kXOuttakeDistThreshold + SmartDashboard.getNumber("Competition/Outtake Extra Threshold", 0) / 100;
             Logger.recordOutput("x dist", Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()));
             return Math.abs(_currentReefTarget.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getY()) < thresh;
+        }
+        return true;
+    }
+
+    private boolean afterP1(){
+        if(!_paused) {
+            Logger.recordOutput("p1 dist", p1.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX());
+            return p1.getTranslation().minus(RobotState.getInstance().getRobotPose().getTranslation()).rotateBy(FieldConstants.getClosestReefTag().getRotation().unaryMinus()).getX() > 0;
         }
         return true;
     }
@@ -180,15 +199,9 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
         return true;
     }
 
-    private boolean atGoal(){
+    public boolean atGoal(){
         if(!_paused)
             return atGoalX() && atGoalY() && atGoal0();
-        return true;
-    }
-
-    public boolean atReef(){
-        if(!_paused)
-            return atGoal() && stage == 2;
         return true;
     }
 
@@ -198,11 +211,6 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
 
         if(_paused)
             return;
-
-        atGoal();
-        Logger.recordOutput("atGoalX", atGoalX());
-        Logger.recordOutput("atGoalY", atGoalY());
-        Logger.recordOutput("atGoal0", atGoal0());
 
         SmartDashboard.putNumber("Competition/Dist To Reef", RobotState.getInstance()
                 .getDistance(_currentReefTarget) * 100);

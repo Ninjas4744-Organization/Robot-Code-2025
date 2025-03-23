@@ -20,11 +20,9 @@ public class OuttakeConstants {
 
     public static final double kL4OuttakeState = 80;//75;
     public static final double kOuttakeState = 17;
-    public static final double kL1OuttakeState = -5;
+    public static final double kL1OuttakeState = -10;
     public static final double kIntakeState = 15;
     public static final double kIndexBackState = -5;
     public static final double kIndexState = 5;
     public static final double kRemoveAlgae = -100;
-
-    public static final double kOuttakeTime = 1;
 }

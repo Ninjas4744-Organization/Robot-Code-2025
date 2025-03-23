@@ -37,7 +37,7 @@ public class CommandBuilder {
     }
 
     public static Command changeRobotState(RobotStates state) {
-        return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state), StateMachine.getInstance());
+        return Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(state));
     }
 
     public static Command changeReefLevel(boolean up){
@@ -46,9 +46,14 @@ public class CommandBuilder {
 
     public static Command setReefLevel(int level){
         return Commands.runOnce(() -> {
-            if(RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE_READY
-                    && RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE)
+            if(RobotState.getInstance().getRobotState() != RobotStates.OUTTAKE)
                 RobotState.getInstance().setReefLevel(level);
+        });
+    }
+
+    public static Command switchAlgaeState(){
+        return Commands.runOnce(() -> {
+           RobotState.getInstance().setAlgae(!RobotState.getInstance().getAlgae());
         });
     }
 
@@ -63,7 +68,7 @@ public class CommandBuilder {
                 Supplier<Translation2d> rotation,
                 BooleanSupplier isLookAt,
                 BooleanSupplier isBayblade) {
-            return Commands.runOnce(
+            return Commands.run(
                     () -> {
                         double lx = -MathUtil.applyDeadband(translation.get().getX(), SwerveConstants.kJoystickDeadband);
                         double ly = -MathUtil.applyDeadband(translation.get().getY(), SwerveConstants.kJoystickDeadband);
@@ -87,7 +92,7 @@ public class CommandBuilder {
                                 finalRotation)),
                             SwerveConstants.kDriverFieldRelative, "Driver"
                         );
-                    }, SwerveSubsystem.getInstance());
+                    });
         }
 
         public static Command runIfTestMode(Command command) {
@@ -124,9 +129,9 @@ public class CommandBuilder {
                 SwerveConstants.kAutonomyConfig, //Autonomy config
                 SwerveConstants.kSwerveControllerConstants.robotConfig, //Robot config
 
-                () -> false, // Boolean supplier that mirrors path if red alliance
+                () -> false // Boolean supplier that mirrors path if red alliance
 
-                SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
+                 //SwerveSubsystem.getInstance() // Reference to swerve subsystem to set requirements
             );
 
             registerCommands();
@@ -136,11 +141,13 @@ public class CommandBuilder {
         private static void registerCommands() {
             NamedCommands.registerCommand("Wait Reset", waitReset());
             NamedCommands.registerCommand("Intake", intake());
+            NamedCommands.registerCommand("Wait Intake", waitIntake());
             NamedCommands.registerCommand("Wait Outtake", waitOuttake());
             NamedCommands.registerCommand("Right 4", Right(4));
             NamedCommands.registerCommand("Left 4", Left(4));
             NamedCommands.registerCommand("Right 3", Right(3));
             NamedCommands.registerCommand("Left 3", Left(3));
+            NamedCommands.registerCommand("Print 1", Commands.print("1111111111111"));
         }
 
         private static Command waitReset(){
@@ -148,12 +155,11 @@ public class CommandBuilder {
         }
 
         private static Command intake() {
-            return Commands.sequence(
-                    CommandBuilder.changeRobotState(RobotStates.INTAKE),
-                    Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto"))
-                            .until(() -> RobotState.getInstance().isCoralInRobot())
-//                    Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()/*RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY*/)
-            );
+            return Commands.runOnce(() -> Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.IDLE).andThen(CommandBuilder.changeRobotState(RobotStates.INTAKE)).schedule());
+        }
+
+        private static Command waitIntake() {
+            return Commands.run(() -> SwerveController.getInstance().setControl(new ChassisSpeeds(), false, "Auto")).until(() -> RobotState.getInstance().isCoralInRobot());
         }
 
         private static Command waitOuttake() {
@@ -161,21 +167,23 @@ public class CommandBuilder {
         }
 
         private static Command Right(int level) {
-            return Commands.sequence(
+            return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
-                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_RIGHT_REEF))
-            );
+                    Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
+                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
+            ));
         }
 
         private static Command Left(int level) {
-            return Commands.sequence(
+            return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
                     Commands.waitTime(Seconds.of(0.02)),
-                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_LEFT_REEF))
-            );
+                    Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
+                    Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
+            ));
         }
     }
 }
