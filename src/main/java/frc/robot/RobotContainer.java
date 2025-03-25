@@ -27,6 +27,7 @@ import frc.robot.StateMachine.RobotState;
 import frc.robot.StateMachine.RobotStates;
 import frc.robot.StateMachine.StateMachine;
 import frc.robot.Subsystems.*;
+import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.CommandBuilder.Teleop.runIfNotTestMode;
 import static frc.robot.CommandBuilder.Teleop.runIfTestMode;
@@ -56,7 +57,6 @@ public class RobotContainer {
 
         StateMachineIO.setInstance(new StateMachine(false));
         VisionIO.setConstants(VisionConstants.kVisionConstants);
-        LimelightVision.init();
         FieldConstants.getFieldLayout();
 
         CommandBuilder.Auto.configureAutoBuilder();
@@ -193,13 +193,11 @@ public class RobotContainer {
 
         for (VisionOutput estimation : VisionIO.getInstance().getVisionEstimations())
                 RobotState.getInstance().updateRobotPose(estimation);
-//        RobotState.getInstance().updateRobotPose(LimelightVision.getVisionEstimation());
-//        Logger.recordOutput("Right", VisionIO.getInstance().getVisionEstimations()[0].robotPose);
-//        Logger.recordOutput("Left", VisionIO.getInstance().getVisionEstimations()[1].robotPose);
 
-        SmartDashboard.putString("Competition/Robot State", RobotState.getInstance().getRobotState().toString());
-        SmartDashboard.putNumber("Competition/Reef Level", RobotState.getInstance().getReefLevel());
-        SmartDashboard.putBoolean("Competition/Beam Breaker", RobotState.getInstance().isCoralInRobot());
+        Logger.recordOutput("Other/Right Camera", VisionIO.getInstance().getVisionEstimations()[0].robotPose);
+        Logger.recordOutput("Other/Left Camera", VisionIO.getInstance().getVisionEstimations()[1].robotPose);
+//        Logger.recordOutput("Other/Back Camera", VisionIO.getInstance().getVisionEstimations()[2].robotPose);
+
     }
 
     public void resetSubsystems() {

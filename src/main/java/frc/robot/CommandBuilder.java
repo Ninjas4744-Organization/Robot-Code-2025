@@ -170,7 +170,7 @@ public class CommandBuilder {
             return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
-                    Commands.waitUntil(() -> SwerveSubsystem.getInstance().distToTarget() < 1.5),
+//                    Commands.waitUntil(() -> SwerveSubsystem.getInstance().distToTarget() < 1.5),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(true)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
             ));
@@ -180,7 +180,7 @@ public class CommandBuilder {
             return new RunInParallelCommand(Commands.sequence(
                     Commands.runOnce(() -> RobotState.getInstance().setReefLevel(level)),
                     Commands.waitUntil(() -> RobotState.getInstance().getRobotState() == RobotStates.CORAL_READY),
-                    Commands.waitUntil(() -> SwerveSubsystem.getInstance().distToTarget() < 1.5),
+//                    Commands.waitUntil(() -> SwerveSubsystem.getInstance().distToTarget() < 1.5),
                     Commands.runOnce(() -> RobotState.getInstance().setReefRight(false)),
                     Commands.runOnce(() -> StateMachine.getInstance().changeRobotState(RobotStates.GO_REEF))
             ));

@@ -15,6 +15,7 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
         _robotState = RobotStates.IDLE;
         setReefLevel(3);
         setReefRight(false);
+        setAlgae(false);
     }
 
     public boolean isCoralInRobot(){
@@ -25,20 +26,13 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
 
     public void setReefLevel(int level) {
         _reefLevel = level;
-        Logger.recordOutput("Reef Level", level);
+        Logger.recordOutput("Other/Reef Level", level);
     }
 
-    public boolean resetAlgae() {
-        _removeAlgae = false;
-        Logger.recordOutput("setAlgae", _removeAlgae);
-        return true;
+    public void setAlgae(boolean remove) {
+        _removeAlgae = remove;
+        Logger.recordOutput("Other/Remove Algae", _removeAlgae);
     }
-
-    public void setAlgae(boolean change) {
-        _removeAlgae = change;
-        Logger.recordOutput("setAlgae", _removeAlgae);
-    }
-
 
     public int getReefLevel() {
         return _reefLevel;
@@ -46,7 +40,7 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
 
     public void setReefRight(boolean reefRight){
         _isReefRight = reefRight;
-        Logger.recordOutput("Is Reef Right", reefRight);
+        Logger.recordOutput("Other/Is Reef Right", reefRight);
     }
 
     public boolean isReefRight(){
@@ -54,10 +48,9 @@ public class RobotState extends RobotStateWithSwerve<RobotStates> {
     }
 
     public boolean getAlgae() {
-        Logger.recordOutput("setAlgae", _removeAlgae);
+        Logger.recordOutput("Other/Remove Algae", _removeAlgae);
         return _removeAlgae;
     }
-
 
     public static RobotState getInstance() {
         return (RobotState)RobotStateWithSwerve.getInstance();

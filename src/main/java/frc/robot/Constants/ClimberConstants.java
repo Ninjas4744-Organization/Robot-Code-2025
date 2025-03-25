@@ -12,7 +12,7 @@ public class ClimberConstants {
     static {
         kControllerConstants.main.id = 50;
         kControllerConstants.main.inverted = true;
-        kControllerConstants.subsystemName = "Climber";
+        kControllerConstants.subsystemName = "Subsystems/Climber";
 
         kControllerConstants.controlConstants = ControlConstants.createPID(64, 0, 0, 0);
         kControllerConstants.controlConstants.GravityType = GravityTypeValue.Arm_Cosine;

@@ -12,7 +12,7 @@ public class OuttakeAngleConstants {
     static {
         kControllerConstants.main.id = 31;
         kControllerConstants.main.inverted = true;
-        kControllerConstants.subsystemName = "OuttakeAngle";
+        kControllerConstants.subsystemName = "Subsystems/OuttakeAngle";
 
         kControllerConstants.encoderConversionFactor = 18 / 100.0 * Math.PI * 2;
         kControllerConstants.controlConstants = ControlConstants.createProfiledPID(10, 0, 0, 0, 10, 10, 0, 0, 0, 1, GravityTypeValue.Arm_Cosine);

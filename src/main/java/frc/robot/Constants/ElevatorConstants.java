@@ -11,7 +11,7 @@ public class ElevatorConstants {
     static {
         kControllerConstants.main.id = 20;
         kControllerConstants.main.inverted = true;
-        kControllerConstants.subsystemName = "Elevator";
+        kControllerConstants.subsystemName = "Subsystems/Elevator";
 
         kControllerConstants.followers = new MainControllerConstants.ControllerConstants[1];
         kControllerConstants.followers[0] = new MainControllerConstants.ControllerConstants();
@@ -19,7 +19,7 @@ public class ElevatorConstants {
         kControllerConstants.followers[0].inverted = false;
 
         kControllerConstants.encoderConversionFactor = 0.25 * 0.05 * Math.PI;
-        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(40, 0, 0, 0, 5, 7, 100, 0, 0.47, 0.4, GravityTypeValue.Elevator_Static);
+        kControllerConstants.controlConstants = ControlConstants.createProfiledPID(40, 0, 0, 0, 5, 4, 100, 0, 0.47, 0.4, GravityTypeValue.Elevator_Static);
         kControllerConstants.positionGoalTolerance = 0.03;
         kControllerConstants.isMaxSoftLimit = true;
         kControllerConstants.maxSoftLimit = 1.12;
@@ -32,8 +32,8 @@ public class ElevatorConstants {
 
     public static final double[] kLStates = new double[]{
             0,
-            0.13,
-            0.555,
+            0.13+0.01,
+            0.5+0.01+0.015,
             //1.09//sadna
             1.13//comp
     };

@@ -8,11 +8,11 @@ public class SushiConstants {
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
     static {
         kControllerConstants.main.id = 40;
-        kControllerConstants.subsystemName = "Sushi";
+        kControllerConstants.subsystemName = "Subsystems/Sushi";
 
         kSimulatedControllerConstants.mainControllerConstants = kControllerConstants;
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kIntake = 0.3;
+    public static final double kIntake = 0.2;
 }

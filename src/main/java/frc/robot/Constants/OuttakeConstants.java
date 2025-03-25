@@ -9,7 +9,7 @@ public class OuttakeConstants {
     public static final SimulatedControllerConstants kSimulatedControllerConstants = new SimulatedControllerConstants();
     static {
         kControllerConstants.main.id = 30;
-        kControllerConstants.subsystemName = "Outtake";
+        kControllerConstants.subsystemName = "Subsystems/Outtake";
         kControllerConstants.currentLimit = 70;
 
         kControllerConstants.controlConstants = ControlConstants.createTorqueCurrent(9, 0.2);
@@ -19,10 +19,11 @@ public class OuttakeConstants {
     }
 
     public static final double kL4OuttakeState = 80;
-    public static final double kOuttakeState = 20;//17;
+    public static final double kOuttakeState = 17;
     public static final double kL1OuttakeState = -10;
     public static final double kIntakeState = 15;
-    public static final double kIndexBackState = -7.5;
-    public static final double kIndexState = 5;
+    public static final double kIndexBackState = -5;
+    public static final double kOuttakeBackState = -10;
+    public static final double kIndexState = 7.5;
     public static final double kRemoveAlgae = -100;
 }

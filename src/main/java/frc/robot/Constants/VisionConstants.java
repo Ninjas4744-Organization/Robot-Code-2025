@@ -4,15 +4,12 @@ import com.ninjas4744.NinjasLib.DataClasses.VisionConstants.SimulationConstants;
 import com.ninjas4744.NinjasLib.DataClasses.VisionOutput;
 import com.ninjas4744.NinjasLib.Swerve.SwerveIO;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 import frc.robot.StateMachine.RobotState;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Map;
 
@@ -22,7 +19,7 @@ public class VisionConstants {
         kVisionConstants.cameras = Map.of(
                 "FrontRight", Pair.of(new Transform3d(0.0815+0.1054, -0.0745, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(-7.5-1.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision),
                 "FrontLeft", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(7.5-1.5))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.PhotonVision)
-//                "Back", Pair.of(new Transform3d(0.0815+0.1054, 0.0755, -0.191, new Rotation3d(0, 0, Units.degreesToRadians(180))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.Limelight)
+//                "", Pair.of(new Transform3d(0.1085, -0.0815, -0.064, new Rotation3d(0, Units.degreesToRadians(30), Units.degreesToRadians(180))), com.ninjas4744.NinjasLib.DataClasses.VisionConstants.CameraType.Limelight)
         );
 
         kVisionConstants.maxAmbiguity = 0.2;
