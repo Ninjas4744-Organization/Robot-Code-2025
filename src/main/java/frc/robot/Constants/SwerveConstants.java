@@ -79,10 +79,10 @@ public class SwerveConstants {
             kSwerveConstants.moduleConstants[i].angleMotorConstants.controlConstants = ControlConstants.createPID(4 / 19.2, 0, 0, 0);
         }
 
-        kSwerveConstants.moduleConstants[0].CANCoderOffset = -0.290039;
-        kSwerveConstants.moduleConstants[1].CANCoderOffset = 0.224121;
-        kSwerveConstants.moduleConstants[2].CANCoderOffset = 0.235596;
-        kSwerveConstants.moduleConstants[3].CANCoderOffset = 0.274170;
+        kSwerveConstants.moduleConstants[0].CANCoderOffset = -0.295654;
+        kSwerveConstants.moduleConstants[1].CANCoderOffset = 0.230713;
+        kSwerveConstants.moduleConstants[2].CANCoderOffset = 0.238037;
+        kSwerveConstants.moduleConstants[3].CANCoderOffset = 0.273438;
     }
 
     public static final SwerveControllerConstants kSwerveControllerConstants = new SwerveControllerConstants();

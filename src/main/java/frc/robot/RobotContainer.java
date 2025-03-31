@@ -133,6 +133,12 @@ public class RobotContainer {
            Commands.none(),
            () -> RobotState.getInstance().getRobotState() == RobotStates.CLIMBED1
         )));
+
+        _operatorJoystick.create().whileTrue(runIfNotTestMode(Commands.either(
+                HopperAngle.getInstance().runMotor(0.1),
+                Commands.none(),
+                () -> RobotState.getInstance().getRobotState() == RobotStates.CLIMBED1
+        )));
     }
 
     private void configureTestBindings() {
@@ -198,6 +204,7 @@ public class RobotContainer {
         Logger.recordOutput("Other/Left Camera", VisionIO.getInstance().getVisionEstimations()[1].robotPose);
 //        Logger.recordOutput("Other/Back Camera", VisionIO.getInstance().getVisionEstimations()[2].robotPose);
 
+        Logger.recordOutput("Beam Breaker", RobotState.getInstance().isCoralInRobot());
     }
 
     public void resetSubsystems() {

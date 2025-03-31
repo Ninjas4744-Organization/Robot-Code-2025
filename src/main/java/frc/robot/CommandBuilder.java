@@ -118,8 +118,8 @@ public class CommandBuilder {
                 () -> RobotState.getInstance().getRobotPose(), // Robot pose supplier
 
                 pose -> {
-                    RobotState.getInstance().setRobotPose(pose);
                     RobotState.getInstance().resetGyro(pose.getRotation());
+                    RobotState.getInstance().setRobotPose(pose);
                 }, // Method to reset odometry (will be called if your auto has a starting pose)
 
                 () -> SwerveIO.getInstance().getChassisSpeeds(false), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE

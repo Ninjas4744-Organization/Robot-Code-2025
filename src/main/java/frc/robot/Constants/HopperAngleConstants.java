@@ -23,5 +23,5 @@ public class HopperAngleConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
     public static final double kCloseState = 0;
-    public static final double kOpenState = Units.degreesToRadians(213);
+    public static final double kOpenState = Units.degreesToRadians(192);
 }

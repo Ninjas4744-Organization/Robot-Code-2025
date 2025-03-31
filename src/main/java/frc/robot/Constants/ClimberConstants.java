@@ -30,5 +30,5 @@ public class ClimberConstants {
         kSimulatedControllerConstants.motorType = SimulatedControllerConstants.MotorType.KRAKEN;
     }
 
-    public static final double kStage1 = Units.degreesToRadians(80);
+    public static final double kStage1 = Units.degreesToRadians(54);
 }

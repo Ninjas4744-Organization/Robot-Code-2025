@@ -107,8 +107,8 @@ public class SwerveSubsystem extends StateMachineSubsystem<RobotStates> {
             double a = 0;
             double b = 0;
             if(RobotState.isAutonomous()){
-                a = 1.5;
-                b = 1.5;
+                a = 1.625;//1.5
+                b = 1.625;//1.5
             }else{
                 a = 1.75;
                 b = 1.75;

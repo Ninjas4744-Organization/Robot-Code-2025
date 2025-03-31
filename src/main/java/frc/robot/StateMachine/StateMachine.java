@@ -63,7 +63,7 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexBackState),
                 Sushi.getInstance().setPercent(() -> 0),
                 Commands.waitUntil(() -> !RobotState.getInstance().isCoralInRobot()),
-                Commands.waitSeconds(0.05),
+                Commands.waitSeconds(0.04),
                 Outtake.getInstance().setVelocity(() -> OuttakeConstants.kIndexState),
                 Commands.waitUntil(() -> RobotState.getInstance().isCoralInRobot()),
                 Commands.runOnce(() -> intakeCount++)
@@ -100,7 +100,6 @@ public class StateMachine extends StateMachineIO<RobotStates> {
                 OuttakeAngle.getInstance().setPosition(() -> OuttakeAngleConstants.kCoralState),
                 Outtake.getInstance().intake().until(() -> RobotState.getInstance().isCoralInRobot()),
                 index(2),
-                Commands.waitSeconds(0.02),
                 CommandBuilder.changeRobotState(RobotStates.CLOSE)
         ));
 
@@ -185,6 +184,13 @@ public class StateMachine extends StateMachineIO<RobotStates> {
         addCommand(RobotStates.CLIMB2, Commands.sequence(
 //                Climber.getInstance().stage2(),
 //                CommandBuilder.changeRobotState(RobotStates.CLIMBED)
+        ));
+
+        addCommand(RobotStates.TEST, Commands.runOnce(() -> {
+                    HopperAngle.getInstance().resetSubsystem();
+                    Climber.getInstance().resetSubsystem();
+                    Outtake.getInstance().resetSubsystem();
+            }
         ));
     }
 
